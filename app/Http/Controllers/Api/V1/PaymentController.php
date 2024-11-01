@@ -30,7 +30,7 @@ class PaymentController extends Controller
 
 
                 print_r($response);
-                print_r($request);
+                // print_r($request);
 
                 die();
 
