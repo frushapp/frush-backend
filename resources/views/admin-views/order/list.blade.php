@@ -329,7 +329,14 @@
                                     <label class="badge badge-danger">{{__('messages.invalid')}} {{__('messages.customer')}} {{__('messages.data')}}</label>
                                 @endif
                             </td>
-                            <td>Driver</td>
+                            <td>
+                                @if($order->delivery_man)
+                                    <a class="text-body text-capitalize"
+                                       href="{{route('admin.customer.view',[$order['user_id']])}}">{{$order->delivery_man['f_name'].' '.$order->customer['phone']}}</a>
+                                @else
+                                    <label class="badge badge-danger"></label>
+                                @endif
+                            </td>
                             <td>
                                 <label class="badge badge-soft-primary"><a href="{{route('admin.vendor.view', $order->restaurant_id)}}" alt="view restaurant">{{Str::limit($order->restaurant?$order->restaurant->name:__('messages.Restaurant deleted!'),20,'...')}}</a></label>
                             </td>
