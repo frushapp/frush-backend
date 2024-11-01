@@ -29,7 +29,7 @@ class PaymentController extends Controller
                 $response = $api->payment->fetch($payment_id)->capture(array('amount' => $payment['amount']));
 
 
-                print_r($response);
+                print_r(json_encode($response));
                 // print_r($request);
 
                 die();
