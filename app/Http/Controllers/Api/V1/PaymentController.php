@@ -31,7 +31,7 @@ class PaymentController extends Controller
 
                 print_r($response);
                 print_r($request);
-                
+
                 die();
 
 
@@ -47,6 +47,11 @@ class PaymentController extends Controller
                 Helpers::send_order_notification($order);
             } catch (\Exception $e) {
                 // print_r($e);
+
+                print_r($request);
+
+                die();
+
                 info($e);
                 Order::where('id', $order)
                     ->update([
@@ -58,23 +63,27 @@ class PaymentController extends Controller
                 if ($order->callback != null) {
                     // return 1;
                     // return redirect($order->callback . '&status=fail');
-                    return response()->json(['status'=>"Failed"], 500);
-
+                    return response()->json(['status' => "Failed"], 500);
                 } else {
                     // return 2;
-                    return response()->json(['status'=>"Failed"], 500);
+                    return response()->json(['status' => "Failed"], 500);
                 }
             }
         }
 
         if ($order->callback != null) {
+            print_r($request);
+
+            die();
             // return 3;
             // return redirect($order->callback . '&status=success');
-            return response()->json(['status'=>"Success"], 200);
-
+            return response()->json(['status' => "Success"], 200);
         } else {
+            print_r($request);
+
+            die();
             // return 4;
-            return response()->json(['status'=>"Success"], 200);
+            return response()->json(['status' => "Success"], 200);
         }
     }
 }
