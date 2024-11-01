@@ -46,8 +46,8 @@ class PaymentController extends Controller
                 $order->save();
                 // Helpers::send_order_notification($order);
             } catch (\Exception $e) {
-                // print_r($e);
-                info($e);
+                print_r($e);
+                // info($e);
                 Order::where('id', $order)
                     ->update([
                         'payment_method' => 'razor_pay',
