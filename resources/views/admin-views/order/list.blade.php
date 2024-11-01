@@ -311,7 +311,6 @@
                     @foreach($orders as $key=>$order)
 
 
-                        {{json_encode($order)}}
                         <tr class="status-{{$order['order_status']}} class-all">
                             <td class="">
                                 {{$key+$orders->firstItem()}}
