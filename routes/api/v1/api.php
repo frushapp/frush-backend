@@ -191,7 +191,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
 
     // Route::group(['prefix' => 'banners'], function () {
     Route::get('/banners', 'BannerController@get_banners');
-    Route::post('/payment', 'RazorPayController@payment_new');
+    Route::post('/payment', 'PaymentController@payment_new');
     // });
 
     Route::group(['prefix' => 'categories'], function () {
