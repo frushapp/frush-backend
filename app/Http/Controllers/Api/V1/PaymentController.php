@@ -26,11 +26,10 @@ class PaymentController extends Controller
 
 
         if(!empty($payment_id)){
-            $response = $api->payment->fetch($payment_id)->capture(array('amount' => $payment['amount']));
-            print_r(json_encode($response));
-            if($response == "This payment has already been captured"){
-                print_r("hu");
-            }
+
+            print_r(json_encode($payment));
+            // $response = $api->payment->fetch($payment_id)->capture(array('amount' => $payment['amount']));
+            
             die();
         }
 
