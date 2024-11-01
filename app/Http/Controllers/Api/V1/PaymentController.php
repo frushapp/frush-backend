@@ -31,9 +31,9 @@ class PaymentController extends Controller
         if (!empty($payment_id)) {
             try {
 
-                print_r($payment["status"]);
-                $response = $api->payment->fetch($payment_id)->capture(array('amount' => $payment['amount']));
-
+                if($payment["status"]=="Authorized" || $payment["status"]=="authorized");{
+                    $response = $api->payment->fetch($payment_id)->capture(array('amount' => $payment['amount']));
+                }
 
                 $order = Order::where(['id' => $order_id])->first();
                 $tr_ref = $payment_id;
