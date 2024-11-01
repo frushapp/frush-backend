@@ -2,16 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use Symfony\Component\Process\Exception\ProcessFailedException;
+use Illuminate\Http\Request;
 use Symfony\Component\Process\Process;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Response;
-use Carbon\Carbon;
-
-use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
 
 class BackupController extends Controller
@@ -19,29 +12,42 @@ class BackupController extends Controller
 
     public function downloadDatabaseDump()
     {
-        // Set the database information
         $databaseName = env('tast_safemax');
         $username = env('tast_safemax');
         $password = env('tast_safemax');
         $host = env('127.0.0.1');
-        
-        // Define the filename with the current timestamp
-        $fileName = "backup-" . Carbon::now()->format('Y-m-d_H-i-s') . ".sql";
-        $filePath = storage_path("app/public/{$fileName}");
-        
-        // Command to export the database
-        $command = "mysqldump --user={$username} --password={$password} --host={$host} {$databaseName} > {$filePath}";
-        
-        $process = new Process([$command]);
-        $process->setTimeout(300); // Set a timeout if the backup takes long
 
-        try {
-            $process->mustRun();
-        } catch (ProcessFailedException $exception) {
-            return response()->json(['error' => 'Database backup failed.'], 500);
-        }
+        // Define the filename for the download
+        $fileName = "backup-" . date('Y-m-d_H-i-s') . ".sql";
 
-        // Return the file as a download
-        return response()->download($filePath)->deleteFileAfterSend(true);
+        // Prepare the command to dump the database
+        $command = sprintf(
+            'mysqldump --user=%s --password=%s --host=%s %s',
+            escapeshellarg($username),
+            escapeshellarg($password),
+            escapeshellarg($host),
+            escapeshellarg($databaseName)
+        );
+
+        $response = new StreamedResponse(function () use ($command) {
+            $process = Process::fromShellCommandline($command);
+            $process->setTimeout(300); // Set a timeout if the backup takes long
+
+            // Run the command and stream the output directly to the response
+            $process->run(function ($type, $buffer) {
+                if (Process::ERR === $type) {
+                    // Handle errors if needed
+                    echo 'Error: ' . $buffer;
+                } else {
+                    echo $buffer; // Send the output to the response
+                }
+            });
+        });
+
+        // Set headers for the response to indicate file download
+        $response->headers->set('Content-Type', 'application/octet-stream');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+
+        return $response;
     }
 }
