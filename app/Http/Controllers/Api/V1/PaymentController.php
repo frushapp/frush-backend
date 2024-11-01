@@ -27,7 +27,7 @@ class PaymentController extends Controller
 
         if(!empty($payment_id)){
 
-            print_r(json_encode($payment));
+            print_r($payment);
             // $response = $api->payment->fetch($payment_id)->capture(array('amount' => $payment['amount']));
             
             die();
