@@ -47,11 +47,6 @@ class PaymentController extends Controller
                 // Helpers::send_order_notification($order);
             } catch (\Exception $e) {
                 // print_r($e);
-
-                print_r($request);
-
-                die();
-
                 info($e);
                 Order::where('id', $order)
                     ->update([
@@ -72,16 +67,10 @@ class PaymentController extends Controller
         }
 
         if ($order->callback != null) {
-            print_r($request);
-
-            die();
             // return 3;
             // return redirect($order->callback . '&status=success');
             return response()->json(['status' => "Success"], 200);
         } else {
-            print_r($request);
-
-            die();
             // return 4;
             return response()->json(['status' => "Success"], 200);
         }
