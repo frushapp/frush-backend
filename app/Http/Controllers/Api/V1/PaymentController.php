@@ -31,9 +31,9 @@ class PaymentController extends Controller
         if (!empty($payment_id)) {
             try {
 
-                if($payment["status"]=="Authorized" || $payment["status"]=="authorized");{
-                    $response = $api->payment->fetch($payment_id)->capture(array('amount' => $payment['amount']));
-                }
+                // if($payment["status"]=="Authorized" || $payment["status"]=="authorized");{
+                //     $response = $api->payment->fetch($payment_id)->capture(array('amount' => $payment['amount']));
+                // }
 
                 $order = Order::where(['id' => $order_id])->first();
                 $tr_ref = $payment_id;
@@ -44,9 +44,9 @@ class PaymentController extends Controller
                 $order->order_status = 'pending';
                 $order->confirmed = now();
                 $order->save();
-                // Helpers::send_order_notification($order);
+                Helpers::send_order_notification($order);
             } catch (\Exception $e) {
-                print_r($e);
+                // print_r($e);
                 // info($e);
                 Order::where('id', $order)
                     ->update([
