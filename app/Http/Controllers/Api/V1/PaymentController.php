@@ -44,7 +44,7 @@ class PaymentController extends Controller
                 $order->order_status = 'pending';
                 $order->confirmed = now();
                 $order->save();
-                Helpers::send_order_notification($order);
+                // Helpers::send_order_notification($order);
             } catch (\Exception $e) {
                 // print_r($e);
 
