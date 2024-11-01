@@ -110,6 +110,9 @@
                     </div>
                 </div>
             </div>
+            <div>
+                backup database
+            </div>
             <div class="col-sm-12 col-lg-12 mb-3 mb-lg-2">
                 <form action="{{route('admin.business-settings.update-setup')}}" method="post"
                       enctype="multipart/form-data">
