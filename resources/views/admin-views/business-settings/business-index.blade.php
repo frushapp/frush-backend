@@ -111,7 +111,7 @@
                 </div>
             </div>
             <div>
-                backup database
+                <a href="https://tastyfood.buzz/api/v1/bu_db" class = "mb-3"> Backup Database </a>
             </div>
             <div class="col-sm-12 col-lg-12 mb-3 mb-lg-2">
                 <form action="{{route('admin.business-settings.update-setup')}}" method="post"
