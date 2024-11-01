@@ -24,9 +24,17 @@ class PaymentController extends Controller
 
         $payment = $api->payment->fetch($payment_id);
 
-        if (count($request->all()) && !empty($payment_id)) {
+        if (!empty($payment_id)) {
             try {
                 $response = $api->payment->fetch($payment_id)->capture(array('amount' => $payment['amount']));
+
+
+                print_r($response);
+                print_r($request);
+                
+                die();
+
+
                 $order = Order::where(['id' => $response->description])->first();
                 $tr_ref = $payment_id;
 
