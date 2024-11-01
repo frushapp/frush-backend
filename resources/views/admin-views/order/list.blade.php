@@ -296,6 +296,7 @@
                         <th class="table-column-pl-0">{{__('messages.order')}}</th>
                         <th>{{__('messages.date')}}</th>
                         <th>{{__('messages.customer')}}</th>
+                        <th>Driver</th>
                         <th>{{__('messages.restaurant')}}</th>
                         <th>{{__('messages.payment')}} {{__('messages.status')}}</th>
                         <th>{{__('messages.total')}}</th>
@@ -326,6 +327,7 @@
                                     <label class="badge badge-danger">{{__('messages.invalid')}} {{__('messages.customer')}} {{__('messages.data')}}</label>
                                 @endif
                             </td>
+                            <td>Driver</td>
                             <td>
                                 <label class="badge badge-soft-primary"><a href="{{route('admin.vendor.view', $order->restaurant_id)}}" alt="view restaurant">{{Str::limit($order->restaurant?$order->restaurant->name:__('messages.Restaurant deleted!'),20,'...')}}</a></label>
                             </td>
