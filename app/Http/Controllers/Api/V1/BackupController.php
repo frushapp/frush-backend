@@ -12,10 +12,10 @@ class BackupController extends Controller
 
     public function downloadDatabaseDump()
     {
-        $databaseName = env('DB_DATABASE');
-        $username = env('DB_USERNAME');
-        $password = env('DB_PASSWORD');
-        $host = env('DB_HOST');
+        $databaseName = "tast_safemax";
+        $username = "tast_safemax";
+        $password = "tast_safemax";
+        $host = "127.0.0.1";
 
         // Define the filename for the download
         $fileName = "backup-" . date('Y-m-d_H-i-s') . ".sql";
