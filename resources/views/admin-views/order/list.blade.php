@@ -331,7 +331,7 @@
                             <td>
                                 @if($order->delivery_man)
                                     <a class="text-body text-capitalize"
-                                       href="{{route('admin.customer.view',[$order['user_id']])}}">{{$order->delivery_man['f_name']}} </br> {{$order->customer['phone']}}</a>
+                                       href="{{route('admin.customer.view',[$order['user_id']])}}">{{$order->delivery_man['f_name']}} {{$order->delivery_man['l_name']}} </br> {{$order->customer['phone']}}</a>
                                 @else
                                     <label class="badge badge-danger"></label>
                                 @endif
