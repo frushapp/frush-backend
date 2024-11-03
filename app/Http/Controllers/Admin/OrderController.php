@@ -1044,12 +1044,27 @@ class OrderController extends Controller
             'view' => view('admin-views.order.partials._quick-view-cart-item', compact('order_id','product', 'cart_item', 'item_key','item_type'))->render(),
         ]);
     }
+    function formatPhoneString($input) {
+        // Check if the string is exactly 10 characters
+        if (strlen($input) == 10) {
+            // Add prefix '91' if it's exactly 10 characters
+            return '91' . $input;
+        } elseif (strlen($input) > 10) {
+            // If the string has more than 10 characters, remove extra prefix and replace with '91'
+            $input = substr($input, -10); // Get the last 10 characters
+            return '91' . $input;
+        } else {
+            // Return as is if the string is less than 10 characters
+            return $input;
+        }
+    }
     function send_sms($cphone,$name , $order_id , $restaurant , $amt , $template_id = "6573201bd6fc051a575ed403"){
 
             // echo "shaun";
 
             $recipients[0] = [
-                    "mobiles" => substr($cphone, 1),
+                    // "mobiles" => substr($cphone, 1),
+                    "mobiles" => $this->formatPhoneString($cphone),
                     "var1" => $name,
                     "var2" => $order_id,
                     "var3" => $restaurant,
