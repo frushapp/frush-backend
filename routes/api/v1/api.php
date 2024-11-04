@@ -24,6 +24,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
         Route::post('verify-phone', 'CustomerAuthController@verify_phone');
 
         Route::post('/ex_users', 'ExUserController@register');
+        Route::post('/global_sms_api', 'GlobalMessageApiController@global_sms_api');
 
 
         Route::post('check-email', 'CustomerAuthController@check_email');
