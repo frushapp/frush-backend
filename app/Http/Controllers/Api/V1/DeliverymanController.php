@@ -415,6 +415,19 @@ class DeliverymanController extends Controller
 
         $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
 
+
+        $totalDeliveryChargeOnline = Order::where('order_status', 'delivered')
+        ->where('payment_method', '!=', 'cash_on_delivery')
+        ->where('delivery_man_id',  $dm['id'])
+        ->sum('delivery_charge');
+        $totalDeliveryChargeOffline = Order::where('order_status', 'delivered')
+        ->where('payment_method', 'cash_on_delivery')
+        ->where('delivery_man_id',  $dm['id'])
+        ->sum('delivery_charge');
+        $totalDeliveryCharge = Order::where('order_status', 'delivered')
+        ->where('delivery_man_id',  $dm['id'])        
+        ->sum('delivery_charge');
+
         $paginator = Order::with(['customer', 'restaurant'])
         ->where(['delivery_man_id' => $dm['id']])
         ->whereIn('order_status', ['delivered','canceled','refund_requested','refunded','failed'])
@@ -426,7 +439,10 @@ class DeliverymanController extends Controller
             'total_size' => $paginator->total(),
             'limit' => $request['limit'],
             'offset' => $request['offset'],
-            'orders' => $orders
+            'orders' => $orders,
+            'cod_amt' => $totalDeliveryChargeOffline,
+            'online_amt' => $totalDeliveryChargeOnline,
+            'total_amt' => $totalDeliveryCharge,
         ];
         return response()->json($data, 200);
     }
