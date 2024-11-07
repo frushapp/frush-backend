@@ -142,6 +142,7 @@
                         <th style="width: 20%">Restaurant Name</th>
                         <th>Variation</th>
                         <th>Price</th>
+                        <th>AddOn Price</th>
                         <th>Qty</th>
                         <th>Total Price</th>
                         <th>From</th>
@@ -189,6 +190,7 @@
                                 ?>
                             </td>
                             <td>Rs. <?php echo $row->price; ?></td>
+                            <td>Rs. <?php echo $row->total_add_on_price; ?></td>
                             <td><?php echo $row->total_qty; ?></td>
                             <td>Rs. 
                                 <?php
