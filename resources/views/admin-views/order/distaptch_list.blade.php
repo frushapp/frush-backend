@@ -334,7 +334,7 @@
                                 @endif
                             </td>
                             <td></td>
-                            <td>{{$order->delivery_address->address}}</td>
+                            <td>{{json_decode($order->delivery_address)->address}}</td>
                             <td>
                                 <label class="badge badge-soft-primary">{{$order->restaurant?$order->restaurant->name:'Restaurant deleted!'}}</label>
                             </td>
