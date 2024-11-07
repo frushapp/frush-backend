@@ -214,7 +214,7 @@ class OrderController extends Controller
         
         Order::where(['checked' => 0])->update(['checked' => 1]);
         
-        $orders = Order::with(['customer', 'restaurant'])
+        $orders = Order::with(['customer', 'restaurant' ,  "delivery_man:id,f_name,l_name,phone"])
         ->when(isset($request->zone), function($query)use($request){
             return $query->whereHas('restaurant', function($query)use($request){
                 return $query->whereIn('zone_id',$request->zone);

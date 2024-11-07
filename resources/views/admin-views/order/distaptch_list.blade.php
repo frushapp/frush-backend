@@ -333,7 +333,13 @@
                                     <label class="badge badge-danger">{{__('messages.invalid')}} {{__('messages.customer')}} {{__('messages.data')}}</label>
                                 @endif
                             </td>
-                            <td></td>
+                            <td>
+                                @if($order->delivery_man)
+                                    <a class="text-body text-capitalize" >{{$order->delivery_man['f_name']}} {{$order->delivery_man['l_name']}} </br> {{$order->customer['phone']}}</a>
+                                @else
+                                    <label class="badge badge-danger"></label>
+                                @endif
+                            </td>
                             <td>{{json_decode($order->delivery_address)->address}}</td>
                             <td>
                                 <label class="badge badge-soft-primary">{{$order->restaurant?$order->restaurant->name:'Restaurant deleted!'}}</label>
