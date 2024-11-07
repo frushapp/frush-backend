@@ -139,6 +139,7 @@
                         <th>#</th>
                         <th>Qty</th>
                         <th>Price</th>
+                        <th>Total Price</th>
                         <th style="width: 20%">Name</th>
 
                     </tr>
@@ -155,7 +156,7 @@
                             <td>Rs. <?php echo $row->price*$row->quantity; ?></td>
                             <td>
                                 <?php 
-                                    print_r($row->food_details);
+                                    print_r($row->food_details->name);
                                 ?>
                             </td>
 
