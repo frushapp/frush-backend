@@ -71,7 +71,7 @@ class ReportController extends Controller
                 order_details.food_id,
                 MAX(order_details.food_details) AS food_details,
                 MAX(order_details.variation) AS variation,
-                GROUP_CONCAT(order_details.add_ons SEPARATOR ',') AS add_ons,
+                MAX(order_details.add_ons) AS add_ons,
                 MAX(order_details.price) AS price,
                 SUM(order_details.quantity) AS total_qty,
                 MAX(orders.zone_id) AS zone_id,
