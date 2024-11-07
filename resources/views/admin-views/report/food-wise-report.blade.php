@@ -138,7 +138,6 @@
                     <tr>
                         <th>{{__('messages.#')}}</th>
                         <th style="width: 20%">{{__('messages.name')}}</th>
-                        <th style="width: 15%">{{__('messages.restaurant')}}</th>
                         <th>{{__('messages.order')}} {{__('messages.count')}}</th>
                         <th>Price</th>
                     </tr>
@@ -153,7 +152,6 @@
 
                             <td>{{$row->food_id}}</td>
                             <td><?php echo $row->food_details['name'];?></td>
-                            <td></td>
                             <td>{{$row->quantity}}</td>
                             <td>Rs. {{$row->price}}</td>
                             </tr>
