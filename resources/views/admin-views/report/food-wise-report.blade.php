@@ -1,3 +1,7 @@
+<?php
+    print_r($foods);
+    die();
+?>
 @extends('layouts.admin.app')
 
 @section('title',__('messages.food_wise_report'))
