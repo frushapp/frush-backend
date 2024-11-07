@@ -152,7 +152,7 @@
                         <tr>
                             <td>{{$row->food_id}}</td>
                             <td><?php echo $row->food_details;?></td>
-                            <td>{{$row->food_details->restaurant_name}}</td>
+                            <td>{{}}</td>
                             <td>{{$row->quantity}}</td>
                             <td>Rs. {{$row->price}}</td>
                             <td>Rs. {{$row->price*$row->quantity}}</td>
