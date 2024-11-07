@@ -72,7 +72,8 @@
                             <tr>
                                 <td scope="row">{{$k+$digital_transaction->firstItem()}}</td>
                                 <td><a href="{{route('admin.order.details',$dt->order_id)}}">{{$dt->order_id}}</a></td>
-                                <td>{{$dt->original_delivery_charge}}</td>
+                                <!-- <td>{{$dt->original_delivery_charge}}</td> -->
+                                <td>{{$dt->delivery_charge}}</td>
                                 <td>{{$dt->created_at->format('Y-m-d')}}</td>
                             </tr>
                         @endforeach
