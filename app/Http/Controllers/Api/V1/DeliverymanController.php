@@ -430,6 +430,7 @@ class DeliverymanController extends Controller
 
         $paginator = Order::with(['customer', 'restaurant'])
         ->where(['delivery_man_id' => $dm['id']])
+        ->where("DATE(created_at)" , $request['from_date'])
         ->whereIn('order_status', ['delivered','canceled','refund_requested','refunded','failed'])
         ->orderBy('schedule_at', 'desc')
         ->Notpos()
