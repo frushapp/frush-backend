@@ -168,7 +168,10 @@
                             </td>
                             <td>
                                 <?php 
-                                    print_r(json_decode($row->variation));
+                                    // print_r(json_decode($row->variation));
+                                    if(count(json_decode($row->variation)) > 0){
+                                        echo json_decode($row->variation)[0]->type;
+                                    }
                                 ?>
                             </td>
 
