@@ -141,6 +141,7 @@
                         <th>Price</th>
                         <th>Total Price</th>
                         <th style="width: 20%">Name</th>
+                        <th style="width: 20%">Restaurant Name</th>
 
                     </tr>
                     </thead>
@@ -157,6 +158,11 @@
                             <td>
                                 <?php 
                                     echo json_decode($row->food_details)->name;
+                                ?>
+                            </td>
+                            <td>
+                                <?php 
+                                    echo json_decode($row->food_details)->restaurant_name;
                                 ?>
                             </td>
 
