@@ -82,25 +82,28 @@ class BusinessSettingsController extends Controller
         $delivery_charges_slab_type = $request['delivery_charges_slab_type'];
         $delivery_charges_slab_type_1 = $request['delivery_charges_slab_type_1'];
         $delivery_charges_slab_value = $request['delivery_charges_slab_value'];
-        
-        $index= 0 ;
+
+        $index = 0;
         $array;
-        foreach($delivery_charges_slab_type as $row){
-            
-            
-            $array[$index]["from"]=$delivery_charges_slab_type[$index];
-            $array[$index]["to"]=$delivery_charges_slab_type_1[$index];
-            $array[$index]["value"]=$delivery_charges_slab_value[$index];
-            
-            $index++;
+        if (!empty($delivery_charges_slab_type)) {
+            foreach ($delivery_charges_slab_type as $row) {
+
+
+                $array[$index]["from"] = $delivery_charges_slab_type[$index];
+                $array[$index]["to"] = $delivery_charges_slab_type_1[$index];
+                $array[$index]["value"] = $delivery_charges_slab_value[$index];
+
+                $index++;
+            }
+            DB::table('business_settings')->updateOrInsert(['key' => 'delivery_charges_slab'], [
+                'key' => 'delivery_charges_slab',
+                'value' => json_encode($array),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
-        
-        DB::table('business_settings')->updateOrInsert(['key' => 'delivery_charges_slab'], [
-            'key' => 'delivery_charges_slab',
-            'value' => json_encode($array),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+
+
 
 
 
@@ -225,7 +228,7 @@ class BusinessSettingsController extends Controller
             ['key' => 'mail_config'],
             [
                 'value' => json_encode([
-                    "status" => $request['status']??0,
+                    "status" => $request['status'] ?? 0,
                     "name" => $request['name'],
                     "host" => $request['host'],
                     "driver" => $request['driver'],
@@ -582,7 +585,7 @@ class BusinessSettingsController extends Controller
         } else if ($tab == 'image') {
             return view('admin-views.business-settings.landing-page-settings.image');
         } else if ($tab == 'backgroundChange') {
-            
+
             return view('admin-views.business-settings.landing-page-settings.backgroundChange');
         }
     }
