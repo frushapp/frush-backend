@@ -454,9 +454,9 @@ class DeliverymanController extends Controller
             'limit' => $request['limit'],
             'offset' => $request['offset'],
             'orders' => $orders,
-            'cod_amt' => $totalDeliveryChargeOffline,
-            'online_amt' => $totalDeliveryChargeOnline,
-            'total_amt' => $totalDeliveryCharge,
+            'cod_amt' => !empty($totalDeliveryChargeOffline)?$totalDeliveryChargeOffline:0,
+            'online_amt' => !empty($totalDeliveryChargeOnline)?$totalDeliveryChargeOnline:0,
+            'total_amt' => !empty($totalDeliveryCharge)?$totalDeliveryCharge:0,
         ];
         return response()->json($data, 200);
     }
