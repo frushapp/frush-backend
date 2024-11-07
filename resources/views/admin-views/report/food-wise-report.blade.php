@@ -153,9 +153,9 @@
                             <td>{{$row->food_id}}</td>
                             <td><?php echo $row->food_details['name'];?></td>
                             <td></td>
-                            <td>{{$row->quantity}}</td>
-                            <td>Rs. {{$row->price}}</td>
-                            <td>Rs. {{$row->price*$row->quantity}}</td>
+                            <td><?php echo $row->quantity;?></td>
+                            <td>Rs. <?php echo $row->price;?></td>
+                            <td>Rs. <?php echo $row->quantity * $row->price;?></td>
                         </tr>
                     @endforeach
                     </tbody>
