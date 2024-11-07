@@ -155,8 +155,7 @@
                             <td>Rs. <?php echo $row->price*$row->quantity; ?></td>
                             <td>
                                 <?php 
-                                    $foodDetails = json_decode($row['food_details'], true); 
-                                    echo $foodDetails->name;
+                                    print_r($row->food_details);
                                 ?>
                             </td>
 
