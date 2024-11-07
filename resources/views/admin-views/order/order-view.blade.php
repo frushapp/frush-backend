@@ -946,6 +946,7 @@
                         <div class="col-md-5 my-2">
                             <ul class="list-group overflow-auto" style="max-height:400px;">
                                 @foreach ($deliveryMen as $dm)
+                                    <?php if($dm->status==1){ ?>
                                     <li class="list-group-item"> 
                                         <span class="dm_list" role='button' data-id="{{$dm['id']}}">
                                             <img class="avatar avatar-sm avatar-circle mr-1" onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'" src="{{asset('storage/app/public/delivery-man')}}/{{$dm['image']}}" alt="{{$dm['name']}}">
@@ -954,6 +955,7 @@
 
                                         <a class="btn btn-primary btn-xs float-right" onclick="addDeliveryMan({{$dm['id']}})">{{__('messages.assign')}}</a>
                                     </li>
+                                    <?php } ?>
                                 @endforeach
                             </ul>
                         </div>
