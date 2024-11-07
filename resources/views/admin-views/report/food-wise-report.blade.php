@@ -142,6 +142,7 @@
                         <th>Total Price</th>
                         <th style="width: 20%">Name</th>
                         <th style="width: 20%">Restaurant Name</th>
+                        <th>Variant Name</th>
 
                     </tr>
                     </thead>
@@ -163,6 +164,11 @@
                             <td>
                                 <?php 
                                     echo json_decode($row->food_details)->restaurant_name;
+                                ?>
+                            </td>
+                            <td>
+                                <?php 
+                                    echo json_decode($row->variantion)[0]->type;
                                 ?>
                             </td>
 
