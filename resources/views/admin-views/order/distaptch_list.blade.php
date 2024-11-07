@@ -340,7 +340,7 @@
                                     <label class="badge badge-danger"></label>
                                 @endif
                             </td>
-                            <td>{{json_decode($order->delivery_address)->address}}</td>
+                            <td style="word-wrap: break-word; white-space: normal;">{{json_decode($order->delivery_address)->address}}</td>
                             <td>
                                 <label class="badge badge-soft-primary">{{$order->restaurant?$order->restaurant->name:'Restaurant deleted!'}}</label>
                             </td>
