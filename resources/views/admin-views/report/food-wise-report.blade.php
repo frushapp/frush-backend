@@ -1,5 +1,5 @@
 <?php
-    print_r($foods);
+    print_r(json_encode($foods));
     die();
 ?>
 @extends('layouts.admin.app')
