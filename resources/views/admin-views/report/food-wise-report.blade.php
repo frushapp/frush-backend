@@ -151,7 +151,7 @@
                     @foreach($foods as $row)
                         <tr>
                             <td>{{$row->food_id}}</td>
-                            <td><?php echo $row->food_details->name;?></td>
+                            <td><?php echo $row->food_details['name'];?></td>
                             <td></td>
                             <td>{{$row->quantity}}</td>
                             <td>Rs. {{$row->price}}</td>
