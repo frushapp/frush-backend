@@ -156,7 +156,7 @@
                             <td>
                                 <?php 
                                     $foodDetails = json_decode($row['food_details'], true); 
-                                    echo $foodDetails['name'];
+                                    echo $foodDetails;
                                 ?>
                             </td>
 
