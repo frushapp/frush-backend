@@ -151,7 +151,7 @@
                     @foreach($foods as $row)
                         <tr>
                             <td>{{$row->food_id}}</td>
-                            <td>{{$row->food_details->name}}</td>
+                            <td>{{$row->food_details['name']}}</td>
                             <td>{{$row->food_details->restaurant_name}}</td>
                             <td>{{$row->quantity}}</td>
                             <td>Rs. {{$row->price}}</td>
