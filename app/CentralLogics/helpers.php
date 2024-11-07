@@ -738,15 +738,14 @@ class Helpers
             ]
         ];
         $response = Http::withHeaders([
-            'Authorization' => 'key=' . $key,
             'Content-Type' => 'application/json',
-        ])->post($url, $postdata);
+        ])->post("http://62.72.30.137:8990/notification_tasty_food", $postdata);
         
         // echo $topic;
         if ($response->successful()) {
             return true;
         } else {
-            \Log::error('Error sending notification: ' . $response->body());
+            // \Log::error('Error sending notification: ' . $response->body());
             return false;
         }
         // $ch = curl_init();
@@ -857,16 +856,18 @@ class Helpers
 
 
 
+        // $response = Http::withHeaders([
+        //     'Authorization' => 'key=' . $key,
+        //     'Content-Type' => 'application/json',
+        // ])->post($url, $postdata);
         $response = Http::withHeaders([
-            'Authorization' => 'key=' . $key,
             'Content-Type' => 'application/json',
-        ])->post($url, $postdata);
+        ])->post("http://62.72.30.137:8990/notification_tasty_food", $postdata);
         
         // echo $topic;
         if ($response->successful()) {
             return true;
         } else {
-            \Log::error('Error sending notification: ' . $response->body());
             return false;
         }
         
