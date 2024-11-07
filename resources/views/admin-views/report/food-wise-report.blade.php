@@ -154,9 +154,9 @@
 
                         <tr>
                             <td><?php echo $row->food_id; ?></td>
-                            <td><?php echo $row->quantity; ?></td>
+                            <td><?php echo $row->total_qty; ?></td>
                             <td>Rs. <?php echo $row->price; ?></td>
-                            <td>Rs. <?php echo $row->price*$row->quantity; ?></td>
+                            <td>Rs. <?php echo $row->price*$row->total_qty; ?></td>
                             <td>
                                 <?php 
                                     echo json_decode($row->food_details)->name;

@@ -66,8 +66,8 @@ class ReportController extends Controller
         // ->paginate(config('default_pagination'))->withQueryString();
         
         if($restaurant_id=="all" && $zone_id=="all"){
-            $foods = DB::select("SELECT * FROM order_details , orders WHERE order_details.order_id=orders.id and 
-            DATE(order_details.created_at) >= ? and DATE(order_details.created_at) <= ? and orders.zone_id=15 and orders.order_status= ? ",[  $from , $to , $status]);
+            $foods = DB::select("SELECT order_details.* , orders.* , SUM(order_details.quantity) as total_qty FROM order_details , orders  WHERE order_details.order_id=orders.id and 
+            DATE(order_details.created_at) >= ? and DATE(order_details.created_at) <= ? and orders.zone_id=15 and orders.order_status= ? group by order_details.food_id , order_details.price",[  $from , $to , $status]);
             
         }else if($restaurant_id!="all" && $zone_id=="all"){
             $foods = DB::select("Select f.* , s.* , r.restaurant_name , r.zone_name from food f 
