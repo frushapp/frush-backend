@@ -137,9 +137,10 @@
                     <thead class="thead-light">
                     <tr>
                         <th>#</th>
-                        <th style="width: 20%">Name</th>
                         <th>Qty</th>
                         <th>Price</th>
+                        <th style="width: 20%">Name</th>
+
                     </tr>
                     </thead>
 
@@ -152,7 +153,6 @@
                             <td><?php echo $row->quantity; ?></td>
                             <td>Rs. <?php echo $row->price; ?></td>
                             <td>Rs. <?php echo $row->price*$row->quantity; ?></td>
-                            <td><?php echo $row->food_details; ?></td>
 
                         </tr>
 
