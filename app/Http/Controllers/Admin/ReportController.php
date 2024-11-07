@@ -132,7 +132,7 @@ class ReportController extends Controller
         // echo $restaurant_id;
         // echo json_encode($foods);
         // die;
-        return view('admin-views.report.food-wise-report', compact('zone', 'restaurant', 'foods'));
+        return view('admin-views.report.food-wise-report', compact('zone', 'restaurant', 'foods' , 'from' , "to"));
     }
 
     public function order_transaction()

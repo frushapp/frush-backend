@@ -144,6 +144,8 @@
                         <th>Price</th>
                         <th>Qty</th>
                         <th>Total Price</th>
+                        <th>From</th>
+                        <th>To</th>
 
                     </tr>
                     </thead>
@@ -188,7 +190,7 @@
                             </td>
                             <td>Rs. <?php echo $row->price; ?></td>
                             <td><?php echo $row->total_qty; ?></td>
-                            <td>
+                            <td>Rs. 
                                 <?php
                                     if(count(json_decode($row->add_ons)) > 0){
                                         echo ($row->price*$row->total_qty) +  $row->total_add_on_price;
@@ -197,6 +199,8 @@
                                     }
                                 ?>
                             </td>
+                            <td><?= $from;?></td>
+                            <td><?= $to;?></td>
                             
                             
                             
