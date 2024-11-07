@@ -71,6 +71,10 @@ class ReportController extends Controller
 
             $foods = DB::select(
                 "SELECT 
+                    ANY_VALUE(order_details.id) AS id,
+                    ANY_VALUE(order_details.order_id) AS order_id,
+                    order_details.food_id,
+                    ANY_VALUE(order_details.price) AS price,
                     order_details.*,
                     orders.*,
                     SUM(order_details.quantity) AS total_qty
