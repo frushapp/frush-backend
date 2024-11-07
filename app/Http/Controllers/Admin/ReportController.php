@@ -84,7 +84,6 @@ class ReportController extends Controller
             WHERE 
                 DATE(order_details.created_at) >= ? 
                 AND DATE(order_details.created_at) <= ? 
-                AND orders.zone_id = 15 
                 AND orders.order_status = ?
             GROUP BY 
                 order_details.food_id, 
@@ -94,34 +93,80 @@ class ReportController extends Controller
 
             
         } else if ($restaurant_id != "all" && $zone_id == "all") {
-            $foods = DB::select("Select f.* , s.* , r.restaurant_name , r.zone_name from food f 
-            RIGHT JOIN (Select food_id , SUM(quantity) as order_x_count from order_details 
-            where order_id IN ( Select id from orders where 
-            restaurant_id = ? and order_status = ? and DATE(created_at) >= ? and DATE(created_at) <= ? ) 
-            GROUP by food_id) s on f.id = s.food_id 
-            LEFT JOIN (Select restaurants.id , restaurants.name as restaurant_name , zones.name as zone_name 
-            from restaurants , zones 
-            where restaurants.zone_id=zones.id) r on f.restaurant_id = r.id", [$restaurant_id, $status, $from, $to]);
+            $foods = DB::select("SELECT 
+                order_details.food_id,
+                MAX(order_details.food_details) AS food_details,
+                MAX(order_details.variation) AS variation,
+                MAX(order_details.add_ons) AS add_ons,
+                MAX(order_details.price) AS price,
+                SUM(order_details.quantity) AS total_qty,
+                MAX(orders.zone_id) AS zone_id,
+                MAX(orders.order_status) AS order_status,
+                MAX(order_details.total_add_on_price) AS total_add_on_price
+            FROM 
+                order_details
+            JOIN 
+                orders ON order_details.order_id = orders.id
+            WHERE 
+                DATE(order_details.created_at) >= ? 
+                AND DATE(order_details.created_at) <= ? 
+                AND orders.restaurant_id = ? 
+                AND orders.order_status = ?
+            GROUP BY 
+                order_details.food_id, 
+                order_details.price,
+                order_details.total_add_on_price;", [ $from, $to , $restaurant_id, $status]);
         } else if ($restaurant_id == "all" && $zone_id != "all") {
 
-            $foods = DB::select("Select f.* , s.* , r.restaurant_name , r.zone_name from food f 
-            RIGHT JOIN (Select food_id , SUM(quantity) as order_x_count from order_details 
-            where order_id IN ( Select id from orders where 
-            zone_id = ? and  order_status = ? and DATE(created_at) >= ? and DATE(created_at) <= ? ) 
-            GROUP by food_id) s on f.id = s.food_id 
-            LEFT JOIN (Select restaurants.id , restaurants.name as restaurant_name , zones.name as zone_name 
-            from restaurants , zones 
-            where restaurants.zone_id=zones.id) r on f.restaurant_id = r.id", [$zone_id, $status, $from, $to]);
+            $foods = DB::select("SELECT 
+                order_details.food_id,
+                MAX(order_details.food_details) AS food_details,
+                MAX(order_details.variation) AS variation,
+                MAX(order_details.add_ons) AS add_ons,
+                MAX(order_details.price) AS price,
+                SUM(order_details.quantity) AS total_qty,
+                MAX(orders.zone_id) AS zone_id,
+                MAX(orders.order_status) AS order_status,
+                MAX(order_details.total_add_on_price) AS total_add_on_price
+            FROM 
+                order_details
+            JOIN 
+                orders ON order_details.order_id = orders.id
+            WHERE 
+                DATE(order_details.created_at) >= ? 
+                AND DATE(order_details.created_at) <= ? 
+                AND orders.zone_id = ? 
+                AND orders.order_status = ?
+            GROUP BY 
+                order_details.food_id, 
+                order_details.price,
+                order_details.total_add_on_price;", [$from, $to , $zone_id, $status]);
         } else if ($restaurant_id != "all" && $zone_id != "all") {
 
-            $foods = DB::select("Select f.* , s.* , r.restaurant_name , r.zone_name from food f 
-            RIGHT JOIN (Select food_id , SUM(quantity) as order_x_count from order_details 
-            where order_id IN ( Select id from orders where 
-            zone_id = ? and restaurant_id = ? and order_status = ? and DATE(created_at) >= ? and DATE(created_at) <= ? ) 
-            GROUP by food_id) s on f.id = s.food_id 
-            LEFT JOIN (Select restaurants.id , restaurants.name as restaurant_name , zones.name as zone_name 
-            from restaurants , zones 
-            where restaurants.zone_id=zones.id) r on f.restaurant_id = r.id", [$zone_id, $restaurant_id, $status, $from, $to]);
+            $foods = DB::select("SELECT 
+                order_details.food_id,
+                MAX(order_details.food_details) AS food_details,
+                MAX(order_details.variation) AS variation,
+                MAX(order_details.add_ons) AS add_ons,
+                MAX(order_details.price) AS price,
+                SUM(order_details.quantity) AS total_qty,
+                MAX(orders.zone_id) AS zone_id,
+                MAX(orders.order_status) AS order_status,
+                MAX(order_details.total_add_on_price) AS total_add_on_price
+            FROM 
+                order_details
+            JOIN 
+                orders ON order_details.order_id = orders.id
+            WHERE 
+                DATE(order_details.created_at) >= ? 
+                AND DATE(order_details.created_at) <= ? 
+                AND orders.zone_id = ? 
+                AND orders.restaurant_id = ? 
+                AND orders.order_status = ?
+            GROUP BY 
+                order_details.food_id, 
+                order_details.price,
+                order_details.total_add_on_price;", [$from, $to , $zone_id, $restaurant_id, $status]);
         }
 
 
