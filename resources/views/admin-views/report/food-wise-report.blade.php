@@ -156,7 +156,15 @@
                             <td><?php echo $row->food_id; ?></td>
                             <td><?php echo $row->total_qty; ?></td>
                             <td>Rs. <?php echo $row->price; ?></td>
-                            <td>Rs. <?php echo $row->price*$row->total_qty; ?></td>
+                            <td>
+                                <?php
+                                    if(count(json_decode($row->add_ons)) > 0){
+                                        echo ($row->price*$row->total_qty) +  $row->total_add_on_price;
+                                    }else{
+                                        echo $row->price*$row->total_qty;
+                                    }
+                                ?>
+                            </td>
                             <td>
                                 <?php 
                                     echo json_decode($row->food_details)->name;

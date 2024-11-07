@@ -75,7 +75,8 @@ class ReportController extends Controller
                 MAX(order_details.price) AS price,
                 SUM(order_details.quantity) AS total_qty,
                 MAX(orders.zone_id) AS zone_id,
-                MAX(orders.order_status) AS order_status
+                MAX(orders.order_status) AS order_status,
+                MAX(order_details.total_add_on_price) AS total_add_on_price
             FROM 
                 order_details
             JOIN 
@@ -87,7 +88,8 @@ class ReportController extends Controller
                 AND orders.order_status = ?
             GROUP BY 
                 order_details.food_id, 
-                order_details.price;
+                order_details.price,
+                order_details.total_add_on_price;
             ", [$from , $to , $status]);
 
             
