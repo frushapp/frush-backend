@@ -147,6 +147,9 @@
 
                     <tbody id="set-rows">
                     
+                    {{print_r($foods)}}
+
+
                     @foreach($foods as $row)
                         <tr>
                             <td>{{$row->id}}</td>

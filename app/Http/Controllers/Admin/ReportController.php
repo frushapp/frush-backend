@@ -66,13 +66,8 @@ class ReportController extends Controller
         // ->paginate(config('default_pagination'))->withQueryString();
         
         if($restaurant_id=="all" && $zone_id=="all"){
-            $foods = DB::select("Select f.* , s.* , r.restaurant_name , r.zone_name from food f 
-            RIGHT JOIN (Select food_id , SUM(quantity) as order_x_count from order_details 
-            where order_id IN ( Select id from orders where  order_status = ? and DATE(created_at) >= ? and DATE(created_at) <= ? ) 
-            GROUP by food_id) s on f.id = s.food_id 
-            LEFT JOIN (Select restaurants.id , restaurants.name as restaurant_name , zones.name as zone_name 
-            from restaurants , zones 
-            where restaurants.zone_id=zones.id) r on f.restaurant_id = r.id",[ $status , $from , $to]);
+            $foods = DB::select("SELECT * FROM order_details , orders WHERE order_details.order_id=orders.id and 
+            DATE(order_details.created_at) >= ? and DATE(order_details.created_at) <= ? and orders.zone_id=15 and orders.order_status= ? ",[  $from , $to , $status]);
             
         }else if($restaurant_id!="all" && $zone_id=="all"){
             $foods = DB::select("Select f.* , s.* , r.restaurant_name , r.zone_name from food f 
