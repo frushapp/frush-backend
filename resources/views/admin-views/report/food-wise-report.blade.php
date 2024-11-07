@@ -153,7 +153,12 @@
                             <td><?php echo $row->quantity; ?></td>
                             <td>Rs. <?php echo $row->price; ?></td>
                             <td>Rs. <?php echo $row->price*$row->quantity; ?></td>
-                            <td><?php echo $row["food_details"]; ?></td>
+                            <td>
+                                <?php 
+                                    $foodDetails = json_decode($row['food_details'], true); 
+                                    echo $foodDetails['name'];
+                                ?>
+                            </td>
 
                         </tr>
 
