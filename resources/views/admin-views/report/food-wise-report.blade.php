@@ -173,9 +173,12 @@
                                     if(count(json_decode($row->variation)) > 0){
                                         echo json_decode($row->variation)[0]->type;
                                     }
+                                ?>
+                                <br>
+                                <?php
                                     if(count(json_decode($row->add_ons)) > 0){
                                         foreach(json_decode($row->add_ons) as $addon){
-                                            echo $addon->name;
+                                            echo $addon->name + "-" + $addon->quantity;
                                         }
                                     }
                                 ?>
