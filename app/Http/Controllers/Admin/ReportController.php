@@ -31,8 +31,8 @@ class ReportController extends Controller
             session()->put('to_date', date('Y-m-30'));
         }
 
-        $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id)?auth('admin')->user()->zone_id:'all');
-        $zone = is_numeric($zone_id)?Zone::findOrFail($zone_id):null;
+        $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
+        $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
         return view('admin-views.report.day-wise-report', compact('zone'));
     }
 
@@ -44,13 +44,13 @@ class ReportController extends Controller
         }
         $from = session('from_date');
         $to = session('to_date');
-        $status = session("my_report_status") ;
+        $status = session("my_report_status");
 
-        
-        $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id)?auth('admin')->user()->zone_id:'all');
+
+        $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
         $restaurant_id = $request->query('restaurant_id', 'all');
-        $zone = is_numeric($zone_id)?Zone::findOrFail($zone_id):null;
-        $restaurant = is_numeric($restaurant_id)?Restaurant::findOrFail($restaurant_id):null;
+        $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
+        $restaurant = is_numeric($restaurant_id) ? Restaurant::findOrFail($restaurant_id) : null;
         // $foods = \App\Models\Food::withoutGlobalScope(RestaurantScope::class)->withCount([
         //     'orders' => function($query)use( $from, $to , $status) {
         //         $query->where("order_status",$status)->whereBetween('created_at', [$from.' 00:00:00', $to.' 23:59:59']);
@@ -64,12 +64,29 @@ class ReportController extends Controller
         // })
         // ->orderBy('orders_count', 'desc')
         // ->paginate(config('default_pagination'))->withQueryString();
-        
-        if($restaurant_id=="all" && $zone_id=="all"){
-            $foods = DB::select("SELECT order_details.* , orders.* , SUM(order_details.quantity) as total_qty FROM order_details , orders  WHERE order_details.order_id=orders.id and 
-            DATE(order_details.created_at) >= ? and DATE(order_details.created_at) <= ? and orders.zone_id=15 and orders.order_status= ? group by order_details.food_id , order_details.price",[  $from , $to , $status]);
-            
-        }else if($restaurant_id!="all" && $zone_id=="all"){
+
+        if ($restaurant_id == "all" && $zone_id == "all") {
+            // $foods = DB::select("SELECT order_details.* , orders.* , SUM(order_details.quantity) as total_qty FROM order_details , orders  WHERE order_details.order_id=orders.id and 
+            // DATE(order_details.created_at) >= ? and DATE(order_details.created_at) <= ? and orders.zone_id=15 and orders.order_status= ? group by order_details.food_id , order_details.price",[  $from , $to , $status]);
+
+            $foods = DB::select(
+                "SELECT 
+                    order_details.*,
+                    orders.*,
+                    SUM(order_details.quantity) AS total_qty
+                FROM 
+                    order_details
+                JOIN 
+                    orders ON order_details.order_id = orders.id
+                WHERE 
+                    DATE(order_details.created_at) BETWEEN '2024-11-01' AND '2024-11-01'
+                    AND orders.zone_id = 15
+                    AND orders.order_status = 'delivered'
+                GROUP BY 
+                    order_details.food_id, 
+                    order_details.price;"
+            );
+        } else if ($restaurant_id != "all" && $zone_id == "all") {
             $foods = DB::select("Select f.* , s.* , r.restaurant_name , r.zone_name from food f 
             RIGHT JOIN (Select food_id , SUM(quantity) as order_x_count from order_details 
             where order_id IN ( Select id from orders where 
@@ -77,10 +94,9 @@ class ReportController extends Controller
             GROUP by food_id) s on f.id = s.food_id 
             LEFT JOIN (Select restaurants.id , restaurants.name as restaurant_name , zones.name as zone_name 
             from restaurants , zones 
-            where restaurants.zone_id=zones.id) r on f.restaurant_id = r.id",[ $restaurant_id , $status , $from , $to]);
-            
-        }else if($restaurant_id=="all" && $zone_id!="all"){
-            
+            where restaurants.zone_id=zones.id) r on f.restaurant_id = r.id", [$restaurant_id, $status, $from, $to]);
+        } else if ($restaurant_id == "all" && $zone_id != "all") {
+
             $foods = DB::select("Select f.* , s.* , r.restaurant_name , r.zone_name from food f 
             RIGHT JOIN (Select food_id , SUM(quantity) as order_x_count from order_details 
             where order_id IN ( Select id from orders where 
@@ -88,11 +104,9 @@ class ReportController extends Controller
             GROUP by food_id) s on f.id = s.food_id 
             LEFT JOIN (Select restaurants.id , restaurants.name as restaurant_name , zones.name as zone_name 
             from restaurants , zones 
-            where restaurants.zone_id=zones.id) r on f.restaurant_id = r.id",[$zone_id  , $status , $from , $to]);
-            
-            
-        }else if($restaurant_id!="all" && $zone_id!="all"){
-            
+            where restaurants.zone_id=zones.id) r on f.restaurant_id = r.id", [$zone_id, $status, $from, $to]);
+        } else if ($restaurant_id != "all" && $zone_id != "all") {
+
             $foods = DB::select("Select f.* , s.* , r.restaurant_name , r.zone_name from food f 
             RIGHT JOIN (Select food_id , SUM(quantity) as order_x_count from order_details 
             where order_id IN ( Select id from orders where 
@@ -100,10 +114,9 @@ class ReportController extends Controller
             GROUP by food_id) s on f.id = s.food_id 
             LEFT JOIN (Select restaurants.id , restaurants.name as restaurant_name , zones.name as zone_name 
             from restaurants , zones 
-            where restaurants.zone_id=zones.id) r on f.restaurant_id = r.id",[$zone_id , $restaurant_id , $status , $from , $to]);
-            
+            where restaurants.zone_id=zones.id) r on f.restaurant_id = r.id", [$zone_id, $restaurant_id, $status, $from, $to]);
         }
-        
+
 
         // echo $from;
         // echo $to;
@@ -126,42 +139,44 @@ class ReportController extends Controller
     {
         session()->put('from_date', date('Y-m-d', strtotime($request['from'])));
         session()->put('to_date', date('Y-m-d', strtotime($request['to'])));
-        if(!empty($request['status'])){
+        if (!empty($request['status'])) {
             session()->put('my_report_status', $request['status']);
         }
         return back();
     }
 
-    public function food_search(Request $request){
+    public function food_search(Request $request)
+    {
         $key = explode(' ', $request['search']);
 
         $from = session('from_date');
         $to = session('to_date');
 
-        $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id)?auth('admin')->user()->zone_id:'all');
+        $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
         $restaurant_id = $request->query('restaurant_id', 'all');
-        $zone = is_numeric($zone_id)?Zone::findOrFail($zone_id):null;
-        $restaurant = is_numeric($restaurant_id)?Restaurant::findOrFail($restaurant_id):null;
+        $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
+        $restaurant = is_numeric($restaurant_id) ? Restaurant::findOrFail($restaurant_id) : null;
         $foods = \App\Models\Food::withoutGlobalScope(RestaurantScope::class)->withCount([
-            'orders as order_count' => function($query)use($from, $to) {
+            'orders as order_count' => function ($query) use ($from, $to) {
                 $query->whereBetween('created_at', [$from, $to]);
             },
         ])
-        ->when(isset($zone), function($query)use($zone){
-            return $query->whereIn('restaurant_id', $zone->restaurants->pluck('id'));
-        })
-        ->when(isset($restaurant), function($query)use($restaurant){
-            return $query->where('restaurant_id', $restaurant->id);
-        })
-        ->where(function ($q) use ($key) {
-            foreach ($key as $value) {
-                $q->orWhere('name', 'like', "%{$value}%");
-            }
-        })
-        ->limit(25)->get();
+            ->when(isset($zone), function ($query) use ($zone) {
+                return $query->whereIn('restaurant_id', $zone->restaurants->pluck('id'));
+            })
+            ->when(isset($restaurant), function ($query) use ($restaurant) {
+                return $query->where('restaurant_id', $restaurant->id);
+            })
+            ->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere('name', 'like', "%{$value}%");
+                }
+            })
+            ->limit(25)->get();
 
-        return response()->json(['count'=>count($foods),
-            'view'=>view('admin-views.report.partials._food_table',compact('foods'))->render()
+        return response()->json([
+            'count' => count($foods),
+            'view' => view('admin-views.report.partials._food_table', compact('foods'))->render()
         ]);
     }
 }
