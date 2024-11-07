@@ -1,7 +1,4 @@
-<?php
-    print_r(json_encode($foods));
-    die();
-?>
+
 @extends('layouts.admin.app')
 
 @section('title',__('messages.food_wise_report'))
@@ -157,8 +154,8 @@
                             <td>{{$row->food_id}}</td>
                             <td><?php echo $row->food_details['name'];?></td>
                             <td></td>
-                            <td><?php echo isset($row->quantity) ? $row->quantity : 'N/A'; ?></td>
-                            <td>Rs. <?php echo isset($row->price) ? $row->price : 'N/A'; ?></td>
+                            <td>{{$row->quantity}}</td>
+                            <td>Rs. {{$row->price}}</td>
                             </tr>
                     @endforeach
                     </tbody>
