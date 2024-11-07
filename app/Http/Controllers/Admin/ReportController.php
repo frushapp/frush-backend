@@ -69,7 +69,7 @@ class ReportController extends Controller
             $foods = DB::select("
             SELECT 
                 order_details.food_id,
-                order_details.food_details
+                order_details.food_details,
                 order_details.variation,
                 order_details.add_ons,
                 order_details.price,
