@@ -68,7 +68,7 @@ class ReportController extends Controller
         if($restaurant_id=="all" && $zone_id=="all"){
             $foods = DB::select("Select f.* , s.* , r.restaurant_name , r.zone_name from food f 
             RIGHT JOIN (Select food_id , SUM(quantity) as order_x_count from order_details 
-            where order_id IN ( Select id from orders where  order_status = ? and created_at >= ? and created_at <= ? ) 
+            where order_id IN ( Select id from orders where  order_status = ? and DATE(created_at) >= ? and DATE(created_at) <= ? ) 
             GROUP by food_id) s on f.id = s.food_id 
             LEFT JOIN (Select restaurants.id , restaurants.name as restaurant_name , zones.name as zone_name 
             from restaurants , zones 
@@ -78,7 +78,7 @@ class ReportController extends Controller
             $foods = DB::select("Select f.* , s.* , r.restaurant_name , r.zone_name from food f 
             RIGHT JOIN (Select food_id , SUM(quantity) as order_x_count from order_details 
             where order_id IN ( Select id from orders where 
-            restaurant_id = ? and order_status = ? and created_at >= ? and created_at <= ? ) 
+            restaurant_id = ? and order_status = ? and DATE(created_at) >= ? and DATE(created_at) <= ? ) 
             GROUP by food_id) s on f.id = s.food_id 
             LEFT JOIN (Select restaurants.id , restaurants.name as restaurant_name , zones.name as zone_name 
             from restaurants , zones 
@@ -89,7 +89,7 @@ class ReportController extends Controller
             $foods = DB::select("Select f.* , s.* , r.restaurant_name , r.zone_name from food f 
             RIGHT JOIN (Select food_id , SUM(quantity) as order_x_count from order_details 
             where order_id IN ( Select id from orders where 
-            zone_id = ? and  order_status = ? and created_at >= ? and created_at <= ? ) 
+            zone_id = ? and  order_status = ? and DATE(created_at) >= ? and DATE(created_at) <= ? ) 
             GROUP by food_id) s on f.id = s.food_id 
             LEFT JOIN (Select restaurants.id , restaurants.name as restaurant_name , zones.name as zone_name 
             from restaurants , zones 
@@ -101,7 +101,7 @@ class ReportController extends Controller
             $foods = DB::select("Select f.* , s.* , r.restaurant_name , r.zone_name from food f 
             RIGHT JOIN (Select food_id , SUM(quantity) as order_x_count from order_details 
             where order_id IN ( Select id from orders where 
-            zone_id = ? and restaurant_id = ? and order_status = ? and created_at >= ? and created_at <= ? ) 
+            zone_id = ? and restaurant_id = ? and order_status = ? and DATE(created_at) >= ? and DATE(created_at) <= ? ) 
             GROUP by food_id) s on f.id = s.food_id 
             LEFT JOIN (Select restaurants.id , restaurants.name as restaurant_name , zones.name as zone_name 
             from restaurants , zones 
