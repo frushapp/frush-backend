@@ -89,7 +89,7 @@ class ReportController extends Controller
             GROUP BY 
                 order_details.food_id, 
                 order_details.price,
-                order_details.total_add_on_price,
+                order_details.total_add_on_price;
             ", [$from , $to , $status]);
 
             
