@@ -303,6 +303,8 @@
                         <th class="table-column-pl-0">{{__('messages.order')}}</th>
                         <th>{{__('messages.date')}}</th>
                         <th>{{__('messages.customer')}}</th>
+                        <th>Driver</th>
+                        <th>Address</th>
                         <th>{{__('messages.restaurant')}}</th>
                         <th>{{__('messages.payment')}} {{__('messages.status')}}</th>
                         <th>{{__('messages.total')}}</th>
@@ -331,6 +333,8 @@
                                     <label class="badge badge-danger">{{__('messages.invalid')}} {{__('messages.customer')}} {{__('messages.data')}}</label>
                                 @endif
                             </td>
+                            <td></td>
+                            <td>{{$order->delivery_address}}</td>
                             <td>
                                 <label class="badge badge-soft-primary">{{$order->restaurant?$order->restaurant->name:'Restaurant deleted!'}}</label>
                             </td>
