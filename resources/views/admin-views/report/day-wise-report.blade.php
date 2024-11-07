@@ -87,6 +87,7 @@
                     $restaurant_earned=$order_transactions->sum('restaurant_amount');
                     $deliveryman_earned=$order_transactions->sum('delivery_charge');
                     $total_sell=$order_transactions->sum('order_amount');
+                    $online_sell=$order_transactions->where("received_by","admin")->sum('order_amount');
                 @endphp
                 <!-- Card -->
                     <div class="card card-sm">
@@ -182,6 +183,33 @@
                                             <h4 class="mb-1">{{__('messages.total_sell')}}</h4>
                                             <span class="font-size-sm text-dark">
                                             {{\App\CentralLogics\Helpers::format_currency($total_sell)}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <!-- End Media -->
+                                </div>
+                            </div>
+                            <!-- End Row -->
+                        </div>
+                    </div>
+                    <!-- End Card -->
+                </div>
+                <!--total sell end-->
+                <!--Total sell-->
+                <div class="col-sm-6 col-lg-3 mb-3">
+                <!-- Card -->
+                    <div class="card card-sm">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <!-- Media -->
+                                    <div class="media">
+                                        <i class="tio-money nav-icon"></i>
+
+                                        <div class="media-body">
+                                            <h4 class="mb-1">Online Sale</h4>
+                                            <span class="font-size-sm text-dark">
+                                            {{\App\CentralLogics\Helpers::format_currency($online_sell)}}
                                             </span>
                                         </div>
                                     </div>

@@ -102,7 +102,7 @@ class OrderLogic
                 'received_by'=> $received_by?$received_by:'admin',
                 'zone_id'=>$order->zone_id,
                 'status'=> $status,
-                'created_at' => now(),
+                'created_at' => $order->created_at,
                 'updated_at' => now()
             ]);
             $adminWallet = AdminWallet::firstOrNew(
