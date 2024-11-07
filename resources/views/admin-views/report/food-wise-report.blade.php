@@ -178,7 +178,7 @@
                                 <?php
                                     if(count(json_decode($row->add_ons)) > 0){
                                         foreach(json_decode($row->add_ons) as $addon){
-                                            echo $addon->name + "-" + $addon->quantity;
+                                            echo $addon->name . "-" . $addon->quantity;
                                         }
                                     }
                                 ?>
