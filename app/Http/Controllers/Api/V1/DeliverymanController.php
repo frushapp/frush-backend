@@ -423,20 +423,20 @@ class DeliverymanController extends Controller
             return $query->whereDate("created_at", "=", $request['from_date']);
         })
         ->where('delivery_man_id',  $dm['id'])
-        ->sum('delivery_charge');
+        ->sum('order_amount');
         $totalDeliveryChargeOffline = Order::where('order_status', 'delivered')
         ->where('payment_method', 'cash_on_delivery')
         ->when($request['from_date'], function ($query) use ($request) {
             return $query->whereDate("created_at", "=", $request['from_date']);
         })
         ->where('delivery_man_id',  $dm['id'])
-        ->sum('delivery_charge');
+        ->sum('order_amount');
         $totalDeliveryCharge = Order::where('order_status', 'delivered')
         ->where('delivery_man_id',  $dm['id']) 
         ->when($request['from_date'], function ($query) use ($request) {
             return $query->whereDate("created_at", "=", $request['from_date']);
         })       
-        ->sum('delivery_charge');
+        ->sum('order_amount');
 
         $paginator = Order::with(['customer', 'restaurant'])
         ->where(['delivery_man_id' => $dm['id']])
