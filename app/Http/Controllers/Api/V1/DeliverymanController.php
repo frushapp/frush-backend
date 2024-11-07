@@ -415,22 +415,35 @@ class DeliverymanController extends Controller
 
         $dm = DeliveryMan::where(['auth_token' => $request['token']])->first();
 
+        $date = empty($request['from_date']) ? date('Y-m-d') : $request['from_date'];
 
         $totalDeliveryChargeOnline = Order::where('order_status', 'delivered')
         ->where('payment_method', '!=', 'cash_on_delivery')
+        ->when($request['from_date'], function ($query) use ($request) {
+            return $query->whereDate("created_at", "=", $request['from_date']);
+        })
         ->where('delivery_man_id',  $dm['id'])
         ->sum('delivery_charge');
         $totalDeliveryChargeOffline = Order::where('order_status', 'delivered')
         ->where('payment_method', 'cash_on_delivery')
+        ->when($request['from_date'], function ($query) use ($request) {
+            return $query->whereDate("created_at", "=", $request['from_date']);
+        })
         ->where('delivery_man_id',  $dm['id'])
         ->sum('delivery_charge');
         $totalDeliveryCharge = Order::where('order_status', 'delivered')
-        ->where('delivery_man_id',  $dm['id'])        
+        ->where('delivery_man_id',  $dm['id']) 
+        ->when($request['from_date'], function ($query) use ($request) {
+            return $query->whereDate("created_at", "=", $request['from_date']);
+        })       
         ->sum('delivery_charge');
 
         $paginator = Order::with(['customer', 'restaurant'])
         ->where(['delivery_man_id' => $dm['id']])
-        ->whereDate("created_at" , "=" ,$request['from_date'])
+        // ->whereDate("created_at" , "=" ,$request['from_date'])
+        ->when($request['from_date'], function ($query) use ($request) {
+            return $query->whereDate("created_at", "=", $request['from_date']);
+        })
         ->whereIn('order_status', ['delivered','canceled','refund_requested','refunded','failed'])
         ->orderBy('schedule_at', 'desc')
         ->Notpos()
