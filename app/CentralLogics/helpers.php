@@ -612,6 +612,7 @@ class Helpers
         foreach ($data as $item) {
             $storage[]=[
                 'id'=>$item['id'],
+                'status'=>$item['status'],
                 'name'=>$item['f_name'].' '.$item['l_name'],
                 'image'=>$item['image'],
                 'lat'=>$item->last_location?$item->last_location->latitude:false,
