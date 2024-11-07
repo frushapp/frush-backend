@@ -138,7 +138,7 @@
                         <th>{{__('messages.#')}}</th>
                         <th style="width: 20%">{{__('messages.name')}}</th>
                         <th style="width: 15%">{{__('messages.restaurant')}}</th>
-                        <th>{{__('messages.zone')}}</th>
+                        <!-- <th>{{__('messages.zone')}}</th> -->
                         <th>{{__('messages.order')}} {{__('messages.count')}}</th>
                         <th>Price</th>
                         <th>Total Price</th>
@@ -147,19 +147,19 @@
 
                     <tbody id="set-rows">
                     
-                    {{print_r($foods)}}
-                    {{die();}}
+                    <!-- {{print_r($foods)}}
+                    {{die();}} -->
 
 
                     @foreach($foods as $row)
                         <tr>
-                            <td>{{$row->id}}</td>
-                            <td>{{$row->name}}</td>
-                            <td>{{$row->restaurant_name}}</td>
-                            <td>{{$row->zone_name}}</td>
-                            <td>{{$row->order_x_count}}</td>
+                            <td>{{$row->food_id}}</td>
+                            <td>{{$row->food_details->name}}</td>
+                            <td>{{$row->food_details->restaurant_name}}</td>
+                            <!-- <td>{{$row->zone_name}}</td> -->
+                            <td>{{$row->quantity}}</td>
                             <td>Rs. {{$row->price}}</td>
-                            <td>Rs. {{$row->price*$row->order_x_count}}</td>
+                            <td>Rs. {{$row->price*$row->quantity}}</td>
                         </tr>
                     @endforeach
                     </tbody>
