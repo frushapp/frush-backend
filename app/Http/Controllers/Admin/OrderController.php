@@ -1003,7 +1003,7 @@ class OrderController extends Controller
                 $order->delivery_charge = 0;
             }
         }
-        $total_order_ammount = $total_price + $total_tax_amount + $order->delivery_charge;
+        $total_order_ammount = $total_price + $total_tax_amount + $order->delivery_charge + + $order->packaging_fees;
         $adjustment = $order->order_amount - $total_order_ammount;
 
         $order->coupon_discount_amount = $coupon_discount_amount;
