@@ -66,30 +66,31 @@ class ReportController extends Controller
         // ->paginate(config('default_pagination'))->withQueryString();
 
         if ($restaurant_id == "all" && $zone_id == "all") {
-            // $foods = DB::select("SELECT order_details.* , orders.* , SUM(order_details.quantity) as total_qty FROM order_details , orders  WHERE order_details.order_id=orders.id and 
-            // DATE(order_details.created_at) >= ? and DATE(order_details.created_at) <= ? and orders.zone_id=15 and orders.order_status= ? group by order_details.food_id , order_details.price",[  $from , $to , $status]);
+            $foods = DB::select("
+            SELECT 
+                order_details.food_id,
+                order_details.food_details
+                order_details.variation,
+                order_details.add_ons,
+                order_details.price,
+                SUM(order_details.quantity) AS total_qty,
+                MAX(orders.zone_id) AS zone_id,
+                MAX(orders.order_status) AS order_status
+            FROM 
+                order_details
+            JOIN 
+                orders ON order_details.order_id = orders.id
+            WHERE 
+                DATE(order_details.created_at) >= ? 
+                AND DATE(order_details.created_at) <= ? 
+                AND orders.zone_id = 15 
+                AND orders.order_status = ?
+            GROUP BY 
+                order_details.food_id, 
+                order_details.price;
+            ", [$from , $to , $status]);
 
-            $foods = DB::select(
-                "SELECT 
-                    ANY_VALUE(order_details.id) AS id,
-                    ANY_VALUE(order_details.order_id) AS order_id,
-                    order_details.food_id,
-                    ANY_VALUE(order_details.price) AS price,
-                    order_details.*,
-                    orders.*,
-                    SUM(order_details.quantity) AS total_qty
-                FROM 
-                    order_details
-                JOIN 
-                    orders ON order_details.order_id = orders.id
-                WHERE 
-                    DATE(order_details.created_at) BETWEEN '2024-11-01' AND '2024-11-01'
-                    AND orders.zone_id = 15
-                    AND orders.order_status = 'delivered'
-                GROUP BY 
-                    order_details.food_id, 
-                    order_details.price;"
-            );
+            
         } else if ($restaurant_id != "all" && $zone_id == "all") {
             $foods = DB::select("Select f.* , s.* , r.restaurant_name , r.zone_name from food f 
             RIGHT JOIN (Select food_id , SUM(quantity) as order_x_count from order_details 
