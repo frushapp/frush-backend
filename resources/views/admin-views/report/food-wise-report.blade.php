@@ -168,7 +168,9 @@
                             </td>
                             <td>
                                 <?php 
-                                    echo json_decode($row->variation)[0]['type'];
+                                    if($row->variation){
+                                        echo json_decode($row->variation)[0]['type'];
+                                    }
                                 ?>
                             </td>
 
