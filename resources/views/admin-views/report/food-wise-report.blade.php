@@ -137,13 +137,13 @@
                     <thead class="thead-light">
                     <tr>
                         <th>#</th>
-                        <th>Qty</th>
-                        <th>Price</th>
-                        <th>Total Price</th>
+                        <th>Add Ons</th>
                         <th style="width: 20%">Name</th>
                         <th style="width: 20%">Restaurant Name</th>
-                        <th>Variant Name</th>
-                        <th>Add Ons</th>
+                        <th>Variation</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Total Price</th>
 
                     </tr>
                     </thead>
@@ -154,14 +154,10 @@
 
                         <tr>
                             <td><?php echo $row->food_id; ?></td>
-                            <td><?php echo $row->total_qty; ?></td>
-                            <td>Rs. <?php echo $row->price; ?></td>
                             <td>
-                                <?php
+                                <?php 
                                     if(count(json_decode($row->add_ons)) > 0){
-                                        echo ($row->price*$row->total_qty) +  $row->total_add_on_price;
-                                    }else{
-                                        echo $row->price*$row->total_qty;
+                                        echo "ADDONS";
                                     }
                                 ?>
                             </td>
@@ -177,7 +173,6 @@
                             </td>
                             <td>
                                 <?php 
-                                    // print_r(json_decode($row->variation));
                                     if(count(json_decode($row->variation)) > 0){
                                         echo json_decode($row->variation)[0]->type;
                                     }
@@ -191,14 +186,21 @@
                                     }
                                 ?>
                             </td>
+                            <td>Rs. <?php echo $row->price; ?></td>
+                            <td><?php echo $row->total_qty; ?></td>
                             <td>
-                                <?php 
-                                    // print_r(json_decode($row->variation));
+                                <?php
                                     if(count(json_decode($row->add_ons)) > 0){
-                                        echo "ADDONS";
+                                        echo ($row->price*$row->total_qty) +  $row->total_add_on_price;
+                                    }else{
+                                        echo $row->price*$row->total_qty;
                                     }
                                 ?>
                             </td>
+                            
+                            
+                            
+                            
 
                         </tr>
 
