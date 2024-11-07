@@ -153,9 +153,9 @@
                             <td>{{$row->food_id}}</td>
                             <td><?php echo $row->food_details['name'];?></td>
                             <td></td>
-                            <td><?php echo $row->quantity;?></td>
-                            <td>Rs. <?php echo $row->price;?></td>
-                        </tr>
+                            <td><?php echo isset($row->quantity) ? $row->quantity : 'N/A'; ?></td>
+                            <td>Rs. <?php echo isset($row->price) ? $row->price : 'N/A'; ?></td>
+                            </tr>
                     @endforeach
                     </tbody>
                 </table>
