@@ -149,6 +149,9 @@
 
                         <tr>
                             <td><?php echo $row->food_id; ?></td>
+                            <td></td>
+                            <td><?php echo $row->quantity; ?></td>
+                            <td><?php echo $row->price; ?></td>
                         </tr>
 
 
