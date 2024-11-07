@@ -145,8 +145,9 @@
                     </thead>
 
                     <tbody id="set-rows">
-                
 
+                    {{print_r($foods)}}
+                    {{die();}}
 
                     @foreach($foods as $row)
                         <tr>
