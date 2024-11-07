@@ -143,6 +143,7 @@
                         <th style="width: 20%">Name</th>
                         <th style="width: 20%">Restaurant Name</th>
                         <th>Variant Name</th>
+                        <th>Add Ons</th>
 
                     </tr>
                     </thead>
@@ -171,6 +172,19 @@
                                     // print_r(json_decode($row->variation));
                                     if(count(json_decode($row->variation)) > 0){
                                         echo json_decode($row->variation)[0]->type;
+                                    }
+                                    if(count(json_decode($row->add_ons)) > 0){
+                                        foreach(json_decode($row->add_ons) as $addon){
+                                            echo $addon->name;
+                                        }
+                                    }
+                                ?>
+                            </td>
+                            <td>
+                                <?php 
+                                    // print_r(json_decode($row->variation));
+                                    if(count(json_decode($row->add_ons)) > 0){
+                                        echo "ADDONS";
                                     }
                                 ?>
                             </td>
