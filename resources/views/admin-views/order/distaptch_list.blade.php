@@ -304,7 +304,7 @@
                         <th>{{__('messages.date')}}</th>
                         <th>{{__('messages.customer')}}</th>
                         <th>Driver</th>
-                        <th style="width:30%">Address</th>
+                        <th>Address</th>
                         <th>{{__('messages.restaurant')}}</th>
                         <th>{{__('messages.payment')}} {{__('messages.status')}}</th>
                         <th>{{__('messages.total')}}</th>
