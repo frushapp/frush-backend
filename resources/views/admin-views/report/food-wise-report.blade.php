@@ -150,6 +150,7 @@
                     @foreach($foods as $row)
                         <tr>
                             {{print_r($row->quantity)}}
+                            {{print_r($row->price)}}
 
                             <td>{{$row->food_id}}</td>
                             <td><?php echo $row->food_details['name'];?></td>
