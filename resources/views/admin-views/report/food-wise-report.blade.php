@@ -169,7 +169,7 @@
                             <td>
                                 <?php 
                                     if($row->variation){
-                                        echo json_decode($row->variation)[0]['type'];
+                                        echo json_decode($row->variation)[0]->type;
                                     }
                                 ?>
                             </td>
