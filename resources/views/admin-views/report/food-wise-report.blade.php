@@ -140,7 +140,6 @@
                         <th style="width: 15%">{{__('messages.restaurant')}}</th>
                         <th>{{__('messages.order')}} {{__('messages.count')}}</th>
                         <th>Price</th>
-                        <th>Total Price</th>
                     </tr>
                     </thead>
 
@@ -149,15 +148,13 @@
 
                     @foreach($foods as $row)
                         <tr>
-                            {{print_r($row->quantity)}}
-                            {{print_r($row->price)}}
+
 
                             <td>{{$row->food_id}}</td>
                             <td><?php echo $row->food_details['name'];?></td>
                             <td></td>
-                            <td><?php echo $row->quantity;?></td>
-                            <td>Rs. <?php echo $row->price;?></td>
-                            <td>Rs. <?php echo $row->quantity * $row->price;?></td>
+                            <td><?php echo $row['quantity'];?></td>
+                            <td>Rs. <?php echo $row['price'];?></td>
                         </tr>
                     @endforeach
                     </tbody>
