@@ -149,10 +149,11 @@
 
                         <tr>
                             <td><?php echo $row->food_id; ?></td>
-                            <td><?php echo $row->food_details["name"]; ?></td>
                             <td><?php echo $row->quantity; ?></td>
                             <td>Rs. <?php echo $row->price; ?></td>
                             <td>Rs. <?php echo $row->price*$row->quantity; ?></td>
+                            <td><?php echo $row->food_details; ?></td>
+
                         </tr>
 
 
