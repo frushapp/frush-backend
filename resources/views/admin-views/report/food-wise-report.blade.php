@@ -136,26 +136,25 @@
                     }'>
                     <thead class="thead-light">
                     <tr>
-                        <th>{{__('messages.#')}}</th>
-                        <th style="width: 20%">{{__('messages.name')}}</th>
-                        <th>{{__('messages.order')}} {{__('messages.count')}}</th>
+                        <th>#</th>
+                        <th style="width: 20%">Name</th>
+                        <th>Qty</th>
                         <th>Price</th>
                     </tr>
                     </thead>
 
                     <tbody id="set-rows">
 
+                    <?php foreach($foods as $row){ ?>
 
-                    @foreach($foods as $row)
                         <tr>
+                            <td><?php echo $row->food_id; ?></td>
+                        </tr>
 
 
-                            <td>{{$row->food_id}}</td>
-                            <td><?php echo $row->food_details['name'];?></td>
-                            <td>{{$row->quantity}}</td>
-                            <td>Rs. {{$row->price}}</td>
-                            </tr>
-                    @endforeach
+                    <?php }   ?>
+
+                    
                     </tbody>
                 </table>
                 <hr>
