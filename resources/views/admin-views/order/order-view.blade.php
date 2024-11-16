@@ -348,8 +348,8 @@
                                     <div class="media-body">
                                         <div class="row">
                                             <div class="col-md-6 mb-3 mb-md-0">
-                                                <strong> {{Str::limit($detail->food['name'], 20, '...')}}</strong><br>
-
+                                                <!-- <strong> {{Str::limit($detail->food['name'], 20, '...')}}</strong><br> -->
+                                                <strong> {{$detail->food['name'] }}</strong><br>
                                                 @if(count(json_decode($detail['variation'],true))>0)
                                                     <strong><u>{{__('messages.variation')}} : </u></strong>
                                                     @foreach(json_decode($detail['variation'],true)[0] as $key1 =>$variation)
