@@ -15,11 +15,11 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'storage/*'],
+    'paths' => ['api/*'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://web.tastyfood.buzz'],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 
