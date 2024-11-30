@@ -32,7 +32,7 @@ class PaymentController extends Controller
             try {
 
                 // if($payment["status"]=="Authorized" || $payment["status"]=="authorized");{
-                //     $response = $api->payment->fetch($payment_id)->capture(array('amount' => $payment['amount']));
+                $api->payment->fetch($payment_id)->capture(array('amount' => $payment['amount']));
                 // }
 
                 $order = Order::where(['id' => $order_id])->first();
