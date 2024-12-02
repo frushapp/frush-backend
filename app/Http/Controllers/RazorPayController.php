@@ -35,7 +35,7 @@ class RazorPayController extends Controller
         if (count($request->all()) && !empty($request['razorpay_payment_id'])) {
             try {
                 $response = $api->payment->fetch($request['razorpay_payment_id'])->capture(array('amount' => $payment['amount']));
-                $order = Order::where(['id' => $response->description])->first();
+                //$order = Order::where(['id' => $response->description])->first();
                 $tr_ref = $request['razorpay_payment_id'];
 
                 $order->transaction_reference = $tr_ref;
