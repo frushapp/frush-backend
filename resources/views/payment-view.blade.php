@@ -525,19 +525,19 @@
 
 
 <script>
-    function click_if_alone() {
-        let total = $('.checkout_details .click-if-alone').length;
+    // function click_if_alone() {
+    //     let total = $('.checkout_details .click-if-alone').length;
         
-        console.log(total)
+    //     console.log(total)
         
-        if (Number.parseInt(total) == 1) {
-            $('.click-if-alone')[0].click()
-            $('.checkout_details').html('<div class="text-center"><h1>{{translate('messages.Redirecting_to_the_payment_page')}}......</h1></div>');
-        }
-    }
-    @if(!Session::has('toastr::messages'))
-        click_if_alone();
-    @endif
+    //     if (Number.parseInt(total) == 1) {
+    //         $('.click-if-alone')[0].click()
+    //         $('.checkout_details').html('<div class="text-center"><h1>{{translate('messages.Redirecting_to_the_payment_page')}}......</h1></div>');
+    //     }
+    // }
+    // @if(!Session::has('toastr::messages'))
+    //     click_if_alone();
+    // @endif
 </script>
 // <script>
     // $(document).ready(function() {
