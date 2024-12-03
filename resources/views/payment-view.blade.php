@@ -539,6 +539,11 @@
     //     click_if_alone();
     // @endif
 </script>
+<script>
+    $(document).ready(function(){
+        $("#rzp-button1").click(); 
+    });
+</script>
 // <script>
     // $(document).ready(function() {
         
