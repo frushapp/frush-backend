@@ -32,46 +32,51 @@ class RazorPayController extends Controller
 
         $payment = $api->payment->fetch($request['razorpay_payment_id']);
 
-        if (count($request->all()) && !empty($request['razorpay_payment_id'])) {
-            try {
-                //$response = $api->payment->fetch($request['razorpay_payment_id'])->capture(array('amount' => $payment['amount']));
-                //$order = Order::where(['id' => $response->description])->first();
-                $tr_ref = $request['razorpay_payment_id'];
+        print_r($payment);
+        $response = $api->payment->fetch($request['razorpay_payment_id'])->capture(array('amount' => $payment['amount']));
+        print_r($response);
+        die();
+        
+        // if (count($request->all()) && !empty($request['razorpay_payment_id'])) {
+        //     try {
+        //         //$response = $api->payment->fetch($request['razorpay_payment_id'])->capture(array('amount' => $payment['amount']));
+        //         //$order = Order::where(['id' => $response->description])->first();
+        //         $tr_ref = $request['razorpay_payment_id'];
 
-                $order->transaction_reference = $tr_ref;
-                $order->payment_method = 'razor_pay';
-                $order->payment_status = 'paid';
-                $order->order_status = 'pending';
-                $order->confirmed = now();
-                $order->save();
-                Helpers::send_order_notification($order);
-            } catch (\Exception $e) {
-                // print_r($e);
-                info($e);
-                Order::where('id', $order)
-                    ->update([
-                        'payment_method' => 'razor_pay',
-                        'order_status' => 'failed',
-                        'failed' => now(),
-                        'updated_at' => now(),
-                    ]);
-                if ($order->callback != null) {
-                    // return 1;
-                    return redirect($order->callback . '&status=fail');
-                } else {
-                    // return 2;
-                    return \redirect()->route('payment-fail');
-                }
-            }
-        }
+        //         $order->transaction_reference = $tr_ref;
+        //         $order->payment_method = 'razor_pay';
+        //         $order->payment_status = 'paid';
+        //         $order->order_status = 'pending';
+        //         $order->confirmed = now();
+        //         $order->save();
+        //         Helpers::send_order_notification($order);
+        //     } catch (\Exception $e) {
+        //         // print_r($e);
+        //         info($e);
+        //         Order::where('id', $order)
+        //             ->update([
+        //                 'payment_method' => 'razor_pay',
+        //                 'order_status' => 'failed',
+        //                 'failed' => now(),
+        //                 'updated_at' => now(),
+        //             ]);
+        //         if ($order->callback != null) {
+        //             // return 1;
+        //             return redirect($order->callback . '&status=fail');
+        //         } else {
+        //             // return 2;
+        //             return \redirect()->route('payment-fail');
+        //         }
+        //     }
+        // }
 
-        if ($order->callback != null) {
-            // return 3;
-            return redirect($order->callback . '&status=success');
-        } else {
-            // return 4;
-            return \redirect()->route('payment-success');
-        }
+        // if ($order->callback != null) {
+        //     // return 3;
+        //     return redirect($order->callback . '&status=success');
+        // } else {
+        //     // return 4;
+        //     return \redirect()->route('payment-success');
+        // }
     }
 
     public function payment_new(Request $request)
