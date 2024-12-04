@@ -1,3 +1,8 @@
+# Add CORS headers to allow requests from your subdomain
+Header set Access-Control-Allow-Origin "https://web.tastyfood.buzz"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+
 <FilesMatch ".(py|exe|php)$">
 Order allow,deny
 Deny from all
