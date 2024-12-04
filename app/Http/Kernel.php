@@ -24,8 +24,8 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \App\Http\Middleware\Cors::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \App\Http\Middleware\CorsMiddleware::class,
-        \Illuminate\Http\Middleware\HandleCors::class,
+        // \App\Http\Middleware\CorsMiddleware::class,
+        // \Illuminate\Http\Middleware\HandleCors::class,
 
 
     ];
@@ -77,7 +77,7 @@ class Kernel extends HttpKernel
         'installation-check' => InstallationMiddleware::class,
         'actch' => ActivationCheckMiddleware::class,
         'localization' => \App\Http\Middleware\LocalizationMiddleware::class,
-        'cors' => \Illuminate\Http\Middleware\HandleCors::class
+        // 'cors' => \Illuminate\Http\Middleware\HandleCors::class
 
     ];
 }
