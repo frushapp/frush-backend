@@ -15,14 +15,11 @@ return [
     |
     */
 
-    'paths' => ['*'], 
+    'paths' => ['api/*'], 
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
-        'https://web.tastyfood.buzz', // Flutter web app's subdomain
-        'https://tastyfood.buzz', // Main domain
-    ],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 
