@@ -26,7 +26,9 @@ class Order extends Model
         'details_count' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'original_delivery_charge'=>'float'
+        'original_delivery_charge'=>'float',
+        'delivery_gst' => 'float',
+        'platform_fees' => 'float'
     ];
 
     public function setDeliveryChargeAttribute($value)
