@@ -64,6 +64,13 @@ class VendorController extends Controller
         $restaurant->save();
         return response()->json(['message' => $restaurant->active?trans('messages.restaurant_opened'):trans('messages.restaurant_temporarily_closed')], 200);
     }
+    public function active_cod_available(Request $request)
+    {
+        $restaurant = $request->vendor->restaurants[0];
+        $restaurant->cod_available = $restaurant->cod_available?0:1;
+        $restaurant->save();
+        return response()->json(['message' => $restaurant->cod_available?trans('messages.restaurant_opened'):trans('messages.restaurant_temporarily_closed')], 200);
+    }
 
     public function get_earning_data(Request $request)
     {
