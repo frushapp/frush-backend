@@ -94,6 +94,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
         Route::get('notifications', 'VendorController@get_notifications');
         Route::get('profile', 'VendorController@get_profile');
         Route::post('update-active-status', 'VendorController@active_status');
+        Route::post('update-active-cod-available', 'VendorController@active_cod_available');
         Route::get('earning-info', 'VendorController@get_earning_data');
         Route::put('update-profile', 'VendorController@update_profile');
         Route::get('current-orders', 'VendorController@get_current_orders');
