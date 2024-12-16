@@ -34,6 +34,7 @@ class Restaurant extends Model
         'gst'=>'string',
         'veg'=>'integer',
         'non_veg'=>'integer',
+        'cod_available' => 'integer',
 
     ];
 
