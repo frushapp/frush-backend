@@ -387,6 +387,14 @@ class OrderController extends Controller
             $order->restaurant_discount_amount= round($restaurant_discount_amount, config('round_up_to_digit'));
             $order->total_tax_amount= round($total_tax_amount, config('round_up_to_digit'));
             $order->order_amount = $order_amount;
+
+            if(!empty($request["delivery_gst"])){
+                $order->order_amount = $request["delivery_gst"];
+            }
+            if(!empty($request["platform_fees"])){
+                $order->order_amount = $request["platform_fees"];
+            }
+            
             $order->save();
             foreach ($order_details as $key => $item) {
                 $order_details[$key]['order_id'] = $order->id;
