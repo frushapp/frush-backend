@@ -195,10 +195,10 @@ class VendorController extends Controller
         $vendor->phone = $request->phone;
 
         if($request->delivery_gst){
-            $vendor->delivery_gst = $request->delivery_gst
+            $vendor->delivery_gst = $request->delivery_gst;
         }
         if($request->platform_fees){
-            $vendor->platform_fees = $request->platform_fees
+            $vendor->platform_fees = $request->platform_fees;
         }
         
         $vendor->delivery_slab = json_encode($array);
