@@ -473,6 +473,8 @@
                         $total_price = $product_price + $total_addon_price - $restaurant_discount_amount - $coupon_discount_amount;
                     
                         $total_tax_amount= $order['total_tax_amount'];
+                        $delivery_gst= $order['delivery_gst'];
+                        $platform_fees= $order['platform_fees'];
 
                         if($editing)
                         {
@@ -556,7 +558,7 @@
                                     <hr>
 
                                     <dt class="col-sm-6">{{__('messages.total')}}:</dt>
-                                    <dd class="col-sm-6">{{\App\CentralLogics\Helpers::format_currency($product_price+$del_c+$total_tax_amount+$packaging_fee+$total_addon_price-$coupon_discount_amount - $restaurant_discount_amount)}}</dd>
+                                    <dd class="col-sm-6">{{\App\CentralLogics\Helpers::format_currency($product_price+ $platform_fees + $delivery_gst + $del_c+$total_tax_amount+$packaging_fee+$total_addon_price-$coupon_discount_amount - $restaurant_discount_amount)}}</dd>
                                 </dl>
                                 <!-- End Row -->
                             </div>
