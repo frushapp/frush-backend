@@ -372,6 +372,8 @@ class OrderController extends Controller
 
         $order_amount = round($total_price + $total_tax_amount + $order->delivery_charge + $order->packaging_fees , config('round_up_to_digit'));
 
+        
+        
         if($request->payment_method == 'wallet' && $request->user()->wallet_balance < $order_amount)
         {
             return response()->json([
@@ -386,14 +388,17 @@ class OrderController extends Controller
 
             $order->restaurant_discount_amount= round($restaurant_discount_amount, config('round_up_to_digit'));
             $order->total_tax_amount= round($total_tax_amount, config('round_up_to_digit'));
-            $order->order_amount = $order_amount;
-
             if(!empty($request["delivery_gst"])){
+                $order_amount = $order_amount + $request["delivery_gst"];
                 $order->order_amount = $request["delivery_gst"];
             }
             if(!empty($request["platform_fees"])){
+                $order_amount = $order_amount + $request["platform_fees"];
                 $order->order_amount = $request["platform_fees"];
             }
+            $order->order_amount = $order_amount;
+
+            
             
             $order->save();
             foreach ($order_details as $key => $item) {
