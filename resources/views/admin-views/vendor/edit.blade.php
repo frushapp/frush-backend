@@ -248,6 +248,23 @@
                                         value="{{ $restaurant->phone }}" required>
                                 </div>
                             </div>
+                            <div class="col-md-4 col-12">
+                                <div class="form-group">
+                                    <label class="input-label"
+                                        for="exampleFormControlInput1">Delivery Gst</label>
+                                    <input type="text" name="delivery_gst" class="form-control" placeholder="18"
+                                        value="{{ $restaurant->delivery_gst }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12">
+                                <div class="form-group">
+                                    <label class="input-label"
+                                        for="exampleFormControlInput1">Platform Fees</label>
+                                    <input type="text" name="platform_fees" class="form-control" placeholder="10"
+                                        value="{{ $restaurant->platform_fees }}" required>
+                                </div>
+                            </div>
+                            
                         </div>
                         <br>
                         
