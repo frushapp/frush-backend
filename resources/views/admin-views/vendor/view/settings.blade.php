@@ -141,6 +141,19 @@
                                         </label>
                                     </div>
                                 </div>
+
+                                <div class="col-xl-4 col-md-4 col-sm-6 col-6">
+                                    <div class="form-group">
+                                        <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="free_delivery">
+                                        <span class="pr-2">Cod Available:</span> 
+                                            <input type="checkbox" class="toggle-switch-input" onclick="location.href='{{route('admin.vendor.toggle-settings',[$restaurant->id,$restaurant->cod_available?0:1, 'cod_available'])}}'" id="free_delivery" {{$restaurant->free_delivery?'checked':''}}>
+                                            <span class="toggle-switch-label">
+                                                <span class="toggle-switch-indicator"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
                                 <div class="col-xl-4 col-md-4 col-sm-6 col-6">
                                     <div class="form-group">
                                         <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="take_away">
