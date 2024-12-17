@@ -228,6 +228,9 @@ class OrderController extends Controller
         }
         $order->user_id = $request->user()->id;
         $order->order_amount = $request['order_amount'];
+
+        
+        
         $order->payment_status = $request['payment_method']=='wallet'?'paid':'unpaid';
         $order->order_status = $request['payment_method']=='digital_payment'?'failed':($request->payment_method == 'wallet'?'confirm':'pending');
         $order->coupon_code = $request['coupon_code'];
@@ -390,11 +393,11 @@ class OrderController extends Controller
             $order->total_tax_amount= round($total_tax_amount, config('round_up_to_digit'));
             if(!empty($request["delivery_gst"])){
                 $order_amount = $order_amount + $request["delivery_gst"];
-                $order->order_amount = $request["delivery_gst"];
+                $order->delivery_gst = $request["delivery_gst"];
             }
             if(!empty($request["platform_fees"])){
                 $order_amount = $order_amount + $request["platform_fees"];
-                $order->order_amount = $request["platform_fees"];
+                $order->platform_fees = $request["platform_fees"];
             }
             $order->order_amount = $order_amount;
 
