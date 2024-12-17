@@ -554,6 +554,17 @@
                                     <dt class="col-sm-6">Packaging Fees:</dt>
                                     <dd class="col-sm-6">
                                         + {{\App\CentralLogics\Helpers::format_currency($packaging_fee)}}</dd>
+                                    
+                                    <dt class="col-sm-6">Delivery GST:</dt>
+                                    <dd class="col-sm-6">
+                                        + {{\App\CentralLogics\Helpers::format_currency($delivery_gst)}}</dd>
+                                    
+                                    <dt class="col-sm-6">Platform Fees:</dt>
+                                    <dd class="col-sm-6">
+                                        + {{\App\CentralLogics\Helpers::format_currency($platform_fees)}}</dd>
+
+
+
 
                                     <hr>
 
