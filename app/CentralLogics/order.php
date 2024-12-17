@@ -103,7 +103,13 @@ class OrderLogic
                 'zone_id'=>$order->zone_id,
                 'status'=> $status,
                 'created_at' => $order->created_at,
-                'updated_at' => now()
+                'updated_at' => now(),
+                
+                // Newly added parameters if they exist
+                'delivery_gst' => isset($order->delivery_gst) ? $order->delivery_gst : 0,
+                'platform_fees' => isset($order->platform_fees) ? $order->platform_fees : 0,
+
+                                     
             ]);
             $adminWallet = AdminWallet::firstOrNew(
                 ['admin_id' => Admin::where('role_id', 1)->first()->id]
