@@ -217,10 +217,10 @@ class VendorController extends Controller
         $restaurant->tax = $request->tax;
 
 
-        if($request->delivery_gst){
+        if($request->delivery_gst || $request->delivery_gst === 0){
             $restaurant->delivery_gst = $request->delivery_gst;
         }
-        if($request->platform_fees){
+        if($request->platform_fees || $request->platform_fees === 0){
             $restaurant->platform_fees = $request->platform_fees;
         }
         
