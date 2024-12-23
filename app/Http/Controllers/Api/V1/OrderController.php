@@ -392,11 +392,11 @@ class OrderController extends Controller
             $order->restaurant_discount_amount= round($restaurant_discount_amount, config('round_up_to_digit'));
             $order->total_tax_amount= round($total_tax_amount, config('round_up_to_digit'));
             if(!empty($request["delivery_gst"])){
-                $order_amount = $order_amount + $request["delivery_gst"];
+                $order_amount = $order_amount + round($request["delivery_gst"],0);
                 $order->delivery_gst = $request["delivery_gst"];
             }
             if(!empty($request["platform_fees"])){
-                $order_amount = $order_amount + $request["platform_fees"];
+                $order_amount = $order_amount + round($request["platform_fees"],0);
                 $order->platform_fees = $request["platform_fees"];
             }
             $order->order_amount = $order_amount;
