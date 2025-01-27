@@ -408,7 +408,7 @@ class OrderController extends Controller
                 $order_details[$key]['order_id'] = $order->id;
             }
             OrderDetail::insert($order_details);
-            Helpers::send_order_notification($order);
+            //Helpers::send_order_notification($order);
 
             $customer = $request->user();
             // $customer->zone_id = $restaurant->zone_id;
