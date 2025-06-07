@@ -739,7 +739,7 @@ class Helpers
         ];
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-        ])->post("http://62.72.30.137:8989/notification_tasty_food", $postdata);
+        ])->post("http://213.210.36.202:8989/notification_tasty_food", $postdata);
         
         // echo $topic;
         if ($response->successful()) {
@@ -862,7 +862,7 @@ class Helpers
         // ])->post($url, $postdata);
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-        ])->post("http://62.72.30.137:8989/notification_tasty_food", $postdata);
+        ])->post("http://213.210.36.202:8989/notification_tasty_food", $postdata);
         
         // echo $topic;
         if ($response->successful()) {
