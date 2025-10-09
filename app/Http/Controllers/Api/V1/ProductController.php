@@ -44,7 +44,7 @@ class ProductController extends Controller
         $foods = $foodQuery->paginate($limit, ['*'], 'page', $page);
 
         // Format data
-        $formattedFoods = Food::product_data_formatting($foods->items(), true, true, 'en');
+        $formattedFoods = Helpers::product_data_formatting($foods->items(), true, true, 'en');
 
         return response()->json([
             'data' => $formattedFoods,
