@@ -169,6 +169,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
     });
 
     Route::group(['prefix' => 'products'], function () {
+        Route::get('/', 'ProductController@get_all_products');
         Route::get('latest', 'ProductController@get_latest_products');
         Route::get('discounted_products', 'ProductController@get_discounted_products');
 
