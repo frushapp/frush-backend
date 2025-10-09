@@ -8,35 +8,35 @@
   ),
   'barryvdh/laravel-debugbar' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Barryvdh\\Debugbar\\ServiceProvider',
-    ),
     'aliases' => 
     array (
       'Debugbar' => 'Barryvdh\\Debugbar\\Facades\\Debugbar',
     ),
+    'providers' => 
+    array (
+      0 => 'Barryvdh\\Debugbar\\ServiceProvider',
+    ),
   ),
   'brian2694/laravel-toastr' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Brian2694\\Toastr\\ToastrServiceProvider',
-    ),
     'aliases' => 
     array (
       'Toastr' => 'Brian2694\\Toastr\\Facades\\Toastr',
     ),
+    'providers' => 
+    array (
+      0 => 'Brian2694\\Toastr\\ToastrServiceProvider',
+    ),
   ),
   'facade/ignition' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Facade\\Ignition\\IgnitionServiceProvider',
-    ),
     'aliases' => 
     array (
       'Flare' => 'Facade\\Ignition\\Facades\\Flare',
+    ),
+    'providers' => 
+    array (
+      0 => 'Facade\\Ignition\\IgnitionServiceProvider',
     ),
   ),
   'fideloper/proxy' => 
@@ -62,24 +62,24 @@
   ),
   'intervention/image' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Intervention\\Image\\ImageServiceProvider',
-    ),
     'aliases' => 
     array (
       'Image' => 'Intervention\\Image\\Facades\\Image',
     ),
+    'providers' => 
+    array (
+      0 => 'Intervention\\Image\\ImageServiceProvider',
+    ),
   ),
   'kingflamez/laravelrave' => 
   array (
-    'providers' => 
-    array (
-      0 => 'KingFlamez\\Rave\\RaveServiceProvider',
-    ),
     'aliases' => 
     array (
       'Rave' => 'KingFlamez\\Rave\\Facades\\Rave',
+    ),
+    'providers' => 
+    array (
+      0 => 'KingFlamez\\Rave\\RaveServiceProvider',
     ),
   ),
   'laravel/passport' => 
@@ -105,13 +105,13 @@
   ),
   'madnest/madzipper' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Madnest\\Madzipper\\MadzipperServiceProvider',
-    ),
     'aliases' => 
     array (
       'Madzipper' => 'Madnest\\Madzipper\\Madzipper',
+    ),
+    'providers' => 
+    array (
+      0 => 'Madnest\\Madzipper\\MadzipperServiceProvider',
     ),
   ),
   'nesbot/carbon' => 
@@ -148,13 +148,13 @@
   ),
   'unicodeveloper/laravel-paystack' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Unicodeveloper\\Paystack\\PaystackServiceProvider',
-    ),
     'aliases' => 
     array (
       'Paystack' => 'Unicodeveloper\\Paystack\\Facades\\Paystack',
+    ),
+    'providers' => 
+    array (
+      0 => 'Unicodeveloper\\Paystack\\PaystackServiceProvider',
     ),
   ),
 );

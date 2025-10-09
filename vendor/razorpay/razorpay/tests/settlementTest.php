@@ -11,9 +11,9 @@ class SettlementTest extends TestCase
      * for example : setl_IAj6iuvvTATqOM 
      */
 
-    private $settlementId =  "";
+    private $settlementId =  "setl_IAj6iuvvTATqOM";
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -74,15 +74,15 @@ class SettlementTest extends TestCase
 
         $this->assertTrue(is_array($data->toArray()));
 
-        $this->assertTrue(is_array($data['items']));
+        $this->assertArrayHasKey('items',$data);
     }
    
     /**
      * Fetch all on-demand settlements
      */
-    public function TestFetchAllOndemandSettlement()
+    public function testFetchAllOndemandSettlement()
     {
-        $data = $api->settlement->fetchAllOndemandSettlement();
+        $data = $this->api->settlement->fetchAllOndemandSettlement();
 
         $this->assertTrue(is_array($data->toArray()));
 
@@ -92,9 +92,9 @@ class SettlementTest extends TestCase
     /**
      * Fetch on-demand settlement by ID
      */
-    public function TestFetchAllOndemandSettlementById()
+    public function testFetchAllOndemandSettlementById()
     {
-        $data = $api->settlement->fetch($this->settlementId)->TestFetchAllOndemandSettlementById();
+        $data = $this->api->settlement->fetch($this->settlementId)->TestFetchAllOndemandSettlementById();
 
         $this->assertTrue(is_array($data->toArray()));
 

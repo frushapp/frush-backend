@@ -12,13 +12,13 @@ class TransferTest extends TestCase
      * pay_I7watngocuEY4P
      */
 
-    private $transferId = "";
+    private $transferId = "trf_JtBI1uAaDdKkpJ";
 
-    private $accountId = "";
+    private $accountId = "acc_HjVXbtpSCIxENR";
 
-    private $paymentId = "";
+    private $paymentId = "pay_LdarHRbodWJeXO";
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }

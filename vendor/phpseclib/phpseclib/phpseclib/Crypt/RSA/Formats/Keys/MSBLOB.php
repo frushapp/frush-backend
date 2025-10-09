@@ -9,8 +9,6 @@
  *
  * PHP version 5
  *
- * @category  Crypt
- * @package   RSA
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2015 Jim Wigginton
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
@@ -19,7 +17,6 @@
 
 namespace phpseclib3\Crypt\RSA\Formats\Keys;
 
-use ParagonIE\ConstantTime\Base64;
 use phpseclib3\Common\Functions\Strings;
 use phpseclib3\Exception\UnsupportedFormatException;
 use phpseclib3\Math\BigInteger;
@@ -27,59 +24,49 @@ use phpseclib3\Math\BigInteger;
 /**
  * Microsoft BLOB Formatted RSA Key Handler
  *
- * @package RSA
  * @author  Jim Wigginton <terrafrost@php.net>
- * @access  public
  */
 abstract class MSBLOB
 {
     /**
      * Public/Private Key Pair
      *
-     * @access private
      */
     const PRIVATEKEYBLOB = 0x7;
     /**
      * Public Key
      *
-     * @access private
      */
     const PUBLICKEYBLOB = 0x6;
     /**
      * Public Key
      *
-     * @access private
      */
     const PUBLICKEYBLOBEX = 0xA;
     /**
      * RSA public key exchange algorithm
      *
-     * @access private
      */
     const CALG_RSA_KEYX = 0x0000A400;
     /**
      * RSA public key exchange algorithm
      *
-     * @access private
      */
     const CALG_RSA_SIGN = 0x00002400;
     /**
      * Public Key
      *
-     * @access private
      */
     const RSA1 = 0x31415352;
     /**
      * Private Key
      *
-     * @access private
      */
     const RSA2 = 0x32415352;
 
     /**
      * Break a public or private key down into its constituent components
      *
-     * @access public
      * @param string $key
      * @param string $password optional
      * @return array
@@ -90,7 +77,7 @@ abstract class MSBLOB
             throw new \UnexpectedValueException('Key should be a string - not a ' . gettype($key));
         }
 
-        $key = Base64::decode($key);
+        $key = Strings::base64_decode($key);
 
         if (!is_string($key)) {
             throw new \UnexpectedValueException('Base64 decoding produced an error');
@@ -101,13 +88,11 @@ abstract class MSBLOB
 
         // PUBLICKEYSTRUC  publickeystruc
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa387453(v=vs.85).aspx
-        extract(unpack('atype/aversion/vreserved/Valgo', Strings::shift($key, 8)));
-        /**
-         * @var string $type
-         * @var string $version
-         * @var integer $reserved
-         * @var integer $algo
-         */
+        $unpacked = unpack('atype/aversion/vreserved/Valgo', Strings::shift($key, 8));
+        $type = $unpacked['type'];
+        $version = $unpacked['version'];
+        $reserved = $unpacked['reserved'];
+        $algo = $unpacked['algo'];
         switch (ord($type)) {
             case self::PUBLICKEYBLOB:
             case self::PUBLICKEYBLOBEX:
@@ -134,12 +119,10 @@ abstract class MSBLOB
         // RSAPUBKEY rsapubkey
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa387685(v=vs.85).aspx
         // could do V for pubexp but that's unsigned 32-bit whereas some PHP installs only do signed 32-bit
-        extract(unpack('Vmagic/Vbitlen/a4pubexp', Strings::shift($key, 12)));
-        /**
-         * @var integer $magic
-         * @var integer $bitlen
-         * @var string $pubexp
-         */
+        $unpacked = unpack('Vmagic/Vbitlen/a4pubexp', Strings::shift($key, 12));
+        $magic = $unpacked['magic'];
+        $bitlen = $unpacked['bitlen'];
+        $pubexp = $unpacked['pubexp'];
         switch ($magic) {
             case self::RSA2:
                 $components['isPublicKey'] = false;
@@ -187,10 +170,9 @@ abstract class MSBLOB
     /**
      * Convert a private key to the appropriate format.
      *
-     * @access public
-     * @param \phpseclib3\Math\BigInteger $n
-     * @param \phpseclib3\Math\BigInteger $e
-     * @param \phpseclib3\Math\BigInteger $d
+     * @param BigInteger $n
+     * @param BigInteger $e
+     * @param BigInteger $d
      * @param array $primes
      * @param array $exponents
      * @param array $coefficients
@@ -219,15 +201,14 @@ abstract class MSBLOB
         $key .= strrev($coefficients[2]->toBytes());
         $key .= strrev($d->toBytes());
 
-        return Base64::encode($key);
+        return Strings::base64_encode($key);
     }
 
     /**
      * Convert a public key to the appropriate format
      *
-     * @access public
-     * @param \phpseclib3\Math\BigInteger $n
-     * @param \phpseclib3\Math\BigInteger $e
+     * @param BigInteger $n
+     * @param BigInteger $e
      * @return string
      */
     public static function savePublicKey(BigInteger $n, BigInteger $e)
@@ -238,6 +219,6 @@ abstract class MSBLOB
         $key .= pack('VVa*', self::RSA1, 8 * strlen($n), $e);
         $key .= $n;
 
-        return Base64::encode($key);
+        return Strings::base64_encode($key);
     }
 }

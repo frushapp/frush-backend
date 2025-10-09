@@ -12,13 +12,15 @@ class TokenTest extends TestCase
      * token_IEcux6sQtS8eLx
      */
 
-    private $paymentId = "";
+    private $paymentId = "pay_IEczPDny6uzSnx";
 
-    private $customerId = "";
+    private $customerId = "cust_IEcn7UdBOFmaNi";
 
-    private $tokenId = "";
+    private $tokenId = "token_IEcux6sQtS8eLx";
 
-    public function setUp()
+    protected static $partnerTokenId ;
+
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -28,7 +30,7 @@ class TokenTest extends TestCase
      */
     public function testCreateRegistrationLink()
     {
-        $data = $this->api->subscription->createSubscriptionRegistration(array('customer' => array('name' => 'Gaurav Kumar','email' => 'gaurav.kumar@example.com','contact' => '9123456780'),'amount' => 0,'currency' => 'INR','type' => 'link','description' => '12 p.m. Meals','subscription_registration' => array('method' => 'nach','auth_type' => 'physical','bank_account' => array('beneficiary_name' => 'Gaurav Kumar','account_number' => '11214311215411','account_type' => 'savings','ifsc_code' => 'HDFC0001233'),'nach' => array('form_reference1' => 'Recurring Payment for Gaurav Kumar','form_reference2' => 'Method Paper NACH'),'expire_at' => 1636772800,'max_amount' => 50000),'receipt' => 'Receipt No. '.time(),'sms_notify' => 1,'email_notify' => 1,'expire_by' => 1636772800,'notes' => array('note_key 1' => 'Beam me up Scotty','note_key 2' => 'Tea. Earl Gray. Hot.')));
+        $data = $this->api->subscription->createSubscriptionRegistration(array('customer' => array('name' => 'Gaurav Kumar','email' => 'gaurav.kumar@example.com','contact' => '9123456780'),'amount' => 0,'currency' => 'INR','type' => 'link','description' => '12 p.m. Meals','subscription_registration' => array('method' => 'nach','auth_type' => 'physical','bank_account' => array('beneficiary_name' => 'Gaurav Kumar','account_number' => '11214311215411','account_type' => 'savings','ifsc_code' => 'HDFC0001233'),'nach' => array('form_reference1' => 'Recurring Payment for Gaurav Kumar','form_reference2' => 'Method Paper NACH'),'expire_at' => strtotime('+1 day'),'max_amount' => 50000),'receipt' => 'Receipt No. '.time(),'sms_notify' => 1,'email_notify' => 1,'expire_by' => strtotime('+1 day'),'notes' => array('note_key 1' => 'Beam me up Scotty','note_key 2' => 'Tea. Earl Gray. Hot.')));
 
         $this->assertTrue(is_array($data->toArray()));
 
@@ -57,6 +59,59 @@ class TokenTest extends TestCase
         $this->assertTrue(is_array($data->toArray()));
         
         $this->assertTrue(in_array('payment',$data->toArray()));
+    }
+
+    public function testCreateToken()
+    {      
+        $data = $this->api->token->create($this->requestAttribute($this->customerId));
+
+        self::$partnerTokenId = $data['id'];
+
+        $this->assertTrue(is_array($data->toArray()));
+        
+        $this->assertTrue(in_array('card',$data->toArray()));
+    }
+
+    public function testFetchToken()
+    {
+        $data = $this->api->token->fetchCardPropertiesByToken(['id'=>self::$partnerTokenId]);
+        
+        $this->assertTrue(is_array($data->toArray()));
+        
+        $this->assertTrue(in_array('card',$data->toArray()));
+    }
+
+    public function testProcessPaymentOnAlternatePAorPG()
+    {
+        $data = $this->api->token->processPaymentOnAlternatePAorPG(['id'=>self::$partnerTokenId]);
+        
+        $this->assertTrue(is_array($data->toArray())); 
+    }
+
+    public function testDeleteToken()
+    {
+        $data = $this->api->token->deleteToken(['id'=>self::$partnerTokenId]);
+        
+        $this->assertTrue(is_array($data->toArray()));  
+    }
+
+    public function requestAttribute($customerId){
+        return [
+            "customer_id" => $customerId,
+            "method" => "card",
+            "card" => [
+                "number" => "4854980604708430",
+                "cvv" => "123",
+                "expiry_month" => "12",
+                "expiry_year" => "24",
+                "name" => "Gaurav Kumar",
+            ],
+            "authentication" => [
+                "provider" => "razorpay",
+                "provider_reference_id" => "pay_123wkejnsakd"
+            ],
+            "notes" => [],
+        ];
     }
 
 }

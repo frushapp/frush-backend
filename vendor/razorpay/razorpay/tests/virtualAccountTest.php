@@ -12,13 +12,13 @@ class VirtualAccountTest extends TestCase
      * va_IEmC8SOoyGxsNn
      */
 
-    private $customerId = "";
+    private $customerId = "cust_IEm1ERQLCdRGPV";
 
-    private $paymentId = "";
+    private $paymentId = "pay_IEljgrElHGxXAC";
 
-    private $virtualAccountId = "";
+    private $virtualAccountId = "va_IEmC8SOoyGxsNn";
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -28,11 +28,11 @@ class VirtualAccountTest extends TestCase
      */
     public function testCreateVirtualAccount()
     {       
-        $data = $this->api->virtualAccount->create(array('receivers' => array('types' => array('bank_account')),'description' => 'Virtual Account created for Raftar Soft','customer_id' => $this->customerId ,'close_by' => 1681615838,'notes' => array('project_name' => 'Banking Software')));
+        $data = $this->api->virtualAccount->create(array('receivers' => array('types' => array('bank_account')),'description' => 'Virtual Account created for Raftar Soft','customer_id' => $this->customerId ,'close_by' => strtotime('+16 minutes', time()), 'notes' => array('project_name' => 'Banking Software')));
 
         $this->assertTrue(is_array($data->toArray()));
 
-        $this->assertTrue(in_array('customer',$data->toArray()));
+        $this->assertArrayHasKey('customer_id',$data->toArray());
     }
 
     /**
@@ -44,7 +44,7 @@ class VirtualAccountTest extends TestCase
 
         $this->assertTrue(is_array($data->toArray()));
 
-        $this->assertTrue(in_array('customer',$data->toArray()));
+        $this->assertArrayHasKey('customer_id',$data->toArray());
     }
 
     /**
@@ -68,7 +68,7 @@ class VirtualAccountTest extends TestCase
 
         $this->assertTrue(is_array($data->toArray()));
 
-        $this->assertTrue(in_array('id',$data->toArray()));
+        $this->assertArrayHasKey('items',$data->toArray());
     }
 
     /**
@@ -81,8 +81,6 @@ class VirtualAccountTest extends TestCase
         $data = $this->api->payment->fetch($this->paymentId)->refunds();
         
         $this->assertTrue(is_array($data->toArray()));
-
-        $this->assertTrue(in_array('id',$data->toArray()));
         
     }
 
@@ -99,7 +97,7 @@ class VirtualAccountTest extends TestCase
             
             $this->assertTrue(is_array($data->toArray()));
     
-            $this->assertTrue(in_array('id',$data->toArray()));
+            $this->assertArrayHasKey('id',$data->toArray());
         }
     }
 }

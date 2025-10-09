@@ -8,14 +8,14 @@ class RefundTest extends TestCase
 {
     /**
      * Specify unique payment id & refund id
-     * for example plan_IEeswu4zFBRGwi & rfnd_IEjzeVghAS4vd1
+     * for example pay_LatkcPaGiDxgRG & rfnd_IEjzeVghAS4vd1
      */
 
-    private $paymentId = "";
+    private $paymentId = "pay_LatkcPaGiDxgRG";
 
-    private $refundId = "";
+    private $refundId = "rfnd_Lcsb6JNwQVAtpi";
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }

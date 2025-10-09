@@ -11,9 +11,9 @@ class PlanTest extends TestCase
      * for example plan_IEeswu4zFBRGwi 
      */
 
-    private $planId = "";
+    private $planId = "plan_IEeswu4zFBRGwi";
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -32,12 +32,15 @@ class PlanTest extends TestCase
 
     /**
      * Fetch all plans
+     * @covers \Razorpay\Api\Collection::count
      */
     public function testFetchAllPlans()
     {
         $data = $this->api->plan->all();
 
         $this->assertTrue(is_array($data->toArray()));
+
+        $this->assertTrue($data->count() >= 0);
 
         $this->assertTrue(is_array($data['items']));
     }
