@@ -54,10 +54,10 @@ class ProductController extends Controller
     public function get_latest_products(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'restaurant_id' => 'required',
             'category_id' => 'required',
             'limit' => 'required',
             'offset' => 'required',
+            'zone_id' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -66,7 +66,7 @@ class ProductController extends Controller
 
         $type = $request->query('type', 'all');
 
-        $products = ProductLogic::get_latest_products($request['limit'], $request['offset'], $request['restaurant_id'], $request['category_id'], $type);
+        $products = ProductLogic::get_latest_products($request['limit'], $request['offset'], $request['restaurant_id'], $request['category_id'], $type, $request['zone_id']);
         $products['products'] = Helpers::product_data_formatting($products['products'], true, false, app()->getLocale());
         return response()->json($products, 200);
     }

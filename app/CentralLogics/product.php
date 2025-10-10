@@ -4,6 +4,7 @@ namespace App\CentralLogics;
 
 use App\Models\Food;
 use App\Models\Review;
+use App\Models\Zone;
 use Illuminate\Support\Facades\DB;
 
 class ProductLogic
@@ -13,7 +14,7 @@ class ProductLogic
         return Food::active()->where('id', $id)->first();
     }
 
-    public static function get_latest_products($limit, $offset, $restaurant_id, $category_id, $type = 'all')
+    public static function get_latest_products($limit, $offset, $restaurant_id, $category_id, $type = 'all', $zone_id = null)
     {
         $paginator = Food::active()->type($type);
         if ($category_id != 0) {
@@ -21,7 +22,20 @@ class ProductLogic
                 return $q->whereId($category_id)->orWhere('parent_id', $category_id);
             });
         }
-        $paginator = $paginator->where('restaurant_id', $restaurant_id)->latest()->paginate($limit, ['*'], 'page', $offset);
+        if ($zone_id) {
+            $restaurantIds = Zone::where('id', $zone_id)
+                ->with('restaurants')
+                ->active()
+                ->firstOrFail()
+                ->restaurants
+                ->pluck('id');
+            $paginator->whereIn('restaurant_id', $restaurantIds);
+        }
+        if ($restaurant_id) {
+            $paginator->where('restaurant_id', $restaurant_id);
+        }
+
+        $paginator = $paginator->latest()->paginate($limit, ['*'], 'page', $offset);
         return [
             'total_size' => $paginator->total(),
             'limit' => $limit,
