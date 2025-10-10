@@ -16,12 +16,13 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
+
     public function get_all_products(Request $request)
     {
         $zone_id = $request->query('zone_id');
         $isVeg = $request->query('veg');
-
         $foodQuery = Food::active()->with('restaurant');
+        $isRecommended = $request->query('is_recommended');
 
         if (!is_null($isVeg)) {
             $foodQuery->where('veg', $isVeg);
@@ -34,18 +35,12 @@ class ProductController extends Controller
                 ->firstOrFail()
                 ->restaurants
                 ->pluck('id');
-
             $foodQuery->whereIn('restaurant_id', $restaurantIds);
         }
-
-        // Pagination
-        $limit = $request->query('per_page', 10); // default 10
+        $limit = $request->query('per_page', 10);
         $page = $request->query('page', 1);
         $foods = $foodQuery->paginate($limit, ['*'], 'page', $page);
-
-        // Format data
         $formattedFoods = Helpers::product_data_formatting($foods->items(), true, true, 'en');
-
         return response()->json([
             'data' => $formattedFoods,
             'total_size' => $foods->total(),
