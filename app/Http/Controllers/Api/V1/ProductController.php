@@ -37,8 +37,8 @@ class ProductController extends Controller
                 ->pluck('id');
             $foodQuery->whereIn('restaurant_id', $restaurantIds);
         }
-        $limit = $request->query('per_page', 10);
-        $page = $request->query('page', 1);
+        $limit = $request->query('limit', 10);
+        $page = $request->query('offset', 1);
         $foods = $foodQuery->paginate($limit, ['*'], 'page', $page);
         $formattedFoods = Helpers::product_data_formatting($foods->items(), true, true, 'en');
         return response()->json([
