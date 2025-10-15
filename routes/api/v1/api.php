@@ -280,5 +280,5 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::get('apply', 'CouponController@apply');
     });
 
-    Route::get('zone-wise-products/{id}', [ZoneController::class, 'products']);
+    Route::get('zone-wise-products', [ZoneController::class, 'products']);
 });

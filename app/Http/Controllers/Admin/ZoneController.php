@@ -11,6 +11,7 @@ use Grimzy\LaravelMysqlSpatial\Types\Polygon;
 use Grimzy\LaravelMysqlSpatial\Types\LineString;
 use App\CentralLogics\Helpers;
 use App\Models\Food;
+use Illuminate\Support\Facades\Validator;
 
 class ZoneController extends Controller
 {
@@ -158,8 +159,17 @@ class ZoneController extends Controller
         }
         return response()->json($data, 200);
     }
-    public function products($id)
+    public function products(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            // 'category_id' => 'required',
+            'limit' => 'required',
+            'offset' => 'required',
+            // 'zone_id' => 'required'
+        ]);
+        $limit = $request->limit;
+        $offset = $request->offset;
+        $id = $request->header('zoneId');
         $restaurantIds = Zone::where('id', $id)
             ->with('restaurants')
             ->active()
@@ -169,7 +179,7 @@ class ZoneController extends Controller
 
         // Get foods for those restaurants with pagination
         $foods = Food::whereIn('restaurant_id', $restaurantIds)->with('restaurant')
-            ->paginate(10); // Change 10 to your desired per-page count
+            ->paginate($limit, ['*'], 'page', $offset);
 
         return response()->json($foods, 200);
     }
