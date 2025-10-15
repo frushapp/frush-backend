@@ -54,7 +54,7 @@ class ProductController extends Controller
     public function get_latest_products(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'category_id' => 'required',
+            // 'category_id' => 'required',
             'limit' => 'required',
             'offset' => 'required',
             'zone_id' => 'required'
