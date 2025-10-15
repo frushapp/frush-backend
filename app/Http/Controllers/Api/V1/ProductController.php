@@ -19,10 +19,10 @@ class ProductController extends Controller
 
     public function get_all_products(Request $request)
     {
-        $zone_id = $request->query('zone_id');
+        $zone_id = $request->header('zoneId');
         $isVeg = $request->query('veg');
         $foodQuery = Food::active()->with('restaurant');
-        $isRecommended = $request->query('is_recommended');
+
 
         if (!is_null($isVeg)) {
             $foodQuery->where('veg', $isVeg);
