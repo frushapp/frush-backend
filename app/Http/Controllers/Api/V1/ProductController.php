@@ -57,16 +57,16 @@ class ProductController extends Controller
             // 'category_id' => 'required',
             'limit' => 'required',
             'offset' => 'required',
-            'zone_id' => 'required'
+            // 'zone_id' => 'required'
         ]);
-
+        $zone_id = $request->header('zoneId'); // <-- fetch from header
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
         $type = $request->query('type', 'all');
 
-        $products = ProductLogic::get_latest_products($request['limit'], $request['offset'], $request['restaurant_id'], $request['category_id'], $type, $request['zone_id']);
+        $products = ProductLogic::get_latest_products($request['limit'], $request['offset'], $request['restaurant_id'], $request['category_id'], $type, $zone_id);
         $products['products'] = Helpers::product_data_formatting($products['products'], true, false, app()->getLocale());
         return response()->json($products, 200);
     }
