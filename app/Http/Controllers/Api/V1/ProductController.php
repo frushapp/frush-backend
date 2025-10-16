@@ -210,7 +210,7 @@ class ProductController extends Controller
         if (Food::find($id)) {
             $products = ProductLogic::get_related_products($id);
             $products = Helpers::product_data_formatting($products, true, false, app()->getLocale());
-            return response()->json($products, 200);
+            return response()->json(['products' => $products], 200);
         }
         return response()->json([
             'errors' => ['code' => 'product-001', 'message' => trans('messages.not_found')]

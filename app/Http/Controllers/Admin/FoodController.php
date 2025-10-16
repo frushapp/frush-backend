@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use App\CentralLogics\Helpers;
 use App\CentralLogics\ProductLogic;
+use App\Models\FoodSpecification;
 use App\Models\ItemCampaign;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Support\Facades\DB;
@@ -144,7 +145,20 @@ class FoodController extends Controller
         $food->restaurant_id = $request->restaurant_id;
         $food->veg = $request->veg;
         $food->save();
-
+        if ($request->filled('specifications')) {
+            foreach ($request->specifications as $spec) {
+                // skip empty rows
+                if (!empty($spec['key']) || !empty($spec['value'])) {
+                    FoodSpecification::insert([
+                        'food_id' => $food->id,
+                        'specification_key' => $spec['key'],
+                        'specification_value' => $spec['value'],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        }
         $data = [];
         foreach ($request->lang as $index => $key) {
             if ($request->name[$index] && $key != 'en') {
