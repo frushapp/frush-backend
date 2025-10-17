@@ -22,12 +22,9 @@ class ProductController extends Controller
         $zone_id = $request->header('zoneId');
         $isVeg = $request->query('veg');
         $foodQuery = Food::active()->with('restaurant');
-
-
         if (!is_null($isVeg)) {
             $foodQuery->where('veg', $isVeg);
         }
-
         if ($zone_id) {
             $restaurantIds = Zone::where('id', $zone_id)
                 ->with('restaurants')
@@ -50,6 +47,32 @@ class ProductController extends Controller
             'last_page' => $foods->lastPage(),
         ]);
     }
+    public function cart_suggestion(Request $request)
+    {
+        $ids = $request->ids; // e.g. "1,2,3"
+        $idArray = explode(',', $ids);
+
+        // Get all cart products
+        $products = Food::whereIn('id', $idArray)->get();
+
+        // Collect all category_ids from the cart products
+        $categoryIds = $products->pluck('category_ids')->unique();
+
+        // Get related products from same categories,
+        // ensuring they are active and from open restaurants
+        $relatedProducts = Food::active()
+            ->whereHas('restaurant', function ($query) {
+                $query->Weekday();
+            })
+            ->whereIn('category_ids', $categoryIds)
+            ->whereNotIn('id', $idArray)
+            ->limit(10)
+            ->get();
+        $formattedFoods = Helpers::product_data_formatting($relatedProducts, true, true, 'en');
+
+        return response()->json(['products' => $formattedFoods]);
+    }
+
 
     public function get_latest_products(Request $request)
     {
@@ -63,16 +86,13 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-
         $type = $request->query('type', 'all');
-
         $products = ProductLogic::get_latest_products($request['limit'], $request['offset'], $request['restaurant_id'], $request['category_id'], $type, $zone_id);
         $products['products'] = Helpers::product_data_formatting($products['products'], true, false, app()->getLocale());
         return response()->json($products, 200);
     }
     public function get_discounted_products(Request $request)
     {
-
         if (!$request->hasHeader('zoneId')) {
             $errors = [];
             array_push($errors, ['code' => 'zoneId', 'message' => trans('messages.zone_id_required')]);
@@ -81,7 +101,6 @@ class ProductController extends Controller
             ], 403);
         }
         $zone_id = $request->header('zoneId');
-
         // $products['products']  = Food::where('discount','>',0)->get();
         $products['products']  = Food::where('discount', '>', 0)
             ->whereIn('restaurant_id', function ($query) use ($zone_id) {
@@ -90,11 +109,8 @@ class ProductController extends Controller
                     ->where('zone_id', $zone_id);
             })
             ->get();
-
-
         // DB::statement("Select * from food where discount > 0 and restaurant_id in (Select id from restaurants where zone_id='$zone_id' ) ");
         $products['products'] = Helpers::product_data_formatting($products['products'], true, false, app()->getLocale());
-
         return response()->json($products, 200);
     }
 

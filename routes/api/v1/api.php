@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ZoneController;
 use App\Http\Controllers\Api\V1\Auth\DeliveryManLoginController;
+use App\Http\Controllers\Api\V1\ProductController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\Routing\RouteCompiler;
 
@@ -182,6 +183,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::get('reviews/{food_id}', 'ProductController@get_product_reviews');
         Route::get('rating/{food_id}', 'ProductController@get_product_rating');
         Route::post('reviews/submit', 'ProductController@submit_product_review')->middleware('auth:api');
+        Route::post('cart-suggesstion', [ProductController::class, 'cart_suggestion']);
     });
 
     Route::group(['prefix' => 'restaurants'], function () {
