@@ -374,7 +374,7 @@ class CustomerAuthController extends Controller
         $mobile = $request->mobile;
 
         // Generate a random 6-digit OTP
-        $otp = rand(100000, 999999);
+        $otp = rand(1000, 9999);
 
         // Set OTP validity time (e.g., 5 minutes)
         $validTill = Carbon::now()->addMinutes(5);
@@ -398,7 +398,7 @@ class CustomerAuthController extends Controller
     {
         $validation = Validator::make($request->all(), [
             'mobile' => 'required|digits:10',
-            'otp' => 'required|digits:6',
+            'otp' => 'required|digits:4',
         ]);
 
         if ($validation->fails()) {
