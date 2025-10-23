@@ -430,7 +430,8 @@ class CustomerAuthController extends Controller
         $user = User::firstOrCreate(
             ['phone' => $mobile],
             [
-                'name' => 'User_' . substr($mobile, -4), // default name
+                'f_name' => 'User_' . substr($mobile, -4), // default name
+                'is_phone_verified' => 1,
                 'password' => bcrypt('password'), // dummy password
                 'login_medium' => 'mobile',
             ]
