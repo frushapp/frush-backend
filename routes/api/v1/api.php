@@ -25,6 +25,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::post('register', 'CustomerAuthController@register');
         Route::post('login', 'CustomerAuthController@login');
         Route::post('verify-phone', 'CustomerAuthController@verify_phone');
+        Route::post('send-otp', 'CustomerAuthController@send_otp_mobile');
+        Route::post('verify-otp', 'CustomerAuthController@verify_otp_mobile');
 
         Route::post('/ex_users', 'ExUserController@register');
         Route::post('/global_sms_api', 'GlobalMessageApiController@global_sms_api');

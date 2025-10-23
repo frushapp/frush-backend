@@ -9,6 +9,8 @@ use App\Mail\EmailVerification;
 use App\Models\BusinessSetting;
 use App\Models\EmailVerifications;
 use App\Models\User;
+use App\Models\UserOtp;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -279,7 +281,8 @@ class CustomerAuthController extends Controller
 
         $customer_verification = BusinessSetting::where('key', 'customer_verification')->first()->value;
         if (Auth::attempt($data)) {
-            $token = auth()->user()->createToken('RestaurantCustomerAuth')->accessToken;
+            $user = auth()->user();
+            $token = $user->createToken('RestaurantCustomerAuth')->accessToken;
             if (!auth()->user()->status) {
                 $errors = [];
                 array_push($errors, ['code' => 'auth-003', 'message' => trans('messages.your_account_is_blocked')]);
@@ -359,6 +362,91 @@ class CustomerAuthController extends Controller
                 ], 401);
             }
         }
+    }
+    public function send_otp_mobile(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'mobile' => 'required|digits:10'
+        ]);
+        if ($validation->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validation)], 403);
+        }
+        $mobile = $request->mobile;
+
+        // Generate a random 6-digit OTP
+        $otp = rand(100000, 999999);
+
+        // Set OTP validity time (e.g., 5 minutes)
+        $validTill = Carbon::now()->addMinutes(5);
+        $isExists = User::where('phone', $mobile)->first();
+        $userOtp = UserOtp::updateOrCreate(
+            ['mobile' => $mobile],
+            [
+                'user_id' => $isExists ? $isExists->id : null,
+                'otp' => $otp,
+                'valid_till' => $validTill,
+                'is_verified' => '0',
+            ]
+        );
+        return response()->json([
+            'message' => 'OTP sent successfully.',
+            'otp' => $otp, // ⚠️ remove in production
+            'valid_till' => $validTill->toDateTimeString(),
+        ], 200);
+    }
+    public function verify_otp_mobile(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'mobile' => 'required|digits:10',
+            'otp' => 'required|digits:6',
+        ]);
+
+        if ($validation->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validation)], 403);
+        }
+
+        $mobile = $request->mobile;
+        $otp = $request->otp;
+
+        // Find OTP record
+        $userOtp = UserOtp::where('mobile', $mobile)
+            ->where('otp', $otp)
+            ->latest()
+            ->first();
+
+        if (!$userOtp) {
+            return response()->json(['message' => 'Invalid OTP.'], 400);
+        }
+
+        // Check if OTP expired
+        if (Carbon::now()->gt(Carbon::parse($userOtp->valid_till))) {
+            return response()->json(['message' => 'OTP has expired.'], 400);
+        }
+
+        // Mark as verified
+        $userOtp->update(['is_verified' => '1']);
+
+        // Find or create user by phone number
+        $user = User::firstOrCreate(
+            ['phone' => $mobile],
+            [
+                'name' => 'User_' . substr($mobile, -4), // default name
+                'password' => bcrypt('password'), // dummy password
+                'login_medium' => 'mobile',
+            ]
+        );
+
+        // Generate Passport token
+        $tokenResult = $user->createToken('authToken')->accessToken;
+
+        // Optionally delete the OTP record to prevent reuse
+        $userOtp->delete();
+
+        return response()->json([
+            'message' => 'OTP verified successfully.',
+            'user' => $user,
+            'token' => $tokenResult,
+        ], 200);
     }
     function formatPhoneString($input)
     {
