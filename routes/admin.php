@@ -60,6 +60,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('store', 'FoodController@store')->name('store');
             Route::get('edit/{id}', 'FoodController@edit')->name('edit');
             Route::post('update/{id}', 'FoodController@update')->name('update');
+            Route::put('change-update/{id}', 'FoodController@update_food')->name('update_food');
             Route::get('list', 'FoodController@list')->name('list');
             Route::delete('delete/{id}', 'FoodController@delete')->name('delete');
             Route::get('status/{id}/{status}', 'FoodController@status')->name('status');
@@ -133,9 +134,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         });
 
         Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
-                Route::get('get-restaurants-data/{restaurant}', 'VendorController@get_restaurant_data')->name('get-restaurants-data');
-                Route::get('restaurant-filter/{id}', 'VendorController@restaurant_filter')->name('restaurantfilter');
-                Route::get('get-account-data/{restaurant}', 'VendorController@get_account_data')->name('restaurant_filter');
+            Route::get('get-restaurants-data/{restaurant}', 'VendorController@get_restaurant_data')->name('get-restaurants-data');
+            Route::get('restaurant-filter/{id}', 'VendorController@restaurant_filter')->name('restaurantfilter');
+            Route::get('get-account-data/{restaurant}', 'VendorController@get_account_data')->name('restaurant_filter');
             Route::group(['middleware' => ['module:restaurant']], function () {
                 Route::get('update-application/{id}/{status}', 'VendorController@update_application')->name('application');
                 Route::get('add', 'VendorController@index')->name('add');
@@ -170,7 +171,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('withdraw_list', 'VendorController@withdraw')->name('withdraw_list');
                 Route::get('withdraw-view/{withdraw_id}/{seller_id}', 'VendorController@withdraw_view')->name('withdraw_view');
             });
-
         });
 
         Route::group(['prefix' => 'addon', 'as' => 'addon.', 'middleware' => ['module:addon']], function () {
@@ -235,10 +235,10 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('edit-order/{order}', 'OrderController@edit')->name('edit');
             Route::get('quick-view', 'OrderController@quick_view')->name('quick-view');
             Route::get('quick-view-cart-item', 'OrderController@quick_view_cart_item')->name('quick-view-cart-item');
-            Route::get('export-orders/{status}/{type}','OrderController@export_orders')->name('export');
+            Route::get('export-orders/{status}/{type}', 'OrderController@export_orders')->name('export');
         });
 
-        Route::group(['prefix' => 'dispatch', 'as' => 'dispatch.', 'middleware' => ['module:order']],function(){
+        Route::group(['prefix' => 'dispatch', 'as' => 'dispatch.', 'middleware' => ['module:order']], function () {
             Route::get('list/{status}', 'OrderController@dispatch_list')->name('list');
         });
 
@@ -263,7 +263,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::delete('delete/{id}', 'NotificationController@delete')->name('delete');
         });
 
-        Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.', 'middleware' => ['module:settings','actch']], function () {
+        Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.', 'middleware' => ['module:settings', 'actch']], function () {
             Route::get('business-setup', 'BusinessSettingsController@business_index')->name('business-setup');
             Route::get('config-setup', 'BusinessSettingsController@config_setup')->name('config-setup');
             Route::post('config-update', 'BusinessSettingsController@config_update')->name('config-update');
@@ -309,9 +309,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             //recaptcha
             Route::get('recaptcha', 'BusinessSettingsController@recaptcha_index')->name('recaptcha_index');
             Route::post('recaptcha-update', 'BusinessSettingsController@recaptcha_update')->name('recaptcha_update');
-            Route::get('social-media/fetch','SocialMediaController@fetch')->name('social-media.fetch');
-            Route::get('social-media/status-update','SocialMediaController@social_media_status_update')->name('social-media.status-update');
-            Route::resource('social-media','SocialMediaController');
+            Route::get('social-media/fetch', 'SocialMediaController@fetch')->name('social-media.fetch');
+            Route::get('social-media/status-update', 'SocialMediaController@social_media_status_update')->name('social-media.status-update');
+            Route::resource('social-media', 'SocialMediaController');
         });
 
 
@@ -360,8 +360,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('earning', 'ReportController@earning_index')->name('earning');
             Route::post('set-date', 'ReportController@set_date')->name('set-date');
         });
-        Route::get('customer/select-list','CustomerController@get_customers')->name('customer.select-list');
-        Route::group(['prefix' => 'customer', 'as' => 'customer.','middleware' => ['module:customerList']], function() {
+        Route::get('customer/select-list', 'CustomerController@get_customers')->name('customer.select-list');
+        Route::group(['prefix' => 'customer', 'as' => 'customer.', 'middleware' => ['module:customerList']], function () {
             Route::group(['middleware' => ['module:customerList']], function () {
                 Route::get('list', 'CustomerController@customer_list')->name('list');
                 Route::get('view/{user_id}', 'CustomerController@view')->name('view');
@@ -379,10 +379,10 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             // Subscribed customer Routes
             Route::get('subscribed', 'CustomerController@subscribedCustomers')->name('subscribed');
             Route::post('subscriber-search', 'CustomerController@subscriberMailSearch')->name('subscriberMailSearch');
-            
+
             Route::get('loyalty-point/report', 'LoyaltyPointController@report')->name('loyalty-point.report');
-            Route::get('settings','CustomerController@settings')->name('settings');
-            Route::post('update-settings','CustomerController@update_settings')->name('update-settings');
+            Route::get('settings', 'CustomerController@settings')->name('settings');
+            Route::post('update-settings', 'CustomerController@update_settings')->name('update-settings');
         });
 
 

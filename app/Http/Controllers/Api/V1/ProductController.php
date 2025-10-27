@@ -21,9 +21,17 @@ class ProductController extends Controller
     {
         $zone_id = $request->header('zoneId');
         $isVeg = $request->query('veg');
+        $isPopular = $request->query('popular');
+        $isTrending = $request->query('trending');
         $foodQuery = Food::active()->with('restaurant');
         if (!is_null($isVeg)) {
             $foodQuery->where('veg', $isVeg);
+        }
+        if (!is_null($isPopular)) {
+            $foodQuery->where('is_popular', $isPopular);
+        }
+        if (!is_null($isPopular)) {
+            $foodQuery->where('is_trending', $isTrending);
         }
         if ($zone_id) {
             $restaurantIds = Zone::where('id', $zone_id)

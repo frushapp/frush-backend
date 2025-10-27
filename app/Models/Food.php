@@ -25,7 +25,11 @@ class Food extends Model
         'reviews_count' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'veg' => 'integer'
+        'veg' => 'integer',
+        'is_popular' => 'string',
+        'is_newest' => 'string',
+        'is_recommended' => 'string',
+        'is_trending' => 'string',
     ];
 
 
@@ -41,6 +45,13 @@ class Food extends Model
             return $query->where('status', 1);
         });
     }
+    public function scopeTrending($query)
+    {
+        return $query->where('is_trending', "1")->whereHas('restaurant', function ($query) {
+            return $query->where('status', 1);
+        });
+    }
+
 
     public function scopePopular($query)
     {

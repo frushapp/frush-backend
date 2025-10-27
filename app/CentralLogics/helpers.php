@@ -19,6 +19,27 @@ use Illuminate\Support\Facades\Http;
 
 class Helpers
 {
+    public static function send_text_message($phone)
+    {
+        $user     = "SWAD_RCS";
+        $pass     = "123456";
+        $sender   = "RCSSMS";
+
+        $text     = "swad_rcs";
+        $priority = "rcs";
+        $stype    = "normal";
+        $params   = "123456";
+
+        $url = "https://bhashsms.com/api/sendmsgrcs.php?"
+            . "user=" . urlencode($user)
+            . "&pass=" . urlencode($pass)
+            . "&sender=" . urlencode($sender)
+            . "&phone=" . urlencode($phone)
+            . "&text=" . urlencode($text)
+            . "&priority=" . urlencode($priority)
+            . "&stype=" . urlencode($stype)
+            . "&params=" . urlencode($params);
+    }
     public static function error_processor($validator)
     {
         $err_keeper = [];

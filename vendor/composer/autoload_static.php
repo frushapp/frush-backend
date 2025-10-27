@@ -456,8 +456,8 @@ class ComposerStaticInit8376c627feae5bd5466183703f742f52
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -537,8 +537,8 @@ class ComposerStaticInit8376c627feae5bd5466183703f742f52
         ),
         'League\\Uri\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/uri-interfaces',
-            1 => __DIR__ . '/..' . '/league/uri',
+            0 => __DIR__ . '/..' . '/league/uri',
+            1 => __DIR__ . '/..' . '/league/uri-interfaces',
         ),
         'League\\OAuth2\\Server\\' => 
         array (
@@ -720,8 +720,8 @@ class ComposerStaticInit8376c627feae5bd5466183703f742f52
         ),
         'Doctrine\\Common\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/event-manager/src',
-            1 => __DIR__ . '/..' . '/doctrine/common/src',
+            0 => __DIR__ . '/..' . '/doctrine/common/src',
+            1 => __DIR__ . '/..' . '/doctrine/event-manager/src',
         ),
         'Dflydev\\DotAccessData\\' => 
         array (
@@ -959,6 +959,7 @@ class ComposerStaticInit8376c627feae5bd5466183703f742f52
         'App\\Models\\EmailVerifications' => __DIR__ . '/../..' . '/app/Models/EmailVerifications.php',
         'App\\Models\\EmployeeRole' => __DIR__ . '/../..' . '/app/Models/EmployeeRole.php',
         'App\\Models\\Food' => __DIR__ . '/../..' . '/app/Models/Food.php',
+        'App\\Models\\FoodSpecification' => __DIR__ . '/../..' . '/app/Models/FoodSpecification.php',
         'App\\Models\\ItemCampaign' => __DIR__ . '/../..' . '/app/Models/ItemCampaign.php',
         'App\\Models\\LoyaltyPointTransaction' => __DIR__ . '/../..' . '/app/Models/LoyaltyPointTransaction.php',
         'App\\Models\\MailConfig' => __DIR__ . '/../..' . '/app/Models/MailConfig.php',
@@ -979,6 +980,7 @@ class ComposerStaticInit8376c627feae5bd5466183703f742f52
         'App\\Models\\Translation' => __DIR__ . '/../..' . '/app/Models/Translation.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Models\\UserNotification' => __DIR__ . '/../..' . '/app/Models/UserNotification.php',
+        'App\\Models\\UserOtp' => __DIR__ . '/../..' . '/app/Models/UserOtp.php',
         'App\\Models\\Vendor' => __DIR__ . '/../..' . '/app/Models/Vendor.php',
         'App\\Models\\VendorEmployee' => __DIR__ . '/../..' . '/app/Models/VendorEmployee.php',
         'App\\Models\\WalletTransaction' => __DIR__ . '/../..' . '/app/Models/WalletTransaction.php',
