@@ -388,6 +388,7 @@ class CustomerAuthController extends Controller
                 'is_verified' => '0',
             ]
         );
+        Helpers::send_text_message($mobile, $otp);
         return response()->json([
             'message' => 'OTP sent successfully.',
             'otp' => $otp, // ⚠️ remove in production

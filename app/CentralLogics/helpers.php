@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Http;
 
 class Helpers
 {
-    public static function send_text_message($phone)
+    public static function send_text_message($phone, $otp)
     {
         $user     = "SWAD_RCS";
         $pass     = "123456";
@@ -28,7 +28,7 @@ class Helpers
         $text     = "swad_rcs";
         $priority = "rcs";
         $stype    = "normal";
-        $params   = "123456";
+        $params   = $otp;
 
         $url = "https://bhashsms.com/api/sendmsgrcs.php?"
             . "user=" . urlencode($user)
@@ -39,6 +39,21 @@ class Helpers
             . "&priority=" . urlencode($priority)
             . "&stype=" . urlencode($stype)
             . "&params=" . urlencode($params);
+        $response = Http::get('https://bhashsms.com/api/sendmsgrcs.php', [
+            'user' => $user,
+            'pass' => $pass,
+            'sender' => $sender,
+            'phone' => $phone,
+            'text' => $text,
+            'priority' => $priority,
+            'stype' => $stype,
+            'params' => $params,
+        ]);
+        if ($response->successful()) {
+            return true;
+        } else {
+            return false;
+        }
     }
     public static function error_processor($validator)
     {
