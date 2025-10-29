@@ -338,9 +338,9 @@
                                                 <input type="hidden" name="is_newest"
                                                     value="{{ $food->is_newest === '1' ? '0' : '1' }}">
                                                 <label class="toggle-switch toggle-switch-sm"
-                                                    for="latest_stocksCheckbox{{ $food->id }}">
+                                                    for="latest{{ $food->id }}">
                                                     <input type="checkbox" class="toggle-switch-input"
-                                                        id="latest_stocksCheckbox{{ $food->id }}" name="is_newest"
+                                                        id="latest{{ $food->id }}" name="is_newest"
                                                         value="{{ $food->is_newest == '1' ? '0' : '1' }}"
                                                         {{ $food->is_newest == '1' ? 'checked' : '' }}
                                                         onchange="this.form.submit()">
