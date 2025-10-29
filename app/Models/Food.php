@@ -49,7 +49,7 @@ class Food extends Model
         'is_recommended',
         'is_trending',
     ];
-
+    protected $table = 'food';
     public function translations()
     {
         return $this->morphMany(Translation::class, 'translationable');
