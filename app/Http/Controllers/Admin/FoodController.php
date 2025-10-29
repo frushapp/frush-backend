@@ -507,7 +507,7 @@ class FoodController extends Controller
     public function update_food(Request $request, $id)
     {
         $data  = $request->except(['_token', '_method']);
-        // return response()->json($data);
+        return response()->json($data);
         Food::where('id', $id)->update($data);
         return redirect()->back();
     }
