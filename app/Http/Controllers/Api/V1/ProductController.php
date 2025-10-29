@@ -23,6 +23,7 @@ class ProductController extends Controller
         $isVeg = $request->query('veg');
         $isPopular = $request->query('popular');
         $isTrending = $request->query('trending');
+        $isLatest = $request->query('latest');
         $foodQuery = Food::active()->with('restaurant');
         if (!is_null($isVeg)) {
             $foodQuery->where('veg', $isVeg);
@@ -32,6 +33,9 @@ class ProductController extends Controller
         }
         if (!is_null($isPopular)) {
             $foodQuery->where('is_trending', $isTrending);
+        }
+        if (!is_null($isLatest)) {
+            $foodQuery->where('is_newest', $isLatest);
         }
         if ($zone_id) {
             $restaurantIds = Zone::where('id', $zone_id)

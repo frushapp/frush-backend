@@ -246,6 +246,7 @@
                                     <th>{{ __('messages.status') }}</th>
                                     <th>{{ __('Is Popular') }}</th>
                                     <th>{{ __('Is Trending') }}</th>
+                                    <th>{{ __('Is Latest') }}</th>
                                     <th>{{ __('messages.action') }}</th>
                                 </tr>
                             </thead>
@@ -321,6 +322,27 @@
                                                         name="is_trending"
                                                         value="{{ $food->is_trending == '1' ? '0' : '1' }}"
                                                         {{ $food->is_trending == '1' ? 'checked' : '' }}
+                                                        onchange="this.form.submit()">
+                                                    <span class="toggle-switch-label">
+                                                        <span class="toggle-switch-indicator"></span>
+                                                    </span>
+                                                </label>
+                                            </form>
+
+                                        </td>
+                                        <td>
+                                            <form action="{{ route('admin.food.update_food', ['id' => $food->id]) }}"
+                                                method="POST" id="formlatest-{{ $food->id }}">
+                                                @csrf
+                                                @method('PUT')
+                                                <input type="hidden" name="is_newest"
+                                                    value="{{ $food->is_newest === '1' ? '0' : '1' }}">
+                                                <label class="toggle-switch toggle-switch-sm"
+                                                    for="latest_stocksCheckbox{{ $food->id }}">
+                                                    <input type="checkbox" class="toggle-switch-input"
+                                                        id="latest_stocksCheckbox{{ $food->id }}" name="is_newest"
+                                                        value="{{ $food->is_newest == '1' ? '0' : '1' }}"
+                                                        {{ $food->is_newest == '1' ? 'checked' : '' }}
                                                         onchange="this.form.submit()">
                                                     <span class="toggle-switch-label">
                                                         <span class="toggle-switch-indicator"></span>
