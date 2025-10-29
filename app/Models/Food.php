@@ -31,7 +31,24 @@ class Food extends Model
         'is_recommended' => 'string',
         'is_trending' => 'string',
     ];
-
+    protected $fillable = [
+        'tax',
+        'price',
+        'status',
+        'discount',
+        'avg_rating',
+        'set_menu',
+        'category_id',
+        'restaurant_id',
+        'reviews_count',
+        'created_at',
+        'updated_at',
+        'veg',
+        'is_popular',
+        'is_newest',
+        'is_recommended',
+        'is_trending',
+    ];
 
     public function translations()
     {
