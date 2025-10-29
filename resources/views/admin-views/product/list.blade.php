@@ -331,6 +331,7 @@
 
                                         </td>
                                         <td>
+                                            {{ $food->id }}
                                             <form action="{{ route('admin.food.update_food', ['id' => $food->id]) }}"
                                                 method="POST" id="formlatest-{{ $food->id }}">
                                                 @csrf
