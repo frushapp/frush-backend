@@ -506,8 +506,6 @@ class FoodController extends Controller
     }
     public function update_food(Request $request, $id)
     {
-        echo $id;
-        die;
         $data  = $request->except(['_token', '_method']);
         $findFood = Food::where('id', $id)->first();
 
