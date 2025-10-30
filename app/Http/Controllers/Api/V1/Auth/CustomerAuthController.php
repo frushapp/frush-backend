@@ -374,8 +374,15 @@ class CustomerAuthController extends Controller
         $mobile = $request->mobile;
 
         // Generate a random 6-digit OTP
-        $otp = rand(1000, 9999);
+        // $otp =  rand(1000, 9999);
+        $testMobiles = ['3333333333', '5555555555', '4444444444', '6666666666', '7777777777', '8888888888', '9999999999'];
 
+        // Generate OTP
+        if (in_array($mobile, $testMobiles)) {
+            $otp = 8888;
+        } else {
+            $otp = rand(1000, 9999);
+        }
         // Set OTP validity time (e.g., 5 minutes)
         $validTill = Carbon::now()->addMinutes(5);
         $isExists = User::where('phone', $mobile)->first();
