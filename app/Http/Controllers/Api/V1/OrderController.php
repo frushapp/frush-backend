@@ -472,12 +472,25 @@ class OrderController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        $paginator = Order::with(['restaurant', 'delivery_man.rating'])->withCount('details')->where(['user_id' => $request->user()->id])->whereNotIn('order_status', ['delivered', 'canceled', 'refund_requested', 'refunded', 'failed'])->Notpos()->latest()->paginate($request['limit'], ['*'], 'page', $request['offset']);
+        $paginator = Order::with(['restaurant', 'delivery_man.rating', 'details'])->withCount('details')->where(['user_id' => $request->user()->id])->whereNotIn('order_status', ['delivered', 'canceled', 'refund_requested', 'refunded', 'failed'])->Notpos()->latest()->paginate($request['limit'], ['*'], 'page', $request['offset']);
 
         $orders = array_map(function ($data) {
             $data['delivery_address'] = $data['delivery_address'] ? json_decode($data['delivery_address']) : $data['delivery_address'];
             $data['restaurant'] = $data['restaurant'] ? Helpers::restaurant_data_formatting($data['restaurant']) : $data['restaurant'];
             $data['delivery_man'] = $data['delivery_man'] ? Helpers::deliverymen_data_formatting([$data['delivery_man']]) : $data['delivery_man'];
+            if (!empty($data['details']) && is_iterable($data['details'])) {
+                foreach ($data['details'] as &$detail) {
+                    if (!empty($detail['food_details']) && is_string($detail['food_details'])) {
+                        $detail['food_details'] = json_decode($detail['food_details'], true);
+                    }
+                    if (!empty($detail['variation']) && is_string($detail['variation'])) {
+                        $detail['variation'] = json_decode($detail['variation'], true);
+                    }
+                    if (!empty($detail['add_ons']) && is_string($detail['add_ons'])) {
+                        $detail['add_ons'] = json_decode($detail['add_ons'], true);
+                    }
+                }
+            }
             return $data;
         }, $paginator->items());
         $data = [
