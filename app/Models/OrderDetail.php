@@ -14,10 +14,10 @@ class OrderDetail extends Model
         'discount_on_food' => 'float',
         'total_add_on_price' => 'float',
         'tax_amount' => 'float',
-        'food_id'=> 'integer',
-        'order_id'=> 'integer',
-        'quantity'=>'integer',
-        'item_campaign_id'=>'integer'
+        'food_id' => 'integer',
+        'order_id' => 'integer',
+        'quantity' => 'integer',
+        'item_campaign_id' => 'integer'
     ];
 
     protected $primaryKey   = 'id';
@@ -32,7 +32,7 @@ class OrderDetail extends Model
     }
     public function food()
     {
-        return $this->belongsTo(Food::class,'food_id');
+        return $this->belongsTo(Food::class, 'food_id');
     }
     public function campaign()
     {
