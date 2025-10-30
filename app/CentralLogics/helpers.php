@@ -555,18 +555,21 @@ class Helpers
     {
         $storage = [];
         foreach ($data as $item) {
-            if ($item['add_ons']) {
+            if (isset($item['add_ons']) && $item['add_ons']) {
                 $item['add_ons'] = json_decode($item['add_ons']);
             }
-            if ($item['variation']) {
+
+            if (isset($item['variation']) && $item['variation']) {
                 $item['variation'] = json_decode($item['variation']);
             }
-            if ($item['food_details']) {
+
+            if (isset($item['food_details']) && $item['food_details']) {
                 $item['food_details'] = json_decode($item['food_details'], true);
             }
 
-            array_push($storage, $item);
+            $storage[] = $item; // shorthand for array_push()
         }
+
         $data = $storage;
 
         return $data;
