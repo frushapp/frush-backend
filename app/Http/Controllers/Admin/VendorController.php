@@ -178,7 +178,7 @@ class VendorController extends Controller
         $delivery_charges_slab_value = $request['delivery_charges_slab_value'];
 
         $index = 0;
-        $array;
+        $array = [];
         foreach ($delivery_charges_slab_type as $row) {
 
 

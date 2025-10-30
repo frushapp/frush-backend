@@ -33,8 +33,8 @@
         <div class="row gx-2 gx-lg-3">
             <div class="col-sm-12 col-lg-12 mb-3 mb-lg-2">
                 <div class="form-container">
-                    <form action="{{ route('admin.vendor.update', [$restaurant['id']]) }}" method="post"
-                        class="js-validate" enctype="multipart/form-data">
+                    <form action="{{ route('admin.vendor.update', [$restaurant['id']]) }}" method="post" class="js-validate"
+                        enctype="multipart/form-data">
                         @csrf
 
                         <small class="nav-subtitle border-bottom text-secondary">{{ __('messages.restaurant') }}
@@ -68,8 +68,7 @@
                                     <label class="input-label" for="address">{{ __('messages.restaurant') }}
                                         {{ __('messages.address') }}</label>
                                     <textarea type="text" name="address" class="form-control"
-                                        placeholder="{{ __('messages.restaurant') }} {{ __('messages.address') }}"
-                                        required>{{ $restaurant->address }}</textarea>
+                                        placeholder="{{ __('messages.restaurant') }} {{ __('messages.address') }}" required>{{ $restaurant->address }}</textarea>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -95,13 +94,13 @@
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="cover-photo">
-                                    <center>
+                                    <div>
                                         <img style="max-width: 100%;border: 1px solid; border-radius: 10px; max-height:200px;"
                                             id="coverImageViewer"
                                             onerror="this.src='{{ asset('public/assets/admin/img/900x400/img1.jpg') }}'"
                                             src="{{ asset('storage/app/public/restaurant/cover/' . $restaurant->cover_photo) }}"
                                             alt="Product thumbnail" />
-                                    </center>
+                                    </div>
 
                                     <div class="form-group">
                                         <label for="name">{{ __('messages.upload') }} {{ __('messages.cover') }}
@@ -120,13 +119,13 @@
                                 </div>
                             </div>
                             <div class="col-md-6 col-12">
-                                <center>
+                                <div>
                                     <img style="max-width: 100%;border: 1px solid; border-radius: 10px; max-height:200px;"
                                         id="viewer"
                                         onerror="this.src='{{ asset('public/assets/admin/img/400x400/img2.jpg') }}'"
                                         src="{{ asset('storage/app/public/restaurant/cover/' . $restaurant->logo) }}"
                                         alt="Product thumbnail" />
-                                </center>
+                                </div>
 
                                 <div class="form-group">
                                     <label class="input-label">{{ __('messages.restaurant') }}
@@ -196,7 +195,9 @@
                             </div>
 
                             <div class="col-md-12 col-12">
-                                <input id="pac-input" class="controls rounded" style="height: 3em;width:fit-content;" title="{{__('messages.search_your_location_here')}}" type="text" placeholder="{{__('messages.search_here')}}"/>
+                                <input id="pac-input" class="controls rounded" style="height: 3em;width:fit-content;"
+                                    title="{{ __('messages.search_your_location_here') }}" type="text"
+                                    placeholder="{{ __('messages.search_here') }}" />
                                 <div id="map"></div>
                             </div>
 
@@ -222,8 +223,7 @@
                         <div class="row">
                             <div class="col-md-4 col-12">
                                 <div class="form-group">
-                                    <label class="input-label"
-                                        for="exampleFormControlInput1">{{ __('messages.first') }}
+                                    <label class="input-label" for="exampleFormControlInput1">{{ __('messages.first') }}
                                         {{ __('messages.name') }}</label>
                                     <input type="text" name="f_name" class="form-control"
                                         placeholder="{{ __('messages.first') }} {{ __('messages.name') }}"
@@ -232,8 +232,7 @@
                             </div>
                             <div class="col-md-4 col-12">
                                 <div class="form-group">
-                                    <label class="input-label"
-                                        for="exampleFormControlInput1">{{ __('messages.last') }}
+                                    <label class="input-label" for="exampleFormControlInput1">{{ __('messages.last') }}
                                         {{ __('messages.name') }}</label>
                                     <input type="text" name="l_name" class="form-control"
                                         placeholder="{{ __('messages.last') }} {{ __('messages.name') }}"
@@ -244,48 +243,51 @@
                                 <div class="form-group">
                                     <label class="input-label"
                                         for="exampleFormControlInput1">{{ __('messages.phone') }}</label>
-                                    <input type="text" name="phone" class="form-control" placeholder="Ex : 017********"
-                                        value="{{ $restaurant->phone }}" required>
+                                    <input type="text" name="phone" class="form-control"
+                                        placeholder="Ex : 017********" value="{{ $restaurant->phone }}" required>
                                 </div>
                             </div>
                             <div class="col-md-4 col-12">
                                 <div class="form-group">
-                                    <label class="input-label"
-                                        for="exampleFormControlInput1">Delivery Gst</label>
+                                    <label class="input-label" for="exampleFormControlInput1">Delivery Gst</label>
                                     <input type="text" name="delivery_gst" class="form-control" placeholder="18"
                                         value="{{ $restaurant->delivery_gst }}" required>
                                 </div>
                             </div>
                             <div class="col-md-4 col-12">
                                 <div class="form-group">
-                                    <label class="input-label"
-                                        for="exampleFormControlInput1">Platform Fees</label>
+                                    <label class="input-label" for="exampleFormControlInput1">Platform Fees</label>
                                     <input type="text" name="platform_fees" class="form-control" placeholder="10"
                                         value="{{ $restaurant->platform_fees }}" required>
                                 </div>
                             </div>
-                            
+
                         </div>
                         <br>
-                        
+
                         <div class="row">
                             <div class="col-md-6 col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label class="input-label" for="address">Packaging Status (Fixed/Variable)</label>
                                     <select name="packaging_var" class="form-control">
-                                        <option <?php if($restaurant->packaging_var == "NO") {echo "selected"; } ?> value="NO">Fixed</option>
-                                        <option <?php if($restaurant->packaging_var == "YES") {echo "selected"; } ?> value="YES">Variable</option>
+                                        <option <?php if ($restaurant->packaging_var == 'NO') {
+                                            echo 'selected';
+                                        } ?> value="NO">Fixed</option>
+                                        <option <?php if ($restaurant->packaging_var == 'YES') {
+                                            echo 'selected';
+                                        } ?> value="YES">Variable</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label class="input-label" for="address">Packaging Cost</label>
-                                    <input type="text"  class="form-control" value="{{ $restaurant->packaging_cost }}" name="packaging_cost"/>
+                                    <input type="text" class="form-control" value="{{ $restaurant->packaging_cost }}"
+                                        name="packaging_cost" />
                                 </div>
                             </div>
                         </div>
-                        
+
                         <small class="nav-subtitle text-secondary border-bottom">{{ __('messages.login') }}
                             {{ __('messages.info') }}</small>
                         <div class="row">
@@ -347,68 +349,75 @@
                             </div>
                         </div>
                         <label>Slab Charge For Delivery</label>
-                    <br/>
-                    <button type="button" id="but_add" class="btn btn-primary">Add More</button>
-                    
-                    
-                    <?php if(!empty(json_decode( $restaurant->vendor->delivery_slab ))){ foreach(json_decode( $restaurant->vendor->delivery_slab ) as $row){ ?>
-                    
-                    <div class="row custom_duplicate">
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label class="input-label d-inline" for="exampleFormControlInput1">From</label>
-                                <input  type="text" class="form-control" value="{{$row->from}}" name="delivery_charges_slab_type[]"/>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label class="input-label d-inline" for="exampleFormControlInput1">To</label>
-                                <input  type="text" class="form-control" value="{{$row->to}}" name="delivery_charges_slab_type_1[]"/>
-                            </div>
-                        </div>
-                        <div class="col-5">
-                            <div class="form-group">
-                                <label class="input-label d-inline" for="exampleFormControlInput1">Value</label>
-                                <input type="text" class="form-control" value="{{$row->value}}" name="delivery_charges_slab_value[]"/>
-                            </div>
-                        </div>
-                        <div class="col-1">
-                            <div class="form-group">
-                                <a href="#" class="btn btn-danger btn-sm remove_btn mt-4">Remove </a>
-                            </div>
-                        </div>
-                    </div>
-                    <?php }}?>
-                    
-                    <?php if(empty($restaurant->vendor->delivery_slab)){?>
-                    
+                        <br />
+                        <button type="button" id="but_add" class="btn btn-primary">Add More</button>
+
+
+                        <?php if(!empty(json_decode( $restaurant->vendor->delivery_slab ))){ foreach(json_decode( $restaurant->vendor->delivery_slab ) as $i => $row){ ?>
+
                         <div class="row custom_duplicate">
                             <div class="col-3">
                                 <div class="form-group">
                                     <label class="input-label d-inline" for="exampleFormControlInput1">From</label>
-                                    <input  type="text" class="form-control"  name="delivery_charges_slab_type[]"/>
+                                    <input type="text" class="form-control" value="{{ $row->from }}"
+                                        name="delivery_charges_slab_type[]" />
                                 </div>
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
                                     <label class="input-label d-inline" for="exampleFormControlInput1">To</label>
-                                    <input  type="text" class="form-control"  name="delivery_charges_slab_type_1[]"/>
+                                    <input type="text" class="form-control" value="{{ $row->to }}"
+                                        name="delivery_charges_slab_type_1[]" />
                                 </div>
                             </div>
                             <div class="col-5">
                                 <div class="form-group">
                                     <label class="input-label d-inline" for="exampleFormControlInput1">Value</label>
-                                    <input type="text" class="form-control"  name="delivery_charges_slab_value[]"/>
+                                    <input type="text" class="form-control" value="{{ $row->value }}"
+                                        name="delivery_charges_slab_value[]" />
                                 </div>
                             </div>
                             <div class="col-1">
                                 <div class="form-group">
+
                                     <a href="#" class="btn btn-danger btn-sm remove_btn mt-4">Remove </a>
+
+
                                 </div>
                             </div>
                         </div>
-                    
-                    <?php }?>
+                        <?php }}?>
+
+                        @if (count(json_decode($restaurant->vendor->delivery_slab)) == 0 || empty($restaurant->vendor->delivery_slab))
+                            <div class="row custom_duplicate">
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label class="input-label d-inline" for="exampleFormControlInput1">From</label>
+                                        <input type="text" class="form-control" name="delivery_charges_slab_type[]" />
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label class="input-label d-inline" for="exampleFormControlInput1">To</label>
+                                        <input type="text" class="form-control"
+                                            name="delivery_charges_slab_type_1[]" />
+                                    </div>
+                                </div>
+                                <div class="col-5">
+                                    <div class="form-group">
+                                        <label class="input-label d-inline" for="exampleFormControlInput1">Value</label>
+                                        <input type="text" class="form-control"
+                                            name="delivery_charges_slab_value[]" />
+                                    </div>
+                                </div>
+                                <div class="col-1">
+                                    <div class="form-group">
+                                        <a href="#" class="btn btn-danger btn-sm remove_btn mt-4">Remove </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         <button type="submit" class="btn btn-primary">{{ __('messages.submit') }}</button>
 
                     </form>
@@ -480,43 +489,43 @@
                 const places = searchBox.getPlaces();
 
                 if (places.length == 0) {
-                return;
+                    return;
                 }
                 // Clear out the old markers.
                 markers.forEach((marker) => {
-                marker.setMap(null);
+                    marker.setMap(null);
                 });
                 markers = [];
                 // For each place, get the icon, name and location.
                 const bounds = new google.maps.LatLngBounds();
                 places.forEach((place) => {
-                if (!place.geometry || !place.geometry.location) {
-                    console.log("Returned place contains no geometry");
-                    return;
-                }
-                const icon = {
-                    url: place.icon,
-                    size: new google.maps.Size(71, 71),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(17, 34),
-                    scaledSize: new google.maps.Size(25, 25),
-                };
-                // Create a marker for each place.
-                markers.push(
-                    new google.maps.Marker({
-                    map,
-                    icon,
-                    title: place.name,
-                    position: place.geometry.location,
-                    })
-                );
+                    if (!place.geometry || !place.geometry.location) {
+                        console.log("Returned place contains no geometry");
+                        return;
+                    }
+                    const icon = {
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(25, 25),
+                    };
+                    // Create a marker for each place.
+                    markers.push(
+                        new google.maps.Marker({
+                            map,
+                            icon,
+                            title: place.name,
+                            position: place.geometry.location,
+                        })
+                    );
 
-                if (place.geometry.viewport) {
-                    // Only geocodes have viewport.
-                    bounds.union(place.geometry.viewport);
-                } else {
-                    bounds.extend(place.geometry.location);
-                }
+                    if (place.geometry.viewport) {
+                        // Only geocodes have viewport.
+                        bounds.union(place.geometry.viewport);
+                    } else {
+                        bounds.extend(place.geometry.location);
+                    }
                 });
                 map.fitBounds(bounds);
             });
@@ -628,28 +637,29 @@
         });
     </script>
     <script>
-        $(document).ready(function(){
- 
-            $('#but_add').click(function(){
-         
-                 // Create clone of <div class='input-form'>
-                 var newel = $('.custom_duplicate:last').clone(true);
-         
-                 // Add after last <div class='input-form'>
-                 $(newel).insertAfter(".custom_duplicate:last");
+        $(document).ready(function() {
+
+            $('#but_add').click(function() {
+                var newel = $('.custom_duplicate:last').clone(true);
+                $(newel).insertAfter(".custom_duplicate:last");
             });
             $(".remove_btn").click(function(e) {
+                e.preventDefault(); // prevent default action first
+
+                // count how many .custom_duplicate elements exist
+                const total = $(".custom_duplicate").length;
+
+                // remove only if more than one
+                if (total > 1) {
                     $(this).closest(".custom_duplicate").remove();
-                    e.preventDefault();
+                } else {
+                    // optional: show a warning or disable the last removal
+                    alert("At least one item must remain!");
+                }
             });
-        
-            // $('.txt').focus(function(){
-            //      $(this).css('border-color','red');
-            // });
-         
-            // $('.txt').focusout(function(){
-            //      $(this).css('border-color','initial');
-            // });
+
+
+
         });
     </script>
 @endpush

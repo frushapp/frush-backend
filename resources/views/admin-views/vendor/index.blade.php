@@ -15,7 +15,6 @@
                 height: 200px;
             }
         }
-
     </style>
 @endpush
 
@@ -67,8 +66,7 @@
                                 <label class="input-label" for="address">{{ __('messages.restaurant') }}
                                     {{ __('messages.address') }}</label>
                                 <textarea type="text" name="address" class="form-control"
-                                    placeholder="{{ __('messages.restaurant') }} {{ __('messages.address') }}"
-                                    required>{{ old('address') }}</textarea>
+                                    placeholder="{{ __('messages.restaurant') }} {{ __('messages.address') }}" required>{{ old('address') }}</textarea>
                             </div>
                         </div>
                         <div class="col-md-3 col-lg-3 col-sm-12">
@@ -91,15 +89,14 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <center>
+                            <div>
                                 <img style="max-width: 100%;border: 1px solid; border-radius: 10px; max-height:200px;"
                                     id="coverImageViewer" src="{{ asset('public/assets/admin/img/900x400/img1.jpg') }}"
                                     alt="Product thumbnail" />
-                            </center>
+                            </div>
                             <div class="form-group pt-2">
                                 <label for="name">{{ __('messages.upload') }} {{ __('messages.cover') }}
-                                    {{ __('messages.photo') }} <span
-                                        class="text-danger">({{ __('messages.ratio') }}
+                                    {{ __('messages.photo') }} <span class="text-danger">({{ __('messages.ratio') }}
                                         2:1)</span></label>
                                 <div class="custom-file">
                                     <input type="file" name="cover_photo" id="coverImageUpload" class="custom-file-input"
@@ -110,11 +107,11 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <center>
+                            <div>
                                 <img style="height: 200px;border: 1px solid; border-radius: 10px;" id="viewer"
                                     src="{{ asset('public/assets/admin/img/400x400/img2.jpg') }}"
                                     alt="delivery-man image" />
-                            </center>
+                            </div>
 
                             <div class="form-group pt-2">
                                 <label class="input-label">{{ __('messages.restaurant') }}
@@ -142,13 +139,13 @@
                                             alt="{{ __('messages.select_zone_for_map') }}"></span></label>
                                 <select name="zone_id" id="choice_zones" required class="form-control js-select2-custom"
                                     data-placeholder="{{ __('messages.select') }} {{ __('messages.zone') }}">
-                                    
+
                                     <option value="" selected>{{ __('messages.select') }}
                                         {{ __('messages.zone') }}</option>
                                     @foreach (\App\Models\Zone::all() as $zone)
                                         @if (isset(auth('admin')->user()->zone_id))
                                             @if (auth('admin')->user()->zone_id == $zone->id)
-                                                <option value="{{ $zone->id }}" >{{ $zone->name }}
+                                                <option value="{{ $zone->id }}">{{ $zone->name }}
                                                 </option>
                                             @endif
                                         @else
@@ -178,13 +175,16 @@
                                         title="{{ __('messages.restaurant_lat_lng_warning') }}"><img
                                             src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                             alt="{{ __('messages.restaurant_lat_lng_warning') }}"></span></label>
-                                <input type="text" name="longitude" class="form-control" placeholder="Ex : 103.344322"
-                                    id="longitude" value="{{ old('longitude') }}" required readonly>
+                                <input type="text" name="longitude" class="form-control"
+                                    placeholder="Ex : 103.344322" id="longitude" value="{{ old('longitude') }}" required
+                                    readonly>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12 col-12">
-                        <input id="pac-input" class="controls rounded" style="height: 3em;width:fit-content;" title="{{__('messages.search_your_location_here')}}" type="text" placeholder="{{__('messages.search_here')}}"/>
+                        <input id="pac-input" class="controls rounded" style="height: 3em;width:fit-content;"
+                            title="{{ __('messages.search_your_location_here') }}" type="text"
+                            placeholder="{{ __('messages.search_here') }}" />
                         <div id="map"></div>
                     </div>
 
@@ -222,7 +222,7 @@
                     </div>
                     <br>
 
- <div class="row">
+                    <div class="row">
                         <div class="col-md-6 col-lg-6 col-sm-12">
                             <div class="form-group">
                                 <label class="input-label" for="address">Packaging Status (Fixed/Variable)</label>
@@ -235,7 +235,7 @@
                         <div class="col-md-6 col-lg-6 col-sm-12">
                             <div class="form-group">
                                 <label class="input-label" for="address">Packaging Cost</label>
-                                <input type="text"  class="form-control" name="packaging_cost"/>
+                                <input type="text" class="form-control" name="packaging_cost" />
                             </div>
                         </div>
                     </div>
@@ -244,20 +244,19 @@
                         {{ __('messages.info') }}</small>
 
 
-                   
+
 
                     <div class="row">
                         <div class="col-md-4 col-12">
                             <div class="form-group">
                                 <label class="input-label" for="email">{{ __('messages.email') }}</label>
-                                <input type="email" name="email" class="form-control" placeholder="Ex : ex@example.com"
-                                    value="{{ old('email') }}" required>
+                                <input type="email" name="email" class="form-control"
+                                    placeholder="Ex : ex@example.com" value="{{ old('email') }}" required>
                             </div>
                         </div>
                         <div class="col-md-4 col-12">
                             <div class="js-form-message form-group">
-                                <label class="input-label"
-                                    for="signupSrPassword">{{ __('messages.password') }}</label>
+                                <label class="input-label" for="signupSrPassword">{{ __('messages.password') }}</label>
 
                                 <div class="input-group input-group-merge">
                                     <input type="password" class="js-toggle-password form-control" name="password"
@@ -304,52 +303,48 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="col-md-4 col-12">
 
                             <label>Slab Charge For Delivery</label>
-                            <br/>
-                            <button type="button" id="but_add" class="btn btn-primary">Add More</button>
-                            
-        
-        
-                            <div class="row custom_duplicate">
-                                <div class="col-3">
-                                    <div class="form-group">
-                                        <label class="input-label d-inline" for="exampleFormControlInput1">From</label>
-                                        <input  type="text" class="form-control"  name="delivery_charges_slab_type[]"/>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="form-group">
-                                        <label class="input-label d-inline" for="exampleFormControlInput1">To</label>
-                                        <input  type="text" class="form-control"  name="delivery_charges_slab_type_1[]"/>
-                                    </div>
-                                </div>
-                                <div class="col-5">
-                                    <div class="form-group">
-                                        <label class="input-label d-inline" for="exampleFormControlInput1">Value</label>
-                                        <input type="text" class="form-control"  name="delivery_charges_slab_value[]"/>
-                                    </div>
-                                </div>
-                                <div class="col-1">
-                                    <div class="form-group">
-                                        <a href="#" class="btn btn-danger btn-sm remove_btn mt-4">Remove </a>
-                                    </div>
+                        </div>
+                        <br />
+                        <button type="button" id="but_add" class="btn btn-primary">Add More</button>
+                        <div class="row custom_duplicate">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label class="input-label d-inline" for="exampleFormControlInput1">From</label>
+                                    <input type="text" class="form-control" name="delivery_charges_slab_type[]" />
                                 </div>
                             </div>
-                        
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label class="input-label d-inline" for="exampleFormControlInput1">To</label>
+                                    <input type="text" class="form-control" name="delivery_charges_slab_type_1[]" />
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <label class="input-label d-inline" for="exampleFormControlInput1">Value</label>
+                                    <input type="text" class="form-control" name="delivery_charges_slab_value[]" />
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <div class="form-group">
+                                    <a href="#" class="btn btn-danger btn-sm remove_btn mt-4">Remove </a>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
-                    
-                    
-                    
-                    <button type="submit" class="btn btn-primary">{{ __('messages.submit') }}</button>
-
-                </form>
-
             </div>
+
+            <button type="submit" class="btn btn-primary">{{ __('messages.submit') }}</button>
+
+            </form>
+
         </div>
+    </div>
     </div>
 
 @endsection
@@ -358,7 +353,7 @@
     <script>
         $(document).on('ready', function() {
             @if (isset(auth('admin')->user()->zone_id))
-            $('#choice_zones').trigger('change');
+                $('#choice_zones').trigger('change');
             @endif
             // INITIALIZATION OF SHOW PASSWORD
             // =======================================================
@@ -498,43 +493,43 @@
                 const places = searchBox.getPlaces();
 
                 if (places.length == 0) {
-                return;
+                    return;
                 }
                 // Clear out the old markers.
                 markers.forEach((marker) => {
-                marker.setMap(null);
+                    marker.setMap(null);
                 });
                 markers = [];
                 // For each place, get the icon, name and location.
                 const bounds = new google.maps.LatLngBounds();
                 places.forEach((place) => {
-                if (!place.geometry || !place.geometry.location) {
-                    console.log("Returned place contains no geometry");
-                    return;
-                }
-                const icon = {
-                    url: place.icon,
-                    size: new google.maps.Size(71, 71),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(17, 34),
-                    scaledSize: new google.maps.Size(25, 25),
-                };
-                // Create a marker for each place.
-                markers.push(
-                    new google.maps.Marker({
-                    map,
-                    icon,
-                    title: place.name,
-                    position: place.geometry.location,
-                    })
-                );
+                    if (!place.geometry || !place.geometry.location) {
+                        console.log("Returned place contains no geometry");
+                        return;
+                    }
+                    const icon = {
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(25, 25),
+                    };
+                    // Create a marker for each place.
+                    markers.push(
+                        new google.maps.Marker({
+                            map,
+                            icon,
+                            title: place.name,
+                            position: place.geometry.location,
+                        })
+                    );
 
-                if (place.geometry.viewport) {
-                    // Only geocodes have viewport.
-                    bounds.union(place.geometry.viewport);
-                } else {
-                    bounds.extend(place.geometry.location);
-                }
+                    if (place.geometry.viewport) {
+                        // Only geocodes have viewport.
+                        bounds.union(place.geometry.viewport);
+                    } else {
+                        bounds.extend(place.geometry.location);
+                    }
                 });
                 map.fitBounds(bounds);
             });
@@ -596,17 +591,27 @@
         });
     </script>
     <script>
-        $(document).ready(function(){
- 
-            $('#but_add').click(function(){
-         
-                 var newel = $('.custom_duplicate:last').clone(true);
-         
-                 $(newel).insertAfter(".custom_duplicate:last");
+        $(document).ready(function() {
+
+            $('#but_add').click(function() {
+
+                var newel = $('.custom_duplicate:last').clone(true);
+
+                $(newel).insertAfter(".custom_duplicate:last");
             });
             $(".remove_btn").click(function(e) {
+                e.preventDefault(); // prevent default action first
+
+                // count how many .custom_duplicate elements exist
+                const total = $(".custom_duplicate").length;
+
+                // remove only if more than one
+                if (total > 1) {
                     $(this).closest(".custom_duplicate").remove();
-                    e.preventDefault();
+                } else {
+                    // optional: show a warning or disable the last removal
+                    alert("At least one item must remain!");
+                }
             });
         });
     </script>
