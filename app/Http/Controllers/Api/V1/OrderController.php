@@ -433,7 +433,15 @@ class OrderController extends Controller
             $data['delivery_address'] = $data['delivery_address'] ? json_decode($data['delivery_address']) : $data['delivery_address'];
             $data['restaurant'] = $data['restaurant'] ? Helpers::restaurant_data_formatting($data['restaurant']) : $data['restaurant'];
             $data['delivery_man'] = $data['delivery_man'] ? Helpers::deliverymen_data_formatting([$data['delivery_man']]) : $data['delivery_man'];
-            $data['foods'] = $data['details'] ? Helpers::order_details_data_formatting([$data['details']]) : $data['details'];
+
+            if (!empty($data['details']) && is_array($data['details'])) {
+                $data['details'] = array_map(function ($detail) {
+                    if (isset($detail['food_details']) && is_string($detail['food_details'])) {
+                        $detail['food_details'] = json_decode($detail['food_details'], true);
+                    }
+                    return $detail;
+                }, $data['details']);
+            }
             return $data;
         }, $paginator->items());
         $data = [
