@@ -436,9 +436,9 @@ class OrderController extends Controller
 
             if (!empty($data['details']) && is_array($data['details'])) {
                 $data['details'] = array_map(function ($detail) {
-                    if (isset($detail['food_details']) && is_string($detail['food_details'])) {
-                        $detail['food_details'] = json_decode($detail['food_details'], true);
-                    }
+
+                    $detail['food_details'] = json_decode($detail['food_details'], true);
+
                     return $detail;
                 }, $data['details']);
             }
