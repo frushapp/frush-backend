@@ -99,7 +99,8 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ Request::is('admin/order/list/food_on_the_way') ? 'active' : '' }}">
+                                <li
+                                    class="nav-item {{ Request::is('admin/order/list/food_on_the_way') ? 'active' : '' }}">
                                     <a class="nav-link text-capitalize"
                                         href="{{ route('admin.order.list', ['food_on_the_way']) }}"
                                         title="{{ __('messages.foodOnTheWay') }}">
@@ -188,7 +189,8 @@
                             </ul>
                         </li>
                         <!-- Order dispachment -->
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/dispatch/*') ? 'active' : '' }}">
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/dispatch/*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
                                 title="{{ __('messages.dispatchManagement') }}">
                                 <i class="tio-clock nav-icon"></i>
@@ -212,7 +214,8 @@
                                         </span>
                                     </a>
                                 </li>
-                                <li class="nav-item {{ Request::is('admin/dispatch/list/on_going') ? 'active' : '' }}">
+                                <li
+                                    class="nav-item {{ Request::is('admin/dispatch/list/on_going') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('admin.dispatch.list', ['on_going']) }}"
                                         title="{{ __('messages.ongoingOrders') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
@@ -312,7 +315,8 @@
 
                     <!-- Category -->
                     @if (\App\CentralLogics\Helpers::module_permission_check('category'))
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/category*') ? 'active' : '' }}">
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/category*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
                                 title="{{ __('messages.category') }}">
                                 <i class="tio-category nav-icon"></i>
@@ -368,7 +372,8 @@
 
                     <!-- Attributes -->
                     @if (\App\CentralLogics\Helpers::module_permission_check('attribute'))
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/attribute*') ? 'active' : '' }}">
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/attribute*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.attribute.add-new') }}"
                                 title="{{ __('messages.attributes') }}">
@@ -560,7 +565,8 @@
                     <!-- End Campaign -->
                     <!-- Banner -->
                     @if (\App\CentralLogics\Helpers::module_permission_check('banner'))
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/banner*') ? 'active' : '' }}">
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/banner*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.banner.add-new') }}" title="{{ __('messages.banner') }}">
                                 <i class="tio-image nav-icon"></i>
@@ -572,7 +578,8 @@
                     <!-- End Banner -->
                     <!-- Coupon -->
                     @if (\App\CentralLogics\Helpers::module_permission_check('coupon'))
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/coupon*') ? 'active' : '' }}">
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/coupon*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.coupon.add-new') }}" title="{{ __('messages.coupon') }}">
                                 <i class="tio-gift nav-icon"></i>
@@ -618,7 +625,7 @@
                             </a>
                         </li>
 
-                        <li
+                        {{-- <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/customer/wallet*') ? 'active' : '' }}">
 
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
@@ -650,9 +657,9 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>
+                        </li> --}}
 
-                        <li
+                        {{-- <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/customer/loyalty-point*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link  nav-link-toggle" href="javascript:"
                                 title="{{ __('messages.customer_loyalty_point') }}">
@@ -675,8 +682,8 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>
-                        <li
+                        </li> --}}
+                        {{-- <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/customer/subscribed') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.customer.subscribed') }}" title="Subscribed emails">
@@ -685,8 +692,8 @@
                                     {{ __('messages.subscribed_mail_list') }}
                                 </span>
                             </a>
-                        </li>
-                        <li
+                        </li> --}}
+                        {{-- <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/customer/settings') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.customer.settings') }}"
@@ -696,7 +703,7 @@
                                     {{ __('messages.Customer') }} {{ __('messages.settings') }}
                                 </span>
                             </a>
-                        </li>
+                        </li> --}}
                     @endif
 
 
@@ -984,7 +991,8 @@
                     @endif
 
                     @if (\App\CentralLogics\Helpers::module_permission_check('employee'))
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/employee*') ? 'active' : '' }}">
+                        <li
+                            class="navbar-vertical-aside-has-menu {{ Request::is('admin/employee*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
                                 title="{{ __('messages.Employee') }}">
                                 <i class="tio-user nav-icon"></i>
