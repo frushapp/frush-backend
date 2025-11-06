@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Zone;
 use Grimzy\LaravelMysqlSpatial\Types\Point;
+
 class CustomerController extends Controller
 {
     public function address_list(Request $request)
@@ -28,13 +29,13 @@ class CustomerController extends Controller
             'address_type' => 'required',
             'contact_person_number' => 'required',
             'address' => 'required',
-            
+
             // 'street' => 'required',
             // 'city' => 'required',
             // 'state' => 'required',
             // 'pincode' => 'required',
             // 'floor' => 'required',
-            
+
             'longitude' => 'required',
             'latitude' => 'required',
         ]);
@@ -43,10 +44,9 @@ class CustomerController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        $point = new Point($request->latitude,$request->longitude);
+        $point = new Point($request->latitude, $request->longitude);
         $zone = Zone::contains('coordinates', $point)->first();
-        if(!$zone)
-        {
+        if (!$zone) {
             $errors = [];
             array_push($errors, ['code' => 'coordinates', 'message' => trans('messages.service_not_available_in_this_area')]);
             return response()->json([
@@ -63,22 +63,22 @@ class CustomerController extends Controller
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
             'zone_id' => $zone->id,
-            'delivery_instructions'=> $request->delivery_instructions,
+            'delivery_instructions' => $request->delivery_instructions,
 
-            'street'=> $request->street,
-            'city'=> $request->city,
-            'state'=> $request->state,
-            'pincode'=> $request->pincode,
-            'floor'=> $request->floor,
+            'street' => $request->street,
+            'city' => $request->city,
+            'state' => $request->state,
+            'pincode' => $request->pincode,
+            'floor' => $request->floor,
 
             'created_at' => now(),
             'updated_at' => now()
         ];
         DB::table('customer_addresses')->insert($address);
-        return response()->json(['message' => trans('messages.successfully_added'),'zone_id'=>$zone->id], 200);
+        return response()->json(['message' => trans('messages.successfully_added'), 'zone_id' => $zone->id], 200);
     }
 
-    public function update_address(Request $request,$id)
+    public function update_address(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'contact_person_name' => 'required',
@@ -97,10 +97,9 @@ class CustomerController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $point = new Point($request->latitude,$request->longitude);
+        $point = new Point($request->latitude, $request->longitude);
         $zone = Zone::contains('coordinates', $point)->first();
-        if(!$zone)
-        {
+        if (!$zone) {
             $errors = [];
             array_push($errors, ['code' => 'coordinates', 'message' => trans('messages.service_not_available_in_this_area')]);
             return response()->json([
@@ -127,8 +126,8 @@ class CustomerController extends Controller
             'created_at' => now(),
             'updated_at' => now()
         ];
-        DB::table('customer_addresses')->where('id',$id)->update($address);
-        return response()->json(['message' => trans('messages.updated_successfully'),'zone_id'=>$zone->id], 200);
+        DB::table('customer_addresses')->where('id', $id)->update($address);
+        return response()->json(['message' => trans('messages.updated_successfully'), 'zone_id' => $zone->id], 200);
     }
 
     public function delete_address(Request $request)
@@ -175,8 +174,8 @@ class CustomerController extends Controller
     public function info(Request $request)
     {
         $data = $request->user();
-        $data['order_count'] =(integer)$request->user()->orders->count();
-        $data['member_since_days'] =(integer)$request->user()->created_at->diffInDays();
+        $data['order_count'] = (int)$request->user()->orders->count();
+        $data['member_since_days'] = (int)$request->user()->created_at->diffInDays();
         unset($data['orders']);
         return response()->json($data, 200);
     }
@@ -184,12 +183,10 @@ class CustomerController extends Controller
     public function update_profile(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'f_name' => 'required',
-            'l_name' => 'required',
-            'email' => 'required|unique:users,email,'.$request->user()->id,
+            'f_name' => 'required'
         ], [
             'f_name.required' => 'First name is required!',
-            'l_name.required' => 'Last name is required!',
+
         ]);
 
         if ($validator->fails()) {
@@ -252,8 +249,8 @@ class CustomerController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        DB::table('users')->where('id',$request->user()->id)->update([
-            'cm_firebase_token'=>$request['cm_firebase_token']
+        DB::table('users')->where('id', $request->user()->id)->update([
+            'cm_firebase_token' => $request['cm_firebase_token']
         ]);
 
         return response()->json(['message' => trans('messages.updated_successfully')], 200);
@@ -270,21 +267,21 @@ class CustomerController extends Controller
         }
 
 
-        $zone_id= $request->header('zoneId');
+        $zone_id = $request->header('zoneId');
 
         $interest = $request->user()->interest;
-        $interest = isset($interest) ? json_decode($interest):null;
+        $interest = isset($interest) ? json_decode($interest) : null;
         // return response()->json($interest, 200);
-        
-        $products =  Food::active()->whereHas('restaurant', function($q)use($zone_id){
+
+        $products =  Food::active()->whereHas('restaurant', function ($q) use ($zone_id) {
             $q->where('zone_id', $zone_id);
         })
-        ->when(isset($interest), function($q)use($interest){
-            return $q->whereIn('category_id',$interest);
-        })
-        ->when($interest == null, function($q){
-            return $q->popular();
-        })->limit(5)->get();
+            ->when(isset($interest), function ($q) use ($interest) {
+                return $q->whereIn('category_id', $interest);
+            })
+            ->when($interest == null, function ($q) {
+                return $q->popular();
+            })->limit(5)->get();
         $products = Helpers::product_data_formatting($products, true, false, app()->getLocale());
         return response()->json($products, 200);
     }
@@ -300,7 +297,7 @@ class CustomerController extends Controller
         }
 
         $customer = $request->user();
-        $customer->zone_id = (integer)$request->header('zoneId');
+        $customer->zone_id = (int)$request->header('zoneId');
         $customer->save();
         return response()->json([], 200);
     }
