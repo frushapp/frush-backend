@@ -849,7 +849,7 @@
                                 <span class="text-truncate">{{ __('messages.app_settings') }}</span>
                             </a>
                         </li>
-                        <li
+                        {{-- <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/landing-page-settings*') ? 'active' : '' }}">
                             <a class="nav-link "
                                 href="{{ route('admin.business-settings.landing-page-settings', 'index') }}"
@@ -857,7 +857,7 @@
                                 <span class="tio-website nav-icon"></span>
                                 <span class="text-truncate">{{ __('messages.landing_page_settings') }}</span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/config*') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.business-settings.config-setup') }}"
