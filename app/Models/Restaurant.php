@@ -150,6 +150,13 @@ class Restaurant extends Model
     {
         $query->selectRaw('*, IF(((select count(*) from `restaurant_schedule` where `restaurants`.`id` = `restaurant_schedule`.`restaurant_id` and `restaurant_schedule`.`day` = ' . now()->dayOfWeek . ' and `restaurant_schedule`.`opening_time` < "' . now()->format('H:i:s') . '" and `restaurant_schedule`.`closing_time` >"' . now()->format('H:i:s') . '") > 0), true, false) as open');
     }
+    public function todaySchedule()
+    {
+        return $this->hasMany(RestaurantSchedule::class, 'restaurant_id')
+            ->where('day', now()->dayOfWeek)
+            ->orderBy('opening_time');
+    }
+
 
     public function scopeWeekday($query)
     {
