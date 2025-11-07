@@ -21,39 +21,47 @@ class Helpers
 {
     public static function send_text_message($phone, $otp)
     {
-        $user     = "SWAD_RCS";
-        $pass     = "123456";
-        $sender   = "RCSSMS";
+        // $user     = "SWAD_RCS";
+        // $pass     = "123456";
+        // $sender   = "RCSSMS";
 
-        $text     = "swad_rcs";
-        $priority = "rcs";
-        $stype    = "normal";
-        $params   = $otp;
+        // $text     = "swad_rcs";
+        // $priority = "rcs";
+        // $stype    = "normal";
+        // $params   = $otp;
 
-        $url = "https://bhashsms.com/api/sendmsgrcs.php?"
-            . "user=" . urlencode($user)
-            . "&pass=" . urlencode($pass)
-            . "&sender=" . urlencode($sender)
-            . "&phone=" . urlencode($phone)
-            . "&text=" . urlencode($text)
-            . "&priority=" . urlencode($priority)
-            . "&stype=" . urlencode($stype)
-            . "&params=" . urlencode($params);
-        $response = Http::get('https://bhashsms.com/api/sendmsgrcs.php', [
-            'user' => $user,
-            'pass' => $pass,
-            'sender' => $sender,
-            'phone' => $phone,
-            'text' => $text,
-            'priority' => $priority,
-            'stype' => $stype,
-            'params' => $params,
-        ]);
-        if ($response->successful()) {
-            return true;
-        } else {
-            return false;
-        }
+        // $url = "https://bhashsms.com/api/sendmsgrcs.php?"
+        //     . "user=" . urlencode($user)
+        //     . "&pass=" . urlencode($pass)
+        //     . "&sender=" . urlencode($sender)
+        //     . "&phone=" . urlencode($phone)
+        //     . "&text=" . urlencode($text)
+        //     . "&priority=" . urlencode($priority)
+        //     . "&stype=" . urlencode($stype)
+        //     . "&params=" . urlencode($params);
+        // $response = Http::get('https://bhashsms.com/api/sendmsgrcs.php', [
+        //     'user' => $user,
+        //     'pass' => $pass,
+        //     'sender' => $sender,
+        //     'phone' => $phone,
+        //     'text' => $text,
+        //     'priority' => $priority,
+        //     'stype' => $stype,
+        //     'params' => $params,
+        // ]);
+        // if ($response->successful()) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
+        $url = " https://www.fast2sms.com/dev/bulkV2?authorization=62xKqTGdDbDXoIdiXLln7zxn2Ajt6AMw4sE9A4tdfjgQOK76kR3pwwXdyhp9&route=dlt&sender_id=SWDAPP&message=194692&variables_values={$otp}%7C&flash=0&numbers={$phone}&schedule_time=";
+        $response = Http::get($url);
+        return true;
+        // if ($response->successful()) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
     }
     public static function error_processor($validator)
     {
