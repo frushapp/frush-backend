@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\ZoneController;
 use App\Http\Controllers\Api\V1\Auth\DeliveryManLoginController;
 use App\Http\Controllers\Api\V1\ProductController;
@@ -285,4 +286,5 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
     });
 
     Route::get('zone-wise-products', [ZoneController::class, 'products']);
+    Route::get('faq', [FaqController::class, 'index']);
 });

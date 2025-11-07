@@ -13,10 +13,13 @@ class FaqController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $res['title'] = 'List of Faq';
         $res['items'] = Faq::orderBy('id', 'DESC')->get();
+        if ($request->expectsJson()) {
+            return response()->json(['data' => $res['items'], 'success' => '1']);
+        }
         return view('admin-views.faq.index', $res);
     }
 
