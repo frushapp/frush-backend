@@ -17,8 +17,8 @@ class RestaurantSchedule extends Model
     protected $table = 'restaurant_schedule';
 
     protected $casts = [
-        'day'=>'integer',
-        'restaurant_id'=>'integer',
+        'day' => 'integer',
+        'restaurant_id' => 'integer',
     ];
 
     public function restaurant()
