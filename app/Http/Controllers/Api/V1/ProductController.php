@@ -20,7 +20,7 @@ class ProductController extends Controller
     public function get_all_products(Request $request)
     {
         $zone_id = $request->header('zoneId');
-        $isVeg = $request->query('veg');
+        $isVeg = $request->query('type');
         $isPopular = $request->query('popular');
         $isTrending = $request->query('trending');
         $isLatest = $request->query('latest');

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -18,13 +19,16 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'f_name', 
-        'l_name', 
-        'phone', 
-        'email', 
+        'f_name',
+        'l_name',
+        'phone',
+        'email',
         'password',
         'login_medium',
-        'social_id'
+        'social_id',
+        'referal_code',
+        'parent_referal_code',
+        'parent_id'
     ];
 
     /**
@@ -59,7 +63,8 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    public function addresses(){
+    public function addresses()
+    {
         return $this->hasMany(CustomerAddress::class);
     }
 
@@ -71,5 +76,26 @@ class User extends Authenticatable
     public function wallet_transaction()
     {
         return $this->hasMany(WalletTransaction::class);
+    }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            // Generate a unique referral code
+            do {
+                $code = strtoupper(Str::random(6));
+            } while (User::where('referal_code', $code)->exists());
+
+            $user->referal_code = $code;
+
+            // If user entered a parent referral code, attach it
+            if (!empty($user->parent_referal_code)) {
+                $parent = User::where('referal_code', $user->parent_referal_code)->first();
+                if ($parent) {
+                    $user->parent_id = $parent->id;
+                }
+            }
+        });
     }
 }
