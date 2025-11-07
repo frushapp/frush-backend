@@ -20,6 +20,7 @@ class FaqController extends Controller
         if ($request->expectsJson()) {
             return response()->json(['data' => $res['items'], 'success' => '1']);
         }
+
         return view('admin-views.faq.index', $res);
     }
 

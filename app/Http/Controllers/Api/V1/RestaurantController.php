@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class RestaurantController extends Controller
 {
-    public function get_restaurants(Request $request, $filter_data="all")
+    public function get_restaurants(Request $request, $filter_data = "all")
     {
         if (!$request->hasHeader('zoneId')) {
             $errors = [];
@@ -24,14 +24,14 @@ class RestaurantController extends Controller
         }
 
         $type = $request->query('type', 'all');
-        $zone_id= $request->header('zoneId');
+        $zone_id = $request->header('zoneId');
         $restaurants = RestaurantLogic::get_restaurants($zone_id, $filter_data, $request['limit'], $request['offset'], $type);
         $restaurants['restaurants'] = Helpers::restaurant_data_formatting($restaurants['restaurants'], true);
 
         return response()->json($restaurants, 200);
     }
 
-    public function get_latest_restaurants(Request $request, $filter_data="all")
+    public function get_latest_restaurants(Request $request, $filter_data = "all")
     {
         if (!$request->hasHeader('zoneId')) {
             $errors = [];
@@ -43,7 +43,7 @@ class RestaurantController extends Controller
 
         $type = $request->query('type', 'all');
 
-        $zone_id= $request->header('zoneId');
+        $zone_id = $request->header('zoneId');
         $restaurants = RestaurantLogic::get_latest_restaurants($zone_id, $request['limit'], $request['offset'], $type);
         $restaurants['restaurants'] = Helpers::restaurant_data_formatting($restaurants['restaurants'], true);
 
@@ -60,7 +60,7 @@ class RestaurantController extends Controller
             ], 403);
         }
         $type = $request->query('type', 'all');
-        $zone_id= $request->header('zoneId');
+        $zone_id = $request->header('zoneId');
         $restaurants = RestaurantLogic::get_popular_restaurants($zone_id, $request['limit'], $request['offset'], $type);
         $restaurants['restaurants'] = Helpers::restaurant_data_formatting($restaurants['restaurants'], true);
 
@@ -70,15 +70,14 @@ class RestaurantController extends Controller
     public function get_details($id)
     {
         $restaurant = RestaurantLogic::get_restaurant_details($id);
-        if($restaurant)
-        {
+        if ($restaurant) {
             $category_ids = DB::table('food')
-            ->join('categories', 'food.category_id', '=', 'categories.id')
-            ->selectRaw('IF((categories.position = "0"), categories.id, categories.parent_id) as categories')
-            ->where('food.restaurant_id', $id)
-            ->where('categories.status',1)
-            ->groupBy('categories')
-            ->get();
+                ->join('categories', 'food.category_id', '=', 'categories.id')
+                ->selectRaw('IF((categories.position = "0"), categories.id, categories.parent_id) as categories')
+                ->where('food.restaurant_id', $id)
+                ->where('categories.status', 1)
+                ->groupBy('categories')
+                ->get();
             // dd($category_ids->pluck('categories'));
             $restaurant = Helpers::restaurant_data_formatting($restaurant);
             $restaurant['category_ids'] = array_map('intval', $category_ids->pluck('categories')->toArray());
@@ -102,11 +101,11 @@ class RestaurantController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        
+
         $type = $request->query('type', 'all');
 
-        $zone_id= $request->header('zoneId');
-        $restaurants = RestaurantLogic::search_restaurants($request['name'], $zone_id, $request->category_id,$request['limit'], $request['offset'], $type);
+        $zone_id = $request->header('zoneId');
+        $restaurants = RestaurantLogic::search_restaurants($request['name'], $zone_id, $request->category_id, $request['limit'], $request['offset'], $type);
         $restaurants['restaurants'] = Helpers::restaurant_data_formatting($restaurants['restaurants'], true);
         return response()->json($restaurants, 200);
     }
@@ -124,10 +123,10 @@ class RestaurantController extends Controller
 
 
         $reviews = Review::with(['customer', 'food'])
-        ->whereHas('food', function($query)use($id){
-            return $query->where('restaurant_id', $id);
-        })
-        ->active()->latest()->get();
+            ->whereHas('food', function ($query) use ($id) {
+                return $query->where('restaurant_id', $id);
+            })
+            ->active()->latest()->get();
 
         $storage = [];
         foreach ($reviews as $item) {
@@ -135,21 +134,18 @@ class RestaurantController extends Controller
             $item['food_name'] = null;
             $item['food_image'] = null;
             $item['customer_name'] = null;
-            if($item->food)
-            {
+            if ($item->food) {
                 $item['food_name'] = $item->food->name;
                 $item['food_image'] = $item->food->image;
-                if(count($item->food->translations)>0)
-                {
+                if (count($item->food->translations) > 0) {
                     $translate = array_column($item->food->translations->toArray(), 'value', 'key');
                     $item['food_name'] = $translate['name'];
                 }
             }
-            if($item->customer)
-            {
-                $item['customer_name'] = $item->customer->f_name.' '.$item->customer->l_name;
+            if ($item->customer) {
+                $item['customer_name'] = $item->customer->f_name . ' ' . $item->customer->l_name;
             }
-            
+
             unset($item['food']);
             unset($item['customer']);
             array_push($storage, $item);

@@ -286,5 +286,5 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
     });
 
     Route::get('zone-wise-products', [ZoneController::class, 'products']);
-    Route::get('faq', [FaqController::class, 'index']);
 });
+Route::get('faq', [FaqController::class, 'index']);

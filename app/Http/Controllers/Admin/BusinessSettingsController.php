@@ -84,7 +84,7 @@ class BusinessSettingsController extends Controller
         $delivery_charges_slab_value = $request['delivery_charges_slab_value'];
 
         $index = 0;
-        $array;
+        $array = [];
         if (!empty($delivery_charges_slab_type)) {
             foreach ($delivery_charges_slab_type as $row) {
 
