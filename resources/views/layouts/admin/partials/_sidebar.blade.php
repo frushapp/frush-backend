@@ -888,6 +888,13 @@
                                         <span class="text-truncate">{{ __('messages.terms_and_condition') }}</span>
                                     </a>
                                 </li>
+                                <li class="nav-item ">
+                                    <a class="nav-link " href="{{ route('admin.faq.index') }}"
+                                        title="{{ __('Faq') }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">{{ __('Faq') }}</span>
+                                    </a>
+                                </li>
 
                                 <li
                                     class="nav-item {{ Request::is('admin/business-settings/pages/privacy-policy') ? 'active' : '' }}">

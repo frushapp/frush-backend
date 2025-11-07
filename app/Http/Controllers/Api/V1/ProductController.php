@@ -24,10 +24,7 @@ class ProductController extends Controller
         $isPopular = $request->query('popular');
         $isTrending = $request->query('trending');
         $isLatest = $request->query('latest');
-        $foodQuery = Food::active()->with('restaurant');
-        if (!is_null($isVeg)) {
-            $foodQuery->where('veg', $isVeg);
-        }
+        $foodQuery = Food::active()->with('restaurant')->type($isVeg);
         if (!is_null($isPopular)) {
             $foodQuery->where('is_popular', $isPopular);
         }

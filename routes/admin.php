@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
     /*authentication*/
     Route::group(['namespace' => 'Auth', 'prefix' => 'auth', 'as' => 'auth.'], function () {
@@ -27,7 +26,12 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::resource('provide-deliveryman-earnings', 'ProvideDMEarningController')->middleware('module:provide_dm_earning');
 
         Route::get('maintenance-mode', 'SystemController@maintenance_mode')->name('maintenance-mode');
-
+        Route::get('/faq', 'FaqController@index')->name('faq.index');
+        Route::get('/faq/create', 'FaqController@create')->name('faq.create');
+        Route::post('/faq', 'FaqController@store')->name('faq.store');
+        Route::put('/faq/{faq}', 'FaqController@update')->name('faq.update');
+        Route::get('/faq/{faq}/edit', 'FaqController@edit')->name('faq.edit');
+        Route::delete('/faq/{faq}', 'FaqController@destroy')->name('faq.destroy');
         Route::group(['prefix' => 'dashboard-stats', 'as' => 'dashboard-stats.'], function () {
             Route::post('order', 'DashboardController@order')->name('order');
             Route::post('zone', 'DashboardController@zone')->name('zone');
