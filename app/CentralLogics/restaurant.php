@@ -19,7 +19,7 @@ class RestaurantLogic
             ->when($filter == 'take_away', function ($q) {
                 return $q->takeaway();
             })->weekday()->with(['todaySchedule'])
-            ->Active()->with('schedules')
+            ->Active()->with('schedules')->withOpen()
             ->type($type)
             ->orderBy('open', 'desc')
             ->paginate($limit, ['*'], 'page', $offset);

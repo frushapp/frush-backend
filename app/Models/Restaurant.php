@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Vendor;
 use App\Scopes\ZoneScope;
+use Illuminate\Support\Facades\DB;
 
 class Restaurant extends Model
 {
@@ -148,7 +149,21 @@ class Restaurant extends Model
 
     public function scopeWithOpen($query)
     {
-        $query->selectRaw('*, IF(((select count(*) from `restaurant_schedule` where `restaurants`.`id` = `restaurant_schedule`.`restaurant_id` and `restaurant_schedule`.`day` = ' . now()->dayOfWeek . ' and `restaurant_schedule`.`opening_time` < "' . now()->format('H:i:s') . '" and `restaurant_schedule`.`closing_time` >"' . now()->format('H:i:s') . '") > 0), true, false) as open');
+        $day = now()->dayOfWeek;
+        $time = now()->format('H:i:s');
+
+        return $query->addSelect(DB::raw("
+        IF(
+            (
+                SELECT COUNT(*)
+                FROM restaurant_schedule
+                WHERE restaurant_schedule.restaurant_id = restaurants.id
+                AND restaurant_schedule.day = {$day}
+                AND restaurant_schedule.opening_time < '{$time}'
+                AND restaurant_schedule.closing_time > '{$time}'
+            ) > 0, true, false
+        ) as open
+    "));
     }
     public function todaySchedule()
     {
