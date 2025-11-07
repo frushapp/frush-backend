@@ -18,7 +18,7 @@ class RestaurantLogic
             })
             ->when($filter == 'take_away', function ($q) {
                 return $q->takeaway();
-            })->weekday()->withOpen()->with(['todaySchedule'])
+            })->weekday()->with(['todaySchedule'])
             ->Active()
             ->type($type)
             ->orderBy('open', 'desc')
