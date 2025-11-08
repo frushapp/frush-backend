@@ -54,7 +54,7 @@ class Helpers
         // } else {
         //     return false;
         // }
-        $url = " https://www.fast2sms.com/dev/bulkV2?authorization=62xKqTGdDbDXoIdiXLln7zxn2Ajt6AMw4sE9A4tdfjgQOK76kR3pwwXdyhp9&route=dlt&sender_id=SWDAPP&message=194692&variables_values={$otp}%7C&flash=0&numbers={$phone}&schedule_time=";
+        $url = "https://www.fast2sms.com/dev/bulkV2?authorization=62xKqTGdDbDXoIdiXLln7zxn2Ajt6AMw4sE9A4tdfjgQOK76kR3pwwXdyhp9&route=dlt&sender_id=SWDAPP&message=194692&variables_values={$otp}&flash=0&numbers={$phone}";
         $response = Http::get($url);
         return true;
         // if ($response->successful()) {
