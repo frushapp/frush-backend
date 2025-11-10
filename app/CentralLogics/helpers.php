@@ -21,41 +21,41 @@ class Helpers
 {
     public static function send_text_message($phone, $otp)
     {
-        // $user     = "SWAD_RCS";
-        // $pass     = "123456";
-        // $sender   = "RCSSMS";
+        $user     = "SWAD_RCS";
+        $pass     = "123456";
+        $sender   = "RCSSMS";
 
-        // $text     = "swad_rcs";
-        // $priority = "rcs";
-        // $stype    = "normal";
-        // $params   = $otp;
+        $text     = "swad_rcs";
+        $priority = "rcs";
+        $stype    = "normal";
+        $params   = $otp;
 
-        // $url = "https://bhashsms.com/api/sendmsgrcs.php?"
-        //     . "user=" . urlencode($user)
-        //     . "&pass=" . urlencode($pass)
-        //     . "&sender=" . urlencode($sender)
-        //     . "&phone=" . urlencode($phone)
-        //     . "&text=" . urlencode($text)
-        //     . "&priority=" . urlencode($priority)
-        //     . "&stype=" . urlencode($stype)
-        //     . "&params=" . urlencode($params);
-        // $response = Http::get('https://bhashsms.com/api/sendmsgrcs.php', [
-        //     'user' => $user,
-        //     'pass' => $pass,
-        //     'sender' => $sender,
-        //     'phone' => $phone,
-        //     'text' => $text,
-        //     'priority' => $priority,
-        //     'stype' => $stype,
-        //     'params' => $params,
-        // ]);
+        $url = "https://bhashsms.com/api/sendmsgrcs.php?"
+            . "user=" . urlencode($user)
+            . "&pass=" . urlencode($pass)
+            . "&sender=" . urlencode($sender)
+            . "&phone=" . urlencode($phone)
+            . "&text=" . urlencode($text)
+            . "&priority=" . urlencode($priority)
+            . "&stype=" . urlencode($stype)
+            . "&params=" . urlencode($params);
+        $response = Http::get('https://bhashsms.com/api/sendmsgrcs.php', [
+            'user' => $user,
+            'pass' => $pass,
+            'sender' => $sender,
+            'phone' => $phone,
+            'text' => $text,
+            'priority' => $priority,
+            'stype' => $stype,
+            'params' => $params,
+        ]);
         // if ($response->successful()) {
         //     return true;
         // } else {
         //     return false;
         // }
-        $url = "https://www.fast2sms.com/dev/bulkV2?authorization=62xKqTGdDbDXoIdiXLln7zxn2Ajt6AMw4sE9A4tdfjgQOK76kR3pwwXdyhp9&route=dlt&sender_id=SWDAPP&message=194692&variables_values={$otp}&flash=0&numbers={$phone}";
-        $response = Http::get($url);
+        // $url = "https://www.fast2sms.com/dev/bulkV2?authorization=62xKqTGdDbDXoIdiXLln7zxn2Ajt6AMw4sE9A4tdfjgQOK76kR3pwwXdyhp9&route=dlt&sender_id=SWDAPP&message=194692&variables_values={$otp}&flash=0&numbers={$phone}";
+        // $response = Http::get($url);
         return true;
         // if ($response->successful()) {
         //     return true;
@@ -95,15 +95,25 @@ class Helpers
 
     public static function variation_price($product, $variation)
     {
-        $match = json_decode($variation, true)[0];
+        $decoded = json_decode($variation, true);
+
+        // ✅ Make sure it's an array and has at least one item
+        if (!is_array($decoded) || count($decoded) == 0) {
+            return 0; // or handle gracefully
+        }
+
+        $match = $decoded[0]; // Now safe to access
         $result = 0;
+
         foreach (json_decode($product['variations'], true) as $property => $value) {
-            if ($value['type'] == $match['type']) {
-                $result = $value['price'];
+            if (isset($value['type']) && $value['type'] == $match['type']) {
+                $result = $value['price'] ?? 0;
             }
         }
+
         return $result;
     }
+
 
     public static function product_data_formatting($data, $multi_data = false, $trans = false, $local = 'en')
     {
