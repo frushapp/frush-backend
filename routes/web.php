@@ -17,6 +17,7 @@ Route::get('generate-invoice-mobile/{id}', [OrderController::class, 'generate_in
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('terms-and-conditions', 'HomeController@terms_and_conditions')->name('terms-and-conditions');
+Route::get('driver-privacy-policy', 'HomeController@driver_policy')->name('driver-terms-and-conditions');
 Route::get('about-us', 'HomeController@about_us')->name('about-us');
 Route::get('delete-policy', 'HomeController@delete_policy')->name('delete-policy');
 

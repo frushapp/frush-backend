@@ -31,19 +31,22 @@ class HomeController extends Controller
     public function terms_and_conditions()
     {
         $data = self::get_settings('terms_and_conditions');
-        return view('terms-and-conditions',compact('data'));
+        return view('terms-and-conditions', compact('data'));
     }
-
+    public function driver_policy()
+    {
+        return view('app_web_page.driver_privacy');
+    }
     public function about_us()
     {
         $data = self::get_settings('about_us');
-        return view('about-us',compact('data'));
+        return view('about-us', compact('data'));
     }
-    
-     public function delete_policy()
+
+    public function delete_policy()
     {
         $data = self::get_settings('delete_policy');
-        return view('delete-policy',compact('data'));
+        return view('delete-policy', compact('data'));
     }
 
     public function contact_us()
@@ -54,7 +57,7 @@ class HomeController extends Controller
     public function privacy_policy()
     {
         $data = self::get_settings('privacy_policy');
-        return view('privacy-policy',compact('data'));
+        return view('privacy-policy', compact('data'));
     }
 
     public static function get_settings($name)
