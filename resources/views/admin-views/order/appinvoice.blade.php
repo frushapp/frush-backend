@@ -46,7 +46,7 @@
                 </center>
                 <hr class="non-printable">
             </div>
-            <div class="col-5">
+            <div class="col-md-5 col-12">
                 <div class="text-center pt-4 mb-3">
                     <h2 style="line-height: 1">{{ $order->restaurant->name }}</h2>
                     <h5 style="font-size: 20px;font-weight: lighter;line-height: 1">

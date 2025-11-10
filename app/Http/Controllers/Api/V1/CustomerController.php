@@ -301,4 +301,37 @@ class CustomerController extends Controller
         $customer->save();
         return response()->json([], 200);
     }
+    public function status(Request $request, $id)
+    {
+        $customer = User::findOrFail($id);
+        $customer->status = $request->status;
+        $customer->save();
+
+
+        if ($request->status == 0) {
+            $customer->tokens->each(function ($token, $key) {
+                $token->delete();
+            });
+            if (isset($customer->cm_firebase_token)) {
+                $data = [
+                    'title' => trans('messages.suspended'),
+                    'description' => trans('messages.your_account_has_been_blocked'),
+                    'order_id' => '',
+                    'image' => '',
+                    'type' => 'block'
+                ];
+                Helpers::send_push_notif_to_device($customer->cm_firebase_token, $data);
+
+                DB::table('user_notifications')->insert([
+                    'data' => json_encode($data),
+                    'user_id' => $customer->id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+        }
+
+
+        return response()->json([], 200);
+    }
 }
