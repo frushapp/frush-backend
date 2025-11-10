@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\OrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {

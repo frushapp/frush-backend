@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\OrderController;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('generate-invoice-mobile/{id}', [OrderController::class, 'generate_invoice_mobile']);
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('terms-and-conditions', 'HomeController@terms_and_conditions')->name('terms-and-conditions');
@@ -56,7 +59,6 @@ return view('stripe-test');
 Route::get('pay-stripe', 'StripePaymentController@payment_process_3d')->name('pay-stripe');
 Route::get('pay-stripe/success', 'StripePaymentController@success')->name('pay-stripe.success');
 Route::get('pay-stripe/fail', 'StripePaymentController@fail')->name('pay-stripe.fail');
-
 // Get Route For Show Payment Form
 Route::get('paywithrazorpay', 'RazorPayController@payWithRazorpay')->name('paywithrazorpay');
 Route::post('payment-razor/{order_id}', 'RazorPayController@payment')->name('payment-razor');
@@ -78,13 +80,13 @@ Route::get('/paymob-callback', 'PaymobController@callback')->name('paymob-callba
 //paystack
 Route::post('/paystack-pay', 'PaystackController@redirectToGateway')->name('paystack-pay');
 Route::get('/paystack-callback', 'PaystackController@handleGatewayCallback')->name('paystack-callback');
-Route::get('/paystack',function (){
+Route::get('/paystack', function () {
     return view('paystack');
 });
 
 
 // The route that the button calls to initialize payment
-Route::post('/flutterwave-pay','FlutterwaveController@initialize')->name('flutterwave_pay');
+Route::post('/flutterwave-pay', 'FlutterwaveController@initialize')->name('flutterwave_pay');
 // The callback url after a payment
 Route::get('/rave/callback', 'FlutterwaveController@callback')->name('flutterwave_callback');
 
@@ -99,7 +101,7 @@ Route::any('/paytabs-payment', 'PaytabsController@payment')->name('paytabs-payme
 Route::any('/paytabs-response', 'PaytabsController@callback_response')->name('paytabs-response');
 
 //bkash
-Route::group(['prefix'=>'bkash'], function () {
+Route::group(['prefix' => 'bkash'], function () {
     // Payment Routes for bKash
     Route::post('get-token', 'BkashPaymentController@getToken')->name('bkash-get-token');
     Route::post('create-payment', 'BkashPaymentController@createPayment')->name('bkash-create-payment');
@@ -120,9 +122,9 @@ Route::any('paytm-response', 'PaytmController@callback')->name('paytm-response')
 Route::get('liqpay-payment', 'LiqPayController@payment')->name('liqpay-payment');
 Route::any('liqpay-callback', 'LiqPayController@callback')->name('liqpay-callback');
 
-Route::get('wallet-payment','WalletPaymentController@make_payment')->name('wallet.payment');
+Route::get('wallet-payment', 'WalletPaymentController@make_payment')->name('wallet.payment');
 
-Route::get('/test',function (){
+Route::get('/test', function () {
     dd('Hello tester');
 });
 
@@ -134,9 +136,7 @@ Route::get('authentication-failed', function () {
     ], 401);
 })->name('authentication-failed');
 
-Route::get('module-test',function (){
-
-});
+Route::get('module-test', function () {});
 
 //Restaurant Registration
 Route::group(['prefix' => 'restaurant', 'as' => 'restaurant.'], function () {

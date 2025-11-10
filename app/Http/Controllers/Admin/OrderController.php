@@ -583,6 +583,11 @@ class OrderController extends Controller
         $order = Order::Notpos()->where('id', $id)->first();
         return view('admin-views.order.invoice', compact('order'));
     }
+    public function generate_invoice_mobile($id)
+    {
+        $order = Order::Notpos()->where('id', $id)->first();
+        return view('admin-views.order.appinvoice', compact('order'));
+    }
 
     public function add_payment_ref_code(Request $request, $id)
     {
