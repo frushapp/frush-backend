@@ -220,7 +220,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::post('update-interest', 'CustomerController@update_interest');
         Route::put('cm-firebase-token', 'CustomerController@update_cm_firebase_token');
         Route::get('suggested-foods', 'CustomerController@get_suggested_food');
-        Route::get('status', 'CustomerController@status');
+        Route::post('status', 'CustomerController@status');
 
         Route::group(['prefix' => 'loyalty-point'], function () {
             Route::post('point-transfer', 'LoyaltyPointController@point_transfer');
