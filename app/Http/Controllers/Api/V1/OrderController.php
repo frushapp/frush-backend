@@ -227,7 +227,7 @@ class OrderController extends Controller
         $order->otp = rand(1000, 9999);
         $order->zone_id = $restaurant->zone_id;
         $order->pending = now();
-        $order->confirmed = now();
+        // $order->confirmed = now();
         $order->created_at = now();
         $order->updated_at = now();
         foreach ($request['cart'] as $c) {
