@@ -249,9 +249,12 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
         Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['module:zone']], function () {
             Route::get('/', 'ZoneController@index')->name('home');
+            Route::get('create', 'ZoneController@create')->name('create');
+            Route::get('radius', 'ZoneController@radius')->name('radius');
+            Route::post('radius', 'ZoneController@store_radius')->name('store_radius');
             Route::post('store', 'ZoneController@store')->name('store');
             Route::get('edit/{id}', 'ZoneController@edit')->name('edit');
-            Route::post('update/{id}', 'ZoneController@update')->name('update');
+            Route::post('update/{id}', 'ZoneController@update_radius')->name('update');
             Route::delete('delete/{zone}', 'ZoneController@destroy')->name('delete');
             Route::get('status/{id}/{status}', 'ZoneController@status')->name('status');
             Route::post('search', 'ZoneController@search')->name('search');

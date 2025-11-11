@@ -20,6 +20,11 @@ class ZoneController extends Controller
         $zones = Zone::withCount(['restaurants', 'deliverymen'])->latest()->paginate(config('default_pagination'));
         return view('admin-views.zone.index', compact('zones'));
     }
+    public function create()
+    {
+        $zones = Zone::withCount(['restaurants', 'deliverymen'])->latest()->paginate(config('default_pagination'));
+        return view('admin-views.zone.radius', compact('zones'));
+    }
 
     public function store(Request $request)
     {
@@ -51,6 +56,97 @@ class ZoneController extends Controller
         Toastr::success(trans('messages.zone_added_successfully'));
         return back();
     }
+    public function store_radius(Request $request)
+    {
+
+        $validation = Validator::make($request->all(), [
+            'name' => 'required|unique:zones|max:191',
+            'circle_coordinates' => 'required',
+            'contact' => 'required',
+        ]);
+
+        if ($validation->fails()) {
+            return response()->json(['errors' => $validation->errors()]);
+        }
+        $value = $request->circle_coordinates; // same format as your polygons
+        $polygon = [];
+
+        foreach (explode('),(', trim($value, '()')) as $index => $single_array) {
+            if ($index == 0) {
+                $lastcord = explode(',', $single_array);
+            }
+            $coords = explode(',', $single_array);
+            $polygon[] = new Point($coords[0], $coords[1]);
+        }
+
+        $zone_id = Zone::count() + 1;
+        $polygon[] = new Point($lastcord[0], $lastcord[1]);
+
+        $zone = new Zone();
+        $zone->id = $zone_id;
+        $zone->name = $request->name;
+        $zone->contact = $request->contact;
+        $zone->coordinates = new Polygon([new LineString($polygon)]);
+        $zone->center_lat = $request->latitude;
+        $zone->center_lng = $request->longitude;
+        $zone->radius = $request->radius;
+        $zone->save();
+        Toastr::success(trans('messages.zone_added_successfully'));
+        return back()->with('success', 'Circle zone saved successfully!');
+    }
+    /**
+     * Update zone radius.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     */
+    public function update_radius(Request $request, $id)
+    {
+        // ✅ Validate input
+        $validation = Validator::make($request->all(), [
+            'name' => 'required|max:191|unique:zones,name,' . $id, // allow same name on current zone
+            'circle_coordinates' => 'required',
+            'contact' => 'required',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'radius' => 'required|numeric|min:1',
+        ]);
+
+        if ($validation->fails()) {
+            return response()->json(['errors' => $validation->errors()], 422);
+        }
+
+        // ✅ Parse coordinates string "(lat,lng),(lat,lng)..."
+        $value = $request->circle_coordinates;
+        $polygon = [];
+
+        foreach (explode('),(', trim($value, '()')) as $index => $single_array) {
+            if ($index == 0) {
+                $lastcord = explode(',', $single_array);
+            }
+            $coords = explode(',', $single_array);
+            $polygon[] = new Point((float) $coords[0], (float) $coords[1]);
+        }
+        $polygon[] = new Point((float) $lastcord[0], (float) $lastcord[1]); // close loop
+
+        // ✅ Update existing zone or create new
+        $zone = Zone::find($id);
+        if (!$zone) {
+            $zone = new Zone();
+        }
+
+        $zone->name = $request->name;
+        $zone->contact = $request->contact;
+        $zone->coordinates = new Polygon([new LineString($polygon)]);
+        $zone->center_lat = (float) $request->latitude;
+        $zone->center_lng = (float) $request->longitude;
+        $zone->radius = (float) $request->radius;
+        $zone->save();
+
+        // ✅ Flash success message
+        Toastr::success(__('messages.zone_updated_successfully'));
+        return back()->with('success', 'Zone radius updated successfully!');
+    }
 
     public function edit($id)
     {
@@ -60,7 +156,7 @@ class ZoneController extends Controller
         }
         $zone = Zone::selectRaw("*,ST_AsText(ST_Centroid(`coordinates`)) as center")->findOrFail($id);
         // dd($zone->coordinates);
-        return view('admin-views.zone.edit', compact('zone'));
+        return view('admin-views.zone.edit-radius', compact('zone'));
     }
 
     public function update(Request $request, $id)
