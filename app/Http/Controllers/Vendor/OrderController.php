@@ -135,7 +135,7 @@ class OrderController extends Controller
         ]);
 
         $order = Order::where(['id' => $request->id, 'restaurant_id' => Helpers::get_restaurant_id()])->first();
-        return response()->json($order);
+        // return response()->json($order);
         if ($order->delivered != null) {
             Toastr::warning(trans('messages.cannot_change_status_after_delivered'));
             return back();
