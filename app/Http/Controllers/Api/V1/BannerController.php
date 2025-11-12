@@ -14,29 +14,55 @@ class BannerController extends Controller
 {
     public function get_banners(Request $request)
     {
-        // if (!$request->hasHeader('zoneId')) {
-        //     $errors = [];
-        //     array_push($errors, ['code' => 'zoneId', 'message' => trans('messages.zone_id_required')]);
-        //     return response()->json([
-        //         'errors' => $errors
-        //     ], 403);
-        // }
-        $zone_id= $request->header('zoneId');
-        $banners = Banner::where("type","default")->get();
-        return response()->json(['banners'=>$banners], 200);
+        try {
+            $zone_id = $request->header('zoneId');
 
-        // $campaigns = Campaign::whereHas('restaurants', function($query)use($zone_id){
-        //     $query->where('zone_id', $zone_id);
-        // })->with('restaurants',function($query){
-        //     return $query->WithOpen();
-        // })->running()->active()->get();
-        // try {
-        //     // return response()->json(
-        //     //     ['campaigns'=>Helpers::basic_campaign_data_formatting($campaigns, true),
-        //     //     'banners'=>$banners], 200);
-        //         return response()->json(['banners'=>$banners], 200);
-        // } catch (\Exception $e) {
-        //     return response()->json([], 200);
-        // }
+            $query = Banner::query();
+
+            // Apply Zone Filter (if provided)
+            if ($zone_id) {
+                $query->where('zone_id', $zone_id);
+            }
+
+            // Optional filters via query parameters
+            if ($request->has('type')) {
+                $query->where('type', $request->type);
+            }
+
+            if ($request->has('status')) {
+                $query->where('status', $request->status);
+            }
+
+            if ($request->has('page')) {
+                $query->where('page', $request->page);
+            }
+
+            if ($request->has('position')) {
+                $query->where('position', $request->position);
+            }
+
+            if ($request->has('title')) {
+                $query->where('title', 'like', "%{$request->title}%");
+            }
+
+            // Default type = "default" if none specified
+            if (!$request->has('type')) {
+                $query->where('type', 'default');
+            }
+
+            // Order by newest first
+            $banners = $query->orderBy('id', 'desc')->get();
+
+            return response()->json([
+                'success' => 1,
+                'count' => $banners->count(),
+                'banners' => $banners
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => 0,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

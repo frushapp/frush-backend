@@ -21,51 +21,57 @@ class BannerController extends Controller
     }
 
     public function store(Request $request)
-    {        
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|max:191',
-            'image' => 'required',
-            'banner_type' => 'required',
-            'zone_id' => 'required',
-            'restaurant_id' => 'required_if:banner_type,restaurant_wise',
-            'item_id' => 'required_if:banner_type,item_wise',
-        ]
-        // , [
-        //     'zone_id.required' => trans('messages.select_a_zone'),
-        //     'restaurant_id.required_if'=> trans('messages.Restaurant is required when banner type is restaurant wise'),
-        //     'item_id.required_if'=> trans('messages.Food is required when banner type is food wise'),
-        // ]
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required|max:191',
+                'image' => 'required',
+                'banner_type' => 'required',
+                'zone_id' => 'required',
+                'restaurant_id' => 'required_if:banner_type,restaurant_wise',
+                'item_id' => 'required_if:banner_type,item_wise',
+            ]
+            // , [
+            //     'zone_id.required' => trans('messages.select_a_zone'),
+            //     'restaurant_id.required_if'=> trans('messages.Restaurant is required when banner type is restaurant wise'),
+            //     'item_id.required_if'=> trans('messages.Food is required when banner type is food wise'),
+            // ]
         );
 
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
-        try{
-        $banner = new Banner;
-        $banner->title = $request->title;
-        $banner->type = $request->banner_type;
-        $banner->zone_id = $request->zone_id;
-        $banner->image = Helpers::upload('banner/', 'png', $request->file('image'));
-        
-        if($request->banner_type == 'default'){
-            $banner->data = "default";
-        }
-        if($request->banner_type == 'restaurant_wise'){
-            $banner->data = $request->restaurant_id;
-        } 
-        if($request->banner_type == 'item_wise'){
-            $banner->data = $request->item_id;
-        }
-        // die();
-        // $banner->data = ($request->banner_type == 'restaurant_wise')?$request->restaurant_id:$request->item_id;
-        
-        $banner->save();
-        return response()->json([], 200);
-        }catch(Exception $e){
+        try {
+            $banner = new Banner;
+            $banner->title = $request->title;
+            $banner->type = $request->banner_type;
+            $banner->zone_id = $request->zone_id;
+            $banner->image = Helpers::upload('banner/', 'png', $request->file('image'));
+            if ($request->page) {
+                $banner->page = $request->page;
+            }
+            if ($request->position) {
+                $banner->position = $request->position;
+            }
+            if ($request->banner_type == 'default') {
+                $banner->data = "default";
+            }
+            if ($request->banner_type == 'restaurant_wise') {
+                $banner->data = $request->restaurant_id;
+            }
+            if ($request->banner_type == 'item_wise') {
+                $banner->data = $request->item_id;
+            }
+            // die();
+            // $banner->data = ($request->banner_type == 'restaurant_wise')?$request->restaurant_id:$request->item_id;
+
+            $banner->save();
+            return response()->json([], 200);
+        } catch (\Exception $e) {
             print_r($e->getMessage());
             return response()->json(["message" =>  $e->getMessage()], 200);
         }
-       
     }
 
     public function edit(Banner $banner)
@@ -99,11 +105,11 @@ class BannerController extends Controller
             'item_id' => 'required_if:banner_type,item_wise',
         ], [
             'zone_id.required' => trans('messages.select_a_zone'),
-            'restaurant_id.required_if'=> trans('messages.Restaurant is required when banner type is restaurant wise'),
-            'item_id.required_if'=> trans('messages.Food is required when banner type is food wise'),
+            'restaurant_id.required_if' => trans('messages.Restaurant is required when banner type is restaurant wise'),
+            'item_id.required_if' => trans('messages.Food is required when banner type is food wise'),
         ]);
 
-   
+
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
@@ -112,7 +118,7 @@ class BannerController extends Controller
         $banner->type = $request->banner_type;
         $banner->zone_id = $request->zone_id;
         $banner->image = $request->has('image') ? Helpers::update('banner/', $banner->image, 'png', $request->file('image')) : $banner->image;
-        $banner->data = $request->banner_type=='restaurant_wise'?$request->restaurant_id:$request->item_id;
+        $banner->data = $request->banner_type == 'restaurant_wise' ? $request->restaurant_id : $request->item_id;
         $banner->save();
 
         return response()->json([], 200);
@@ -130,16 +136,17 @@ class BannerController extends Controller
         return back();
     }
 
-    public function search(Request $request){
+    public function search(Request $request)
+    {
         $key = explode(' ', $request['search']);
-        $banners=Banner::where(function ($q) use ($key) {
+        $banners = Banner::where(function ($q) use ($key) {
             foreach ($key as $value) {
                 $q->orWhere('title', 'like', "%{$value}%");
             }
         })->limit(50)->get();
         return response()->json([
-            'view'=>view('admin-views.banner.partials._table',compact('banners'))->render(),
-            'count'=>$banners->count()
+            'view' => view('admin-views.banner.partials._table', compact('banners'))->render(),
+            'count' => $banners->count()
         ]);
     }
 }
