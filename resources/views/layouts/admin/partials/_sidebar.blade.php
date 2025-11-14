@@ -625,7 +625,7 @@
                             </a>
                         </li>
 
-                        {{-- <li
+                        <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/customer/wallet*') ? 'active' : '' }}">
 
                             <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
@@ -639,7 +639,8 @@
 
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
                                 style="display: {{ Request::is('admin/customer/wallet*') ? 'block' : 'none' }}">
-                                <li class="nav-item {{ Request::is('admin/customer/wallet/add-fund') ? 'active' : '' }}">
+                                <li
+                                    class="nav-item {{ Request::is('admin/customer/wallet/add-fund') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('admin.customer.wallet.add-fund') }}"
                                         title="{{ __('messages.add_fund') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
@@ -648,7 +649,8 @@
                                     </a>
                                 </li>
 
-                                <li class="nav-item {{ Request::is('admin/customer/wallet/report*') ? 'active' : '' }}">
+                                <li
+                                    class="nav-item {{ Request::is('admin/customer/wallet/report*') ? 'active' : '' }}">
                                     <a class="nav-link " href="{{ route('admin.customer.wallet.report') }}"
                                         title="{{ __('messages.report') }}">
                                         <span class="tio-circle nav-indicator-icon"></span>
@@ -657,7 +659,7 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li> --}}
+                        </li>
 
                         {{-- <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/customer/loyalty-point*') ? 'active' : '' }}">
