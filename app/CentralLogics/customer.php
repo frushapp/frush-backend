@@ -74,7 +74,7 @@ class CustomerLogic
 
         $loyalty_point_transaction = new LoyaltyPointTransaction();
         $loyalty_point_transaction->user_id = $user->id;
-        $loyalty_point_transaction->transaction_id = \Str::uuid();
+        $loyalty_point_transaction->transaction_id = Str::uuid();
         $loyalty_point_transaction->reference = $referance;
         $loyalty_point_transaction->transaction_type = $transaction_type;
 
