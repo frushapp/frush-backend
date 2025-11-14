@@ -34,14 +34,26 @@
                                     <div class="form-group">
                                         <label class="input-label"
                                             for="exampleFormControlInput1page">{{ __('Page Name') }}</label>
-                                        <input type="text" name="page" class="form-control"
-                                            placeholder="Enter page name">
+                                        {{-- <input type="text" name="page" class="form-control"
+                                            placeholder="Enter page name"> --}}
+                                        <select name="page" id="page" class="form-select" required>
+                                            <option value="">Select</option>
+                                            @foreach (['Home'] as $item)
+                                                <option value="{{ $item }}">{{ $item }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label class="input-label"
                                             for="exampleFormControlInput1Position">{{ __('Page Position') }}</label>
-                                        <input type="text" name="position" class="form-control"
-                                            placeholder="Enter page position">
+                                        {{-- <input type="text" name="position" class="form-control"
+                                            placeholder="Enter page position"> --}}
+                                        <select name="position" id="position" class="form-select" required>
+                                            <option value="">Select</option>
+                                            @foreach (['Top', 'Center', 'Bottom'] as $item)
+                                                <option value="{{ $item }}">{{ $item }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label class="input-label" for="title">{{ __('messages.zone') }}</label>
