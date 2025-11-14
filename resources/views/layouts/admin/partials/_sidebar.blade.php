@@ -695,7 +695,7 @@
                                 </span>
                             </a>
                         </li> --}}
-                        {{-- <li
+                        <li
                             class="navbar-vertical-aside-has-menu {{ Request::is('admin/customer/settings') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                 href="{{ route('admin.customer.settings') }}"
@@ -705,7 +705,7 @@
                                     {{ __('messages.Customer') }} {{ __('messages.settings') }}
                                 </span>
                             </a>
-                        </li> --}}
+                        </li>
                     @endif
 
 
