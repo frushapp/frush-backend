@@ -36,7 +36,7 @@
                                             for="exampleFormControlInput1page">{{ __('Page Name') }}</label>
                                         {{-- <input type="text" name="page" class="form-control"
                                             placeholder="Enter page name"> --}}
-                                        <select name="page" id="page" class="form-select" required>
+                                        <select name="page" id="page" class="form-control" required>
                                             <option value="">Select</option>
                                             @foreach (['Home'] as $item)
                                                 <option value="{{ $item }}">{{ $item }}</option>
@@ -48,7 +48,7 @@
                                             for="exampleFormControlInput1Position">{{ __('Page Position') }}</label>
                                         {{-- <input type="text" name="position" class="form-control"
                                             placeholder="Enter page position"> --}}
-                                        <select name="position" id="position" class="form-select" required>
+                                        <select name="position" id="position" class="form-control" required>
                                             <option value="">Select</option>
                                             @foreach (['Top', 'Center', 'Bottom'] as $item)
                                                 <option value="{{ $item }}">{{ $item }}</option>
