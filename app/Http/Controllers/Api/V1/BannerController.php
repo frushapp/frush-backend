@@ -35,7 +35,7 @@ class BannerController extends Controller
             if ($request->has('title')) {
                 $query->where('title', 'like', "%{$request->title}%");
             }
-            $banners = $query->with('food')->with('restaurant')->orderBy('id', 'desc')->get();
+            $banners = $query->with('food')->orderBy('id', 'desc')->get();
             return response()->json([
                 'success' => 1,
                 'count' => $banners->count(),
