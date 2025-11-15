@@ -108,7 +108,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>{{ __('messages.campaign') }} {{ __('messages.image') }}</label>
-                                        <small style="color: red">* ( {{ __('messages.ratio') }} 3:1 )</small>
+                                        <small style="color: red">* ( {{ __('messages.ratio') }} 2:1 )</small>
                                         <div class="custom-file">
                                             <input type="file" name="image" id="customFileEg1"
                                                 class="custom-file-input"
