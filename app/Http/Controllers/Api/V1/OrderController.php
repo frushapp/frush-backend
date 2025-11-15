@@ -50,17 +50,10 @@ class OrderController extends Controller
     }
     public function get_max_wallet_usable(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'order_amount' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
-        }
 
         $customer = User::find($request->user()->id);
 
-        $walletToUse = Helpers::getMaxWalletUsable($customer, $request->order_amount);
+        $walletToUse = Helpers::getMaxWalletUsable($customer);
 
         return response()->json([
             'max_wallet_usable' => $walletToUse
@@ -394,7 +387,7 @@ class OrderController extends Controller
 
             // $walletToUse = min($walletBalance, $maxWalletUse);
             if ($walletBalance > 0) {
-                $walletToUse = Helpers::getMaxWalletUsable($customer, $order_amount);
+                $walletToUse = Helpers::getMaxWalletUsable($customer);
             } else {
                 $walletToUse = 0;
             }
