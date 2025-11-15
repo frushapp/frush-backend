@@ -365,9 +365,48 @@ class OrderController extends Controller
             }
             $order->order_amount = $order_amount;
 
+            // ---------------------------------------------
+            // 2. WALLET REDEMPTION (50% MAX)
+            // ---------------------------------------------
+            $customer = User::find($request->user()->id);
+            $walletBalance = $customer->wallet_balance;
+
+            // max wallet use = 50% of order amo
+            $maxWalletUse = $order_amount * 0.50;
+
+            $walletToUse = min($walletBalance, $maxWalletUse);
+            $walletToUse = max($walletToUse, 0);
+
+            // apply wallet
+            $order->wallet_discount_amount = $walletToUse;
+
+            // final payable
+            $payable = $order_amount - $walletToUse;
 
 
+            // ---------------------------------------------
+            // 3. PAYMENT STATUS UPDATE
+            // ---------------------------------------------
+            if ($payable <= 0) {
+                $order->payment_status = 'paid';
+                $order->order_status   = 'confirmed';
+                $order->payment_method = 'wallet';
+            } else {
+                $order->payment_status = 'unpaid';
+            }
+
+            // save order
             $order->save();
+            if ($walletToUse > 0) {
+                CustomerLogic::create_wallet_transaction(
+                    $order->user_id,
+                    $walletToUse,
+                    'order_place',
+                    $order->id
+                );
+            }
+
+
             foreach ($order_details as $key => $item) {
                 $order_details[$key]['order_id'] = $order->id;
             }
