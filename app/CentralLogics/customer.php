@@ -49,7 +49,7 @@ class CustomerLogic
             $wallet_transaction->save();
             DB::commit();
 
-            if (in_array($transaction_type, ['loyalty_point', 'order_place', 'add_fund_by_admin'])) return $wallet_transaction;
+            if (in_array($transaction_type, ['loyalty_point', 'order_place', 'add_fund_by_admin', 'referral_cash_back'])) return $wallet_transaction;
             return true;
         } catch (\Exception $ex) {
             info($ex);
