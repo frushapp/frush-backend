@@ -28,7 +28,12 @@ class User extends Authenticatable
         'social_id',
         'referal_code',
         'parent_referal_code',
-        'parent_id'
+        'parent_id',
+        'wallet_balance',
+        'loyalty_point',
+        'order_count',
+        'is_phone_verified',
+        'interest'
     ];
 
     /**

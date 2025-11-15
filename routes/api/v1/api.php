@@ -218,6 +218,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
         Route::get('update-zone', 'CustomerController@update_zone');
         Route::post('update-profile', 'CustomerController@update_profile');
         Route::post('update-interest', 'CustomerController@update_interest');
+        Route::post('update-referral-code', 'CustomerController@update_referral_code');
         Route::put('cm-firebase-token', 'CustomerController@update_cm_firebase_token');
         Route::get('suggested-foods', 'CustomerController@get_suggested_food');
         Route::post('status/{id}', 'CustomerController@status');

@@ -179,6 +179,38 @@ class CustomerController extends Controller
         unset($data['orders']);
         return response()->json($data, 200);
     }
+    public function update_referral_code(Request $request)
+    {
+        // Validate using your actual DB field: referal_code
+        $validator = Validator::make($request->all(), [
+            'referral_code' => 'required|exists:users,referal_code',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $code = $request->referral_code; // entered code
+        $user = User::find($request->user()->id);
+
+        // Prevent user from using their own referral code
+        if ($user->referal_code === $code) {
+            return response()->json(['message' => 'You cannot use your own referral code.'], 403);
+        }
+
+        // Find parent by the entered code
+        $parent = User::where('referal_code', $code)->first();
+
+        if ($parent) {
+            $user->parent_referal_code = $code; // store parent's code
+            $user->parent_id = $parent->id;     // store parent's ID
+        }
+
+        $user->save();
+
+        return response()->json(['success' => 1, 'message' => "referral_code_updated_successfully"], 200);
+    }
+
 
     public function update_profile(Request $request)
     {
