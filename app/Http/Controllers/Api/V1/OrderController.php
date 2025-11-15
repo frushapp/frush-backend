@@ -48,6 +48,24 @@ class OrderController extends Controller
         }
         return response()->json($order, 200);
     }
+    public function get_max_wallet_usable(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_amount' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $customer = User::find($request->user()->id);
+
+        $walletToUse = Helpers::getMaxWalletUsable($customer, $request->order_amount);
+
+        return response()->json([
+            'max_wallet_usable' => $walletToUse
+        ], 200);
+    }
 
     public function place_order(Request $request)
     {
@@ -372,10 +390,15 @@ class OrderController extends Controller
             $walletBalance = $customer->wallet_balance;
 
             // max wallet use = 50% of order amo
-            $maxWalletUse = $order_amount * 0.50;
+            // $maxWalletUse = $order_amount * 0.50;
 
-            $walletToUse = min($walletBalance, $maxWalletUse);
-            $walletToUse = max($walletToUse, 0);
+            // $walletToUse = min($walletBalance, $maxWalletUse);
+            if ($walletBalance > 0) {
+                $walletToUse = Helpers::getMaxWalletUsable($customer, $order_amount);
+            } else {
+                $walletToUse = 0;
+            }
+
 
             // apply wallet
             $order->wallet_discount_amount = $walletToUse;

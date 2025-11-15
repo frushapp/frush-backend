@@ -1260,6 +1260,32 @@ class Helpers
             ));
         }
     }
+    public static function getMaxWalletUsable($user, float $orderAmount)
+    {
+        // Wallet enabled?
+        $walletEnabled = BusinessSetting::where('key', 'wallet_status')->first()->value ?? 0;
+        if ($walletEnabled != "1") {
+            return 0;
+        }
+
+        // % of wallet user can use (e.g., 50%)
+        $walletUsagePercent = BusinessSetting::where('key', 'wallet_usage_percent')->first()->value ?? 50;
+
+        // Maximum CAP (hard limit on wallet redeem)
+        $walletMaxLimit = BusinessSetting::where('key', 'wallet_max_limit')->first()->value ?? 100; // DEFAULT ₹100
+
+        // % based allowed amount
+        $percentAllowedAmount = ($orderAmount * $walletUsagePercent) / 100;
+
+        // User wallet balance
+        $userBalance = $user->wallet_balance;
+
+        // Final usable wallet = smallest of all 3
+        $usable = min($userBalance, $percentAllowedAmount, $walletMaxLimit);
+
+        return round($usable, 2);
+    }
+
 
     public static function env_key_replace($key_from, $key_to, $value)
     {
