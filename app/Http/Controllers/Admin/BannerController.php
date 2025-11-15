@@ -63,6 +63,9 @@ class BannerController extends Controller
             if ($request->banner_type == 'item_wise') {
                 $banner->data = $request->item_id;
             }
+            if ($request->banner_type == 'referral_wise') {
+                $banner->data = "referral";
+            }
             // die();
             // $banner->data = ($request->banner_type == 'restaurant_wise')?$request->restaurant_id:$request->item_id;
 
