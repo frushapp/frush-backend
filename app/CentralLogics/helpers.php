@@ -1260,11 +1260,8 @@ class Helpers
             ));
         }
     }
-    public static function getMaxWalletUsable($user)
+    public static function getMaxWalletUsable($user, float $orderAmount)
     {
-        // User wallet balance
-        $userBalance = $user->wallet_balance;
-
         // Wallet enabled?
         $walletEnabled = BusinessSetting::where('key', 'wallet_status')->first()->value ?? 0;
         if ($walletEnabled != "1") {
@@ -1278,11 +1275,13 @@ class Helpers
         $walletMaxLimit = BusinessSetting::where('key', 'wallet_max_limit')->first()->value ?? 100; // DEFAULT ₹100
 
         // % based allowed amount
-        $percentAllowedAmount = ($userBalance * $walletUsagePercent) / 100;
+        $percentAllowedAmount = ($orderAmount * $walletUsagePercent) / 100;
 
+        // User wallet balance
+        $userBalance = $user->wallet_balance;
 
         // Final usable wallet = smallest of all 3
-        $usable = min($percentAllowedAmount, $walletMaxLimit);
+        $usable = min($userBalance, $percentAllowedAmount, $walletMaxLimit);
 
         return round($usable, 2);
     }
