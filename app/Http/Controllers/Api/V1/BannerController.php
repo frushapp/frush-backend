@@ -46,9 +46,9 @@ class BannerController extends Controller
             }
 
             // Default type = "default" if none specified
-            if (!$request->has('type')) {
-                $query->where('type', 'default');
-            }
+            // if (!$request->has('type')) {
+            //     $query->where('type', 'default');
+            // }
 
             // Order by newest first
             $banners = $query->orderBy('id', 'desc')->get();
