@@ -50,7 +50,7 @@
                                             placeholder="Enter page position"> --}}
                                         <select name="position" id="position" class="form-control" required>
                                             <option value="">Select</option>
-                                            @foreach (['Top', 'Center', 'Bottom'] as $item)
+                                            @foreach (['Top', 'Bottom'] as $item)
                                                 <option value="{{ $item }}">{{ $item }}</option>
                                             @endforeach
                                         </select>

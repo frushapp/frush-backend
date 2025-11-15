@@ -31,4 +31,17 @@ class WalletController extends Controller
         ];
         return response()->json($data, 200);
     }
+    public function createTransaction(Request $request)
+    {
+        $data = [
+            'user_id' => '1',
+            'credit' => '1',
+            'debit' => '1',
+            'admin_bonus' => '0',
+            'balance' => '0',
+            'reference' => '0'
+        ];
+        $transaction = WalletTransaction::create($data);
+        return response()->json(['message' => 'Transaction created successfully', 'transaction' => $transaction], 201);
+    }
 }
