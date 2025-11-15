@@ -16,43 +16,26 @@ class BannerController extends Controller
     {
         try {
             $zone_id = $request->header('zoneId');
-
             $query = Banner::query();
-
-            // Apply Zone Filter (if provided)
             if ($zone_id) {
                 $query->where('zone_id', $zone_id);
             }
-
-            // Optional filters via query parameters
             if ($request->has('type')) {
                 $query->where('type', $request->type);
             }
-
             if ($request->has('status')) {
                 $query->where('status', $request->status);
             }
-
             if ($request->has('page')) {
                 $query->where('page', $request->page);
             }
-
             if ($request->has('position')) {
                 $query->where('position', $request->position);
             }
-
             if ($request->has('title')) {
                 $query->where('title', 'like', "%{$request->title}%");
             }
-
-            // Default type = "default" if none specified
-            // if (!$request->has('type')) {
-            //     $query->where('type', 'default');
-            // }
-
-            // Order by newest first
-            $banners = $query->orderBy('id', 'desc')->get();
-
+            $banners = $query->with('food')->with('restaurant')->orderBy('id', 'desc')->get();
             return response()->json([
                 'success' => 1,
                 'count' => $banners->count(),

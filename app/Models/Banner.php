@@ -16,12 +16,15 @@ class Banner extends Model
     {
         return $this->belongsTo(Zone::class);
     }
-    
+
     public function scopeActive($query)
     {
         return $query->where('status', '=', 1);
     }
-
+    public function food()
+    {
+        return $this->belongsTo(Food::class, 'data', 'id');
+    }
     protected static function booted()
     {
         static::addGlobalScope(new ZoneScope);
