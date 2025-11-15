@@ -398,15 +398,14 @@ class OrderController extends Controller
                         'referral_cash_back',
                         null
                     );
+                    // Cashback for Child (Customer)
+                    CustomerLogic::create_wallet_transaction(
+                        $customer->id,
+                        $cashbackAmount,
+                        'referral_cash_back',
+                        null
+                    );
                 }
-
-                // Cashback for Child (Customer)
-                CustomerLogic::create_wallet_transaction(
-                    $customer->id,
-                    $cashbackAmount,
-                    'referral_cash_back',
-                    null
-                );
             }
 
             // $customer = $request->user();
