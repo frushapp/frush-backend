@@ -13,6 +13,7 @@ use App\Models\OrderDetail;
 use App\Models\Food;
 use App\Models\Restaurant;
 use App\Models\ItemCampaign;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Zone;
@@ -146,7 +147,8 @@ class OrderController extends Controller
         $per_km_shipping_charge = (float)BusinessSetting::where(['key' => 'per_km_shipping_charge'])->first()->value;
         $minimum_shipping_charge = (float)BusinessSetting::where(['key' => 'minimum_shipping_charge'])->first()->value;
         $original_delivery_charge = ($request->distance * $per_km_shipping_charge > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge : $minimum_shipping_charge;
-        // shaun
+
+
 
         $delivery_charges_slab = BusinessSetting::where('key', 'delivery_charges_slab')->first();
 
@@ -166,10 +168,7 @@ class OrderController extends Controller
             } else {
                 $delivery_charge = ($request->distance * $per_km_shipping_charge > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge : $minimum_shipping_charge;
                 //shaun
-                $delivery_charge  = $original_delivery_charge;
-                //shaun
-
-
+                $delivery_charge  = $original_delivery_charge;            //shaun
             }
         }
 
@@ -207,9 +206,6 @@ class OrderController extends Controller
         }
         $order->user_id = $request->user()->id;
         $order->order_amount = $request['order_amount'];
-
-
-
         $order->payment_status = $request['payment_method'] == 'wallet' ? 'paid' : 'unpaid';
         $order->order_status = $request['payment_method'] == 'digital_payment' ? 'failed' : ($request->payment_method == 'wallet' ? 'confirm' : 'pending');
         $order->coupon_code = $request['coupon_code'];
@@ -379,11 +375,21 @@ class OrderController extends Controller
             }
             OrderDetail::insert($order_details);
             Helpers::send_order_notification($order);
-
-            $customer = $request->user();
+            $referCashBackSetting = BusinessSetting::where('key', 'first_order_referral_cash_back')->first();
+            $cashbackAmount = $referCashBackSetting ? (float) $referCashBackSetting->value : 0;
+            $customer = User::find($request->user()->id);
+            $previousOrders = Order::where('user_id', $customer->id)->count();
+            $isFirstOrder   = ($previousOrders == 0);
+            if ($isFirstOrder && $customer->parent_id != null && $cashbackAmount > 0) {
+                $referrer = User::find($customer->parent_id);
+                if ($referrer) {
+                    CustomerLogic::create_wallet_transaction($referrer->id, $cashbackAmount, 'referral_cash_back', null);
+                }
+            }
+            // $customer = $request->user();
             // $customer->zone_id = $restaurant->zone_id;
-            $customer->zone_id = 10;
-            $customer->save();
+            // $customer->zone_id = 10;
+            // $customer->save();
 
             $restaurant->increment('total_order');
             if ($request->payment_method == 'wallet') CustomerLogic::create_wallet_transaction($order->user_id, $order->order_amount, 'order_place', $order->id);
