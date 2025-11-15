@@ -407,6 +407,7 @@ class CustomerAuthController extends Controller
         $validation = Validator::make($request->all(), [
             'mobile' => 'required|digits:10',
             'otp' => 'required|digits:4',
+            'referral_code' => 'nullable|exists:users,referal_code'
         ]);
 
         if ($validation->fails()) {
@@ -415,6 +416,7 @@ class CustomerAuthController extends Controller
 
         $mobile = $request->mobile;
         $otp = $request->otp;
+        $referralCode = $request->referral_code; // incoming code from app
 
         // Find OTP record
         $userOtp = UserOtp::where('mobile', $mobile)
@@ -426,29 +428,52 @@ class CustomerAuthController extends Controller
             return response()->json(['message' => 'Invalid OTP.'], 400);
         }
 
-        // Check if OTP expired
+        // Check expiration
         if (Carbon::now()->gt(Carbon::parse($userOtp->valid_till))) {
             return response()->json(['message' => 'OTP has expired.'], 400);
         }
 
-        // Mark as verified
         $userOtp->update(['is_verified' => '1']);
 
-        // Find or create user by phone number
+        // FIND OR CREATE USER
         $user = User::firstOrCreate(
             ['phone' => $mobile],
             [
-                'f_name' => 'User_' . substr($mobile, -4), // default name
+                'f_name' => 'User_' . substr($mobile, -4),
                 'is_phone_verified' => 1,
-                'password' => bcrypt('password'), // dummy password
+                'password' => bcrypt('password'),
                 'login_medium' => 'mobile',
             ]
         );
 
-        // Generate Passport token
+        // -----------------------
+        // HANDLE REFERRAL CODE
+        // -----------------------
+
+        if ($referralCode) {
+
+            // Prevent user from entering own code
+            if ($user->referal_code === $referralCode) {
+                return response()->json(['message' => 'You cannot use your own referral code.'], 403);
+            }
+
+            // Only allow referral to be applied ONCE
+            if (empty($user->parent_referal_code)) {
+
+                $parent = User::where('referal_code', $referralCode)->first();
+
+                if ($parent) {
+                    $user->parent_referal_code = $referralCode;
+                    $user->parent_id = $parent->id;
+                    $user->save();
+                }
+            }
+        }
+
+        // CREATE TOKEN
         $tokenResult = $user->createToken('authToken')->accessToken;
 
-        // Optionally delete the OTP record to prevent reuse
+        // Remove OTP after success
         $userOtp->delete();
 
         return response()->json([
@@ -457,6 +482,7 @@ class CustomerAuthController extends Controller
             'token' => $tokenResult,
         ], 200);
     }
+
     function formatPhoneString($input)
     {
         // Check if the string is exactly 10 characters
