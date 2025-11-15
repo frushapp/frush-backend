@@ -42,11 +42,11 @@ class CustomerLogic
         $wallet_transaction->created_at = now();
         $wallet_transaction->updated_at = now();
         $user->wallet_balance = $current_balance + $credit - $debit;
-        $wallet_transaction->save();
+
         try {
             DB::beginTransaction();
             $user->save();
-            // $wallet_transaction->save();
+            $wallet_transaction->save();
             DB::commit();
 
             if (in_array($transaction_type, ['loyalty_point', 'order_place', 'add_fund_by_admin'])) return $wallet_transaction;
