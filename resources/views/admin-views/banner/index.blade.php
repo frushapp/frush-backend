@@ -83,7 +83,7 @@
                                             <option value="restaurant_wise">{{ __('messages.restaurant') }}
                                                 {{ __('messages.wise') }}</option>
                                             <option value="item_wise">{{ __('messages.food') }} {{ __('messages.wise') }}
-                                            <option value="refrel_wise">Refrel Wise</option>
+                                            <option value="referral_wise">Referral Wise</option>
                                         </select>
                                     </div>
                                     <div class="form-group" id="restaurant_wise">
