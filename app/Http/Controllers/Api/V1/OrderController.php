@@ -378,7 +378,7 @@ class OrderController extends Controller
             $referCashBackSetting = BusinessSetting::where('key', 'first_order_referral_cash_back')->first();
             $cashbackAmount = $referCashBackSetting ? (float) $referCashBackSetting->value : 0;
             $customer = User::find($request->user()->id);
-            $previousOrders = Order::where('user_id', $customer->id)->count();
+            $previousOrders = Order::where('user_id', $customer->id)->where('id', '!=', $order->id)->count();
             $isFirstOrder   = ($previousOrders == 0);
             if ($isFirstOrder && $customer->parent_id != null && $cashbackAmount > 0) {
                 $referrer = User::find($customer->parent_id);
