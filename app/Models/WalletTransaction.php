@@ -15,10 +15,19 @@ class WalletTransaction extends Model
         'user_id' => 'integer',
         'credit' => 'float',
         'debit' => 'float',
-        'admin_bonus'=>'float',
-        'balance'=>'float',
-        'reference'=>'string',
-        'created_at'=>'string'
+        'admin_bonus' => 'float',
+        'balance' => 'float',
+        'reference' => 'string',
+        'created_at' => 'string'
+    ];
+    protected $fillable = [
+        'user_id',
+        'credit',
+        'debit',
+        'admin_bonus',
+        'balance',
+        'reference',
+        'created_at'
     ];
 
     public function user()
