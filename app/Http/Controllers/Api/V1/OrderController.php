@@ -51,21 +51,7 @@ class OrderController extends Controller
 
     public function place_order(Request $request)
     {
-        $referCashBackSetting = BusinessSetting::where('key', 'first_order_referral_cash_back')->first();
-        $cashbackAmount = $referCashBackSetting ? $referCashBackSetting->value : 0;
-        $customer = User::find($request->user()->id);
-        // $previousOrders = Order::where('user_id', $customer->id)->where('id', '!=', $order->id)->count();
-        // $isFirstOrder   = ($previousOrders == 0);
-        if ($cashbackAmount > 0) {
-            $referrer = User::find($customer->parent_id);
-            // return response()->json(['message' => 'test', 'data' => $referrer], 200);
-            if ($referrer) {
-                $payment =  CustomerLogic::create_wallet_transaction($referrer->id, $cashbackAmount, 'referral_cash_back', null);
-                return response()->json(['message' => 'test', 'data' => $payment, 'user' => $referrer], 200);
-            }
-        }
 
-        die;
         $validator = Validator::make($request->all(), [
             'order_amount' => 'required',
             'payment_method' => 'required|in:cash_on_delivery,digital_payment,wallet',
