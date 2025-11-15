@@ -342,9 +342,6 @@ class OrderController extends Controller
         }
 
         $order_amount = round($total_price + $total_tax_amount + $order->delivery_charge + $order->packaging_fees, config('round_up_to_digit'));
-
-
-
         if ($request->payment_method == 'wallet' && $request->user()->wallet_balance < $order_amount) {
             return response()->json([
                 'errors' => [
@@ -378,15 +375,40 @@ class OrderController extends Controller
             Helpers::send_order_notification($order);
             $referCashBackSetting = BusinessSetting::where('key', 'first_order_referral_cash_back')->first();
             $cashbackAmount = $referCashBackSetting ? $referCashBackSetting->value : 0;
+
             $customer = User::find($request->user()->id);
-            $previousOrders = Order::where('user_id', $customer->id)->where('id', '!=', $order->id)->count();
-            $isFirstOrder   = ($previousOrders == 0);
-            if ($isFirstOrder && $customer->parent_id != null && $cashbackAmount > 0) {
+
+            // Count previous completed orders (excluding this one)
+            $previousOrders = Order::where('user_id', $customer->id)
+                ->where('id', '!=', $order->id)
+                ->count();
+
+            $isFirstOrder = ($previousOrders == 0);
+
+            // Apply cashback only for first-ever order
+            if ($isFirstOrder && $cashbackAmount > 0 && $customer->parent_id != null) {
+
+                // Cashback for Parent
                 $referrer = User::find($customer->parent_id);
+
                 if ($referrer) {
-                    CustomerLogic::create_wallet_transaction($referrer->id, $cashbackAmount, 'referral_cash_back', null);
+                    CustomerLogic::create_wallet_transaction(
+                        $referrer->id,
+                        $cashbackAmount,
+                        'referral_cash_back',
+                        null
+                    );
                 }
+
+                // Cashback for Child (Customer)
+                CustomerLogic::create_wallet_transaction(
+                    $customer->id,
+                    $cashbackAmount,
+                    'referral_cash_back',
+                    null
+                );
             }
+
             // $customer = $request->user();
             // $customer->zone_id = $restaurant->zone_id;
             // $customer->zone_id = 10;
