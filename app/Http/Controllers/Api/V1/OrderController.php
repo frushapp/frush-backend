@@ -58,7 +58,7 @@ class OrderController extends Controller
         // $isFirstOrder   = ($previousOrders == 0);
         if ($cashbackAmount > 0) {
             $referrer = User::find($customer->parent_id);
-            return response()->json(['message' => 'test', 'data' => $referrer], 200);
+            // return response()->json(['message' => 'test', 'data' => $referrer], 200);
             if ($referrer) {
                 CustomerLogic::create_wallet_transaction($referrer->id, $cashbackAmount, 'referral_cash_back', null);
             }
