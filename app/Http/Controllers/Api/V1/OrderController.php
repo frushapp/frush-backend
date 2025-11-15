@@ -60,7 +60,8 @@ class OrderController extends Controller
             $referrer = User::find($customer->parent_id);
             // return response()->json(['message' => 'test', 'data' => $referrer], 200);
             if ($referrer) {
-                CustomerLogic::create_wallet_transaction($referrer->id, $cashbackAmount, 'referral_cash_back', null);
+                $payment =  CustomerLogic::create_wallet_transaction($referrer->id, $cashbackAmount, 'referral_cash_back', null);
+                return response()->json(['message' => 'test', 'data' => $payment, 'user' => $referrer], 200);
             }
         }
 
