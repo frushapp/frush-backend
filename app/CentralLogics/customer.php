@@ -16,7 +16,6 @@ class CustomerLogic
         if (BusinessSetting::where('key', 'wallet_status')->first()->value != 1) return false;
         $user = User::find($user_id);
         $current_balance = $user->wallet_balance;
-
         $wallet_transaction = new WalletTransaction();
         $wallet_transaction->user_id = $user->id;
         $wallet_transaction->transaction_id = Str::uuid();
@@ -43,7 +42,7 @@ class CustomerLogic
         $wallet_transaction->created_at = now();
         $wallet_transaction->updated_at = now();
         $user->wallet_balance = $current_balance + $credit - $debit;
-        return response()->json([$user], 200);
+        $wallet_transaction->save();
         try {
             DB::beginTransaction();
             $user->save();
