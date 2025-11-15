@@ -25,7 +25,7 @@ class CustomerLogic
         $debit = 0.0;
         $credit = 0.0;
 
-        if (in_array($transaction_type, ['add_fund_by_admin', 'add_fund', 'order_refund', 'loyalty_point'])) {
+        if (in_array($transaction_type, ['add_fund_by_admin', 'referral_cash_back', 'add_fund', 'order_refund', 'loyalty_point'])) {
             $credit = $amount;
             if ($transaction_type == 'add_fund') {
                 $wallet_transaction->admin_bonus = $amount * BusinessSetting::where('key', 'wallet_add_fund_bonus')->first()->value / 100;
