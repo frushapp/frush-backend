@@ -17,12 +17,10 @@ class CustomerController extends Controller
     public function customer_list(Request $request)
     {
         $key = [];
-        if($request->search)
-        {
+        if ($request->search) {
             $key = explode(' ', $request['search']);
         }
-        $customers = User::
-        when(count($key) > 0, function($query)use($key){
+        $customers = User::when(count($key) > 0, function ($query) use ($key) {
             foreach ($key as $value) {
                 $query->orWhere('f_name', 'like', "%{$value}%")
                     ->orWhere('l_name', 'like', "%{$value}%")
@@ -30,7 +28,7 @@ class CustomerController extends Controller
                     ->orWhere('phone', 'like', "%{$value}%");
             };
         })
-        ->orderBy('order_count','desc')->paginate(config('default_pagination'));
+            ->orderBy('order_count', 'desc')->paginate(config('default_pagination'));
         return view('admin-views.customer.list', compact('customers'));
     }
 
@@ -39,39 +37,34 @@ class CustomerController extends Controller
         $customer->status = $request->status;
         $customer->save();
 
-        try
-        {
-            if($request->status == 0)
-            {   $customer->tokens->each(function ($token, $key) {
+        try {
+            if ($request->status == 0) {
+                $customer->tokens->each(function ($token, $key) {
                     $token->delete();
                 });
-                if(isset($customer->cm_firebase_token))
-                {
+                if (isset($customer->cm_firebase_token)) {
                     $data = [
                         'title' => trans('messages.suspended'),
                         'description' => trans('messages.your_account_has_been_blocked'),
                         'order_id' => '',
                         'image' => '',
-                        'type'=> 'block'
+                        'type' => 'block'
                     ];
                     Helpers::send_push_notif_to_device($customer->cm_firebase_token, $data);
 
                     DB::table('user_notifications')->insert([
-                        'data'=> json_encode($data),
-                        'user_id'=>$customer->id,
-                        'created_at'=>now(),
-                        'updated_at'=>now()
+                        'data' => json_encode($data),
+                        'user_id' => $customer->id,
+                        'created_at' => now(),
+                        'updated_at' => now()
                     ]);
                 }
-
             }
-
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             Toastr::warning(trans('messages.push_notification_faild'));
         }
 
-        Toastr::success(trans('messages.customer').trans('messages.status_updated'));
+        Toastr::success(trans('messages.customer') . trans('messages.status_updated'));
         return back();
     }
     public function cod_status(User $customer, Request $request)
@@ -79,22 +72,23 @@ class CustomerController extends Controller
         $customer->is_cod_available = $request->cod_status;
         $customer->save();
 
-        Toastr::success(trans('messages.customer').trans('messages.status_updated'));
+        Toastr::success(trans('messages.customer') . trans('messages.status_updated'));
         return back();
     }
 
-    public function search(Request $request){
+    public function search(Request $request)
+    {
         $key = explode(' ', $request['search']);
-        $customers=User::where(function ($q) use ($key) {
+        $customers = User::where(function ($q) use ($key) {
             foreach ($key as $value) {
                 $q->orWhere('f_name', 'like', "%{$value}%")
                     ->orWhere('l_name', 'like', "%{$value}%")
                     ->orWhere('email', 'like', "%{$value}%")
                     ->orWhere('phone', 'like', "%{$value}%");
             }
-        })->orderBy('order_count','desc')->limit(50)->get();
+        })->orderBy('order_count', 'desc')->limit(50)->get();
         return response()->json([
-            'view'=>view('admin-views.customer.partials._table',compact('customers'))->render()
+            'view' => view('admin-views.customer.partials._table', compact('customers'))->render()
         ]);
     }
 
@@ -109,28 +103,46 @@ class CustomerController extends Controller
         return back();
     }
 
-    public function get_customers(Request $request){
+    public function get_customers(Request $request)
+    {
         $key = explode(' ', $request['q']);
-        $data = User::
-        where(function ($q) use ($key) {
+        $data = User::where(function ($q) use ($key) {
             foreach ($key as $value) {
                 $q->orWhere('f_name', 'like', "%{$value}%")
-                ->orWhere('l_name', 'like', "%{$value}%")
-                ->orWhere('phone', 'like', "%{$value}%");
+                    ->orWhere('l_name', 'like', "%{$value}%")
+                    ->orWhere('phone', 'like', "%{$value}%");
             }
         })
-        ->limit(8)
-        ->get([DB::raw('id, CONCAT(f_name, " ", l_name, " (", phone ,")") as text')]);
-        if($request->all) $data[]=(object)['id'=>false, 'text'=>trans('messages.all')];
-        
+            ->limit(8)->get()->map(function ($user) {
+                $first = $user->f_name ?? '';
+                $last  = $user->l_name ?? '';
+                $phone = $user->phone ?? '';
+
+                // Build full name safely
+                $fullName = trim("$first $last");
+
+                // If fullName empty, use fallback values
+                if ($fullName === '') {
+                    $fullName = $phone ?: "User #$user->id";
+                }
+
+                return [
+                    'id'   => $user->id,
+                    'text' => "$fullName ($phone)"
+                ];
+            });
+
+        // ->get([DB::raw('id, CONCAT(f_name, " ", l_name, " (", phone ,")") as text')]);
+        if ($request->all) $data[] = (object)['id' => false, 'text' => trans('messages.all')];
+
 
         return response()->json($data);
     }
 
     public function settings()
     {
-        $data = BusinessSetting::where('key','like','wallet_%')->orWhere('key','like','loyalty_point_%')->get();
-        $data = array_column($data->toArray(), 'value','key');
+        $data = BusinessSetting::where('key', 'like', 'wallet_%')->orWhere('key', 'like', 'loyalty_point_%')->get();
+        $data = array_column($data->toArray(), 'value', 'key');
         return view('admin-views.customer.settings', compact('data'));
     }
 
@@ -140,30 +152,30 @@ class CustomerController extends Controller
             Toastr::info(trans('messages.update_option_is_disable_for_demo'));
             return back();
         }
-        
+
         $request->validate([
-            'add_fund_bonus'=>'nullable|numeric|max:100|min:0',
-            'loyalty_point_exchange_rate'=>'nullable|numeric',
+            'add_fund_bonus' => 'nullable|numeric|max:100|min:0',
+            'loyalty_point_exchange_rate' => 'nullable|numeric',
         ]);
         BusinessSetting::updateOrInsert(['key' => 'wallet_status'], [
-            'value' => $request['customer_wallet']??0
+            'value' => $request['customer_wallet'] ?? 0
         ]);
         BusinessSetting::updateOrInsert(['key' => 'loyalty_point_status'], [
-            'value' => $request['customer_loyalty_point']??0
+            'value' => $request['customer_loyalty_point'] ?? 0
         ]);
         BusinessSetting::updateOrInsert(['key' => 'wallet_add_refund'], [
-            'value' => $request['refund_to_wallet']??0
+            'value' => $request['refund_to_wallet'] ?? 0
         ]);
         BusinessSetting::updateOrInsert(['key' => 'loyalty_point_exchange_rate'], [
-            'value' => $request['loyalty_point_exchange_rate']??0
+            'value' => $request['loyalty_point_exchange_rate'] ?? 0
         ]);
         BusinessSetting::updateOrInsert(['key' => 'loyalty_point_item_purchase_point'], [
-            'value' => $request['item_purchase_point']??0
+            'value' => $request['item_purchase_point'] ?? 0
         ]);
         BusinessSetting::updateOrInsert(['key' => 'loyalty_point_minimum_point'], [
-            'value' => $request['minimun_transfer_point']??0
+            'value' => $request['minimun_transfer_point'] ?? 0
         ]);
-        
+
         Toastr::success(trans('messages.customer_settings_updated_successfully'));
         return back();
     }
@@ -178,7 +190,7 @@ class CustomerController extends Controller
         $key = explode(' ', $request['search']);
         $customers = Newsletter::where(function ($q) use ($key) {
             foreach ($key as $value) {
-                $q->orWhere('email', 'like', "%". $value."%");
+                $q->orWhere('email', 'like', "%" . $value . "%");
             }
         })->orderBy('id', 'desc')->get();
         return response()->json([

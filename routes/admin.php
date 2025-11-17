@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
     /*authentication*/
+    Route::get('customer/select-list', 'CustomerController@get_customers')->name('customer.select-list');
     Route::group(['namespace' => 'Auth', 'prefix' => 'auth', 'as' => 'auth.'], function () {
         Route::get('login', 'LoginController@login')->name('login');
         Route::post('login', 'LoginController@submit')->middleware('actch');
@@ -368,7 +369,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('earning', 'ReportController@earning_index')->name('earning');
             Route::post('set-date', 'ReportController@set_date')->name('set-date');
         });
-        Route::get('customer/select-list', 'CustomerController@get_customers')->name('customer.select-list');
+        // Route::get('customer/select-list', 'CustomerController@get_customers')->name('customer.select-list');
         Route::group(['prefix' => 'customer', 'as' => 'customer.', 'middleware' => ['module:customerList']], function () {
             Route::group(['middleware' => ['module:customerList']], function () {
                 Route::get('list', 'CustomerController@customer_list')->name('list');
