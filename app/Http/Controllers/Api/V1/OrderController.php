@@ -410,24 +410,24 @@ class OrderController extends Controller
             // ---------------------------------------------
             // 3. PAYMENT STATUS UPDATE
             // ---------------------------------------------
-            if ($payable <= 0) {
-                $order->payment_status = 'paid';
-                $order->order_status   = 'confirmed';
-                $order->payment_method = 'wallet';
-            } else {
-                $order->payment_status = 'unpaid';
-            }
+            // if ($payable <= 0) {
+            //     $order->payment_status = 'paid';
+            //     $order->order_status   = 'confirmed';
+            //     $order->payment_method = 'wallet';
+            // } else {
+            //     $order->payment_status = 'unpaid';
+            // }
 
             // save order
             $order->save();
-            if ($walletToUse > 0) {
-                CustomerLogic::create_wallet_transaction(
-                    $order->user_id,
-                    $walletToUse,
-                    'order_place',
-                    $order->id
-                );
-            }
+            // if ($walletToUse > 0) {
+            //     CustomerLogic::create_wallet_transaction(
+            //         $order->user_id,
+            //         $walletToUse,
+            //         'order_place',
+            //         $order->id
+            //     );
+            // }
 
 
             foreach ($order_details as $key => $item) {
@@ -435,40 +435,40 @@ class OrderController extends Controller
             }
             OrderDetail::insert($order_details);
             Helpers::send_order_notification($order);
-            $referCashBackSetting = BusinessSetting::where('key', 'first_order_referral_cash_back')->first();
-            $cashbackAmount = $referCashBackSetting ? $referCashBackSetting->value : 0;
+            // $referCashBackSetting = BusinessSetting::where('key', 'first_order_referral_cash_back')->first();
+            // $cashbackAmount = $referCashBackSetting ? $referCashBackSetting->value : 0;
 
-            $customer = User::find($request->user()->id);
+            // $customer = User::find($request->user()->id);
 
-            // Count previous completed orders (excluding this one)
-            $previousOrders = Order::where('user_id', $customer->id)
-                ->where('id', '!=', $order->id)
-                ->count();
+            // // Count previous completed orders (excluding this one)
+            // $previousOrders = Order::where('user_id', $customer->id)
+            //     ->where('id', '!=', $order->id)
+            //     ->count();
 
-            $isFirstOrder = ($previousOrders == 0);
+            // $isFirstOrder = ($previousOrders == 0);
 
             // Apply cashback only for first-ever order
-            if ($isFirstOrder && $cashbackAmount > 0 && $customer->parent_id != null) {
+            // if ($isFirstOrder && $cashbackAmount > 0 && $customer->parent_id != null) {
 
-                // Cashback for Parent
-                $referrer = User::find($customer->parent_id);
+            //     // Cashback for Parent
+            //     $referrer = User::find($customer->parent_id);
 
-                if ($referrer) {
-                    CustomerLogic::create_wallet_transaction(
-                        $referrer->id,
-                        $cashbackAmount,
-                        'referral_cash_back',
-                        null
-                    );
-                    // Cashback for Child (Customer)
-                    CustomerLogic::create_wallet_transaction(
-                        $customer->id,
-                        $cashbackAmount,
-                        'referral_cash_back',
-                        null
-                    );
-                }
-            }
+            //     if ($referrer) {
+            //         CustomerLogic::create_wallet_transaction(
+            //             $referrer->id,
+            //             $cashbackAmount,
+            //             'referral_cash_back',
+            //             null
+            //         );
+            //         // Cashback for Child (Customer)
+            //         CustomerLogic::create_wallet_transaction(
+            //             $customer->id,
+            //             $cashbackAmount,
+            //             'referral_cash_back',
+            //             null
+            //         );
+            //     }
+            // }
 
             // $customer = $request->user();
             // $customer->zone_id = $restaurant->zone_id;
@@ -492,7 +492,7 @@ class OrderController extends Controller
             return response()->json([
                 'message' => trans('messages.order_placed_successfully'),
                 'order_id' => $order->id,
-                'total_ammount' => $total_price + $order->delivery_charge + $total_tax_amount
+                'total_ammount' => $total_price + $order->delivery_charge + $total_tax_amount - $walletToUse
             ], 200);
         } catch (\Exception $e) {
 
