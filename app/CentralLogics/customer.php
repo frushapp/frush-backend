@@ -45,6 +45,7 @@ class CustomerLogic
         if (in_array($transaction_type, [
             'add_fund_by_admin',
             'referral_cash_back',
+            'order_place_reversal',
             'add_fund',
             'order_refund',
             'loyalty_point'
@@ -67,7 +68,7 @@ class CustomerLogic
         // --------------------------------------
         else if (in_array($transaction_type, [
             'order_place',                    // wallet used
-            'order_place_reversal',           // reverse wallet use
+            // reverse wallet use
             'referral_cash_back_reversal'     // reverse cashback
         ])) {
             $debit = abs($amount); // always positive
