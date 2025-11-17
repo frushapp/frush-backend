@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessSetting;
 use App\Models\User;
+use App\Models\WalletTransaction;
 use Illuminate\Http\Request;
 use Razorpay\Api\Api;
 
@@ -47,14 +48,14 @@ class PaymentController extends Controller
                 $order->order_status = 'pending';
                 $order->confirmed = now();
                 $order->save();
-                if ($order->wallet_discount_amount > 0) {
-                    CustomerLogic::create_wallet_transaction(
-                        $order->user_id,
-                        $order->wallet_discount_amount,
-                        'order_place',
-                        $order->id
-                    );
-                }
+                // if ($order->wallet_discount_amount > 0) {
+                //     CustomerLogic::create_wallet_transaction(
+                //         $order->user_id,
+                //         $order->wallet_discount_amount,
+                //         'order_place',
+                //         $order->id
+                //     );
+                // }
                 // -----------------------------------
                 // APPLY REFERRAL CASHBACK (ONLY NOW)
                 // -----------------------------------
@@ -97,6 +98,9 @@ class PaymentController extends Controller
             } catch (\Exception $e) {
                 // print_r($e);
                 // info($e);
+                WalletTransaction::where('reference', $order->id)
+                    ->where('transaction_type', 'order_place')
+                    ->delete();
                 Order::where('id', $order)
                     ->update([
                         'payment_method' => 'razor_pay',

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\CentralLogics\CustomerLogic;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Scopes\ZoneScope;
@@ -19,14 +20,14 @@ class Order extends Model
         'delivery_address_id' => 'integer',
         'delivery_man_id' => 'integer',
         'delivery_charge' => 'float',
-        'original_delivery_charge'=>'float',
+        'original_delivery_charge' => 'float',
         'user_id' => 'integer',
         'scheduled' => 'integer',
         'restaurant_id' => 'integer',
         'details_count' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'original_delivery_charge'=>'float',
+        'original_delivery_charge' => 'float',
         'delivery_gst' => 'float',
         'platform_fees' => 'float'
     ];
@@ -84,24 +85,24 @@ class Order extends Model
 
     public function scopePreparing($query)
     {
-        return $query->whereIn('order_status', ['confirmed','processing','handover']);
+        return $query->whereIn('order_status', ['confirmed', 'processing', 'handover']);
     }
-    
+
     public function scopeOngoing($query)
     {
-        return $query->whereIn('order_status', ['accepted','confirmed','processing','handover','picked_up']);
+        return $query->whereIn('order_status', ['accepted', 'confirmed', 'processing', 'handover', 'picked_up']);
     }
-    
+
     public function scopeFoodOnTheWay($query)
     {
-        return $query->where('order_status','picked_up');
+        return $query->where('order_status', 'picked_up');
     }
-    
+
     public function scopePending($query)
     {
-        return $query->where('order_status','pending');
+        return $query->where('order_status', 'pending');
     }
-    
+
     // public function scopeRefundRequest($query)
     // {
     //     return $query->where('order_status','refund_requested');
@@ -109,66 +110,189 @@ class Order extends Model
 
     public function scopeFailed($query)
     {
-        return $query->where('order_status','failed');
+        return $query->where('order_status', 'failed');
     }
-    
+
     public function scopeCanceled($query)
     {
-        return $query->where('order_status','canceled');
+        return $query->where('order_status', 'canceled');
     }
-    
+
     public function scopeDelivered($query)
     {
-        return $query->where('order_status','delivered');
+        return $query->where('order_status', 'delivered');
     }
-    
+
     public function scopeRefunded($query)
     {
-        return $query->where('order_status','refunded');
+        return $query->where('order_status', 'refunded');
     }
-    
+
     public function scopeSearchingForDeliveryman($query)
     {
-        return $query->whereNull('delivery_man_id')->where('order_type', '=' , 'delivery')->whereNotIn('order_status',['delivered','failed','canceled', 'refund_requested', 'refunded']);
+        return $query->whereNull('delivery_man_id')->where('order_type', '=', 'delivery')->whereNotIn('order_status', ['delivered', 'failed', 'canceled', 'refund_requested', 'refunded']);
     }
-    
+
     public function scopeDelivery($query)
     {
-        return $query->where('order_type', '=' , 'delivery');
+        return $query->where('order_type', '=', 'delivery');
     }
-    
+
     public function scopeScheduled($query)
     {
         return $query->whereRaw('created_at <> schedule_at')->where('scheduled', '1');
     }
-    
+
     public function scopeOrderScheduledIn($query, $interval)
     {
-        return $query->where(function($query)use($interval){
-            $query->whereRaw('created_at <> schedule_at')->where(function($q) use ($interval) {
-            $q->whereBetween('schedule_at', [Carbon::now()->toDateTimeString(),Carbon::now()->addMinutes($interval)->toDateTimeString()]); 
-            })->orWhere('schedule_at','<',Carbon::now()->toDateTimeString());
+        return $query->where(function ($query) use ($interval) {
+            $query->whereRaw('created_at <> schedule_at')->where(function ($q) use ($interval) {
+                $q->whereBetween('schedule_at', [Carbon::now()->toDateTimeString(), Carbon::now()->addMinutes($interval)->toDateTimeString()]);
+            })->orWhere('schedule_at', '<', Carbon::now()->toDateTimeString());
         })->orWhereRaw('created_at = schedule_at');
-        
     }
 
     public function scopePos($query)
     {
-        return $query->where('order_type', '=' , 'pos');
+        return $query->where('order_type', '=', 'pos');
     }
 
     public function scopeNotpos($query)
     {
-        return $query->where('order_type', '<>' , 'pos');
+        return $query->where('order_type', '<>', 'pos');
     }
 
     public function getCreatedAtAttribute($value)
     {
-        return date('Y-m-d H:i:s',strtotime($value));
+        return date('Y-m-d H:i:s', strtotime($value));
     }
+    public function reverseWalletAndCashback()
+    {
+        // ---------------------------------------------------------
+        // 1. Reverse order_place credit (wallet_used reversal)
+        // ---------------------------------------------------------
+        $orderPlaceTransactions = WalletTransaction::where('reference', $this->id)
+            ->where('transaction_type', 'order_place')
+            ->get();
+
+        if ($orderPlaceTransactions->count() > 0) {
+
+            foreach ($orderPlaceTransactions as $txn) {
+
+                // Skip if already reversed
+                $alreadyReversed = WalletTransaction::where('reference', $this->id)
+                    ->where('transaction_type', 'order_place_reversal')
+                    ->where('user_id', $txn->user_id)
+                    ->exists();
+
+                if (!$alreadyReversed) {
+                    CustomerLogic::create_wallet_transaction(
+                        $txn->user_id,
+                        -abs($txn->amount),      // debit the wallet
+                        'order_place_reversal',  // reversal type
+                        $this->id
+                    );
+                }
+            }
+        }
+
+        // ---------------------------------------------------------
+        // 2. Reverse referral cashback (customer + referrer)
+        // ---------------------------------------------------------
+        $cashbackTransactions = WalletTransaction::where('reference', $this->id)
+            ->where('transaction_type', 'referral_cash_back')
+            ->get();
+
+        if ($cashbackTransactions->count() > 0) {
+
+            foreach ($cashbackTransactions as $txn) {
+
+                // Skip if already reversed
+                $alreadyReversed = WalletTransaction::where('reference', $this->id)
+                    ->where('transaction_type', 'referral_cash_back_reversal')
+                    ->where('user_id', $txn->user_id)
+                    ->exists();
+
+                if (!$alreadyReversed) {
+                    CustomerLogic::create_wallet_transaction(
+                        $txn->user_id,
+                        -abs($txn->amount),              // debit
+                        'referral_cash_back_reversal',   // reversal type
+                        $this->id
+                    );
+                }
+            }
+        }
+    }
+
+    public function grantReferralCashbackIfEligible()
+    {
+        $customer = User::find($this->user_id);
+
+        // must have parent (referrer)
+        if (!$customer || !$customer->parent_id) {
+            return;
+        }
+
+        // cashback amount from settings
+        $cashbackSetting = BusinessSetting::where('key', 'first_order_referral_cash_back')->first();
+        $cashbackAmount = $cashbackSetting ? (float)$cashbackSetting->value : 0;
+
+        if ($cashbackAmount <= 0) {
+            return;
+        }
+
+        // count delivered orders EXCLUDING current one
+        $previousDeliveredCount = Order::where('user_id', $customer->id)
+            ->where('order_status', 'delivered')
+            ->where('id', '!=', $this->id)
+            ->count();
+
+        // only first delivered order
+        $isFirstDelivered = ($previousDeliveredCount == 0);
+
+        if (!$isFirstDelivered) {
+            return; // already received cashback before
+        }
+
+        // get referrer
+        $referrer = User::find($customer->parent_id);
+
+        if (!$referrer) {
+            return;
+        }
+
+        // grant cashback to referrer
+        CustomerLogic::create_wallet_transaction(
+            $referrer->id,
+            $cashbackAmount,
+            'referral_cash_back',
+            $this->id
+        );
+
+        // grant cashback to customer
+        CustomerLogic::create_wallet_transaction(
+            $customer->id,
+            $cashbackAmount,
+            'referral_cash_back',
+            $this->id
+        );
+    }
+
+
 
     protected static function booted()
     {
         static::addGlobalScope(new ZoneScope);
+        static::updated(function ($order) {
+            if ($order->isDirty('order_status') && $order->order_status == 'canceled') {
+                $order->reverseWalletAndCashback();
+            }
+        });
+        static::updated(function ($order) {
+            if ($order->isDirty('order_status') && $order->order_status == 'delivered') {
+                $order->grantReferralCashbackIfEligible();
+            }
+        });
     }
 }

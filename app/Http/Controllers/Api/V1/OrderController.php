@@ -410,24 +410,24 @@ class OrderController extends Controller
             // ---------------------------------------------
             // 3. PAYMENT STATUS UPDATE
             // ---------------------------------------------
-            // if ($payable <= 0) {
-            //     $order->payment_status = 'paid';
-            //     $order->order_status   = 'confirmed';
-            //     $order->payment_method = 'wallet';
-            // } else {
-            //     $order->payment_status = 'unpaid';
-            // }
+            if ($payable <= 0) {
+                $order->payment_status = 'paid';
+                $order->order_status   = 'confirmed';
+                $order->payment_method = 'wallet';
+            } else {
+                $order->payment_status = 'unpaid';
+            }
 
             // save order
             $order->save();
-            // if ($walletToUse > 0) {
-            //     CustomerLogic::create_wallet_transaction(
-            //         $order->user_id,
-            //         $walletToUse,
-            //         'order_place',
-            //         $order->id
-            //     );
-            // }
+            if ($walletToUse > 0) {
+                CustomerLogic::create_wallet_transaction(
+                    $order->user_id,
+                    $walletToUse,
+                    'order_place',
+                    $order->id
+                );
+            }
 
 
             foreach ($order_details as $key => $item) {
@@ -447,7 +447,7 @@ class OrderController extends Controller
 
             // $isFirstOrder = ($previousOrders == 0);
 
-            // Apply cashback only for first-ever order
+            // // Apply cashback only for first-ever order
             // if ($isFirstOrder && $cashbackAmount > 0 && $customer->parent_id != null) {
 
             //     // Cashback for Parent
@@ -550,8 +550,6 @@ class OrderController extends Controller
         ];
         return response()->json($data, 200);
     }
-
-
     public function get_running_orders(Request $request)
     {
         $validator = Validator::make($request->all(), [
