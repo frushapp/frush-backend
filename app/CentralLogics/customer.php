@@ -25,16 +25,58 @@ class CustomerLogic
         $debit = 0.0;
         $credit = 0.0;
 
-        if (in_array($transaction_type, ['add_fund_by_admin', 'referral_cash_back', 'add_fund', 'order_refund', 'loyalty_point'])) {
-            $credit = $amount;
+        // if (in_array($transaction_type, ['add_fund_by_admin', 'referral_cash_back', 'add_fund', 'order_refund', 'loyalty_point'])) {
+        //     $credit = $amount;
+        //     if ($transaction_type == 'add_fund') {
+        //         $wallet_transaction->admin_bonus = $amount * BusinessSetting::where('key', 'wallet_add_fund_bonus')->first()->value / 100;
+        //     } else if ($transaction_type == 'loyalty_point') {
+        //         $credit = (int)($amount / BusinessSetting::where('key', 'loyalty_point_exchange_rate')->first()->value);
+        //     }
+        // } else if ($transaction_type == 'order_place') {
+        //     $debit = $amount;
+        // }
+
+        // $credit = 0;
+        // $debit = 0;
+
+        // --------------------------------------
+        // CREDIT TRANSACTIONS
+        // --------------------------------------
+        if (in_array($transaction_type, [
+            'add_fund_by_admin',
+            'referral_cash_back',
+            'add_fund',
+            'order_refund',
+            'loyalty_point'
+        ])) {
+            $credit = abs($amount);
+
             if ($transaction_type == 'add_fund') {
-                $wallet_transaction->admin_bonus = $amount * BusinessSetting::where('key', 'wallet_add_fund_bonus')->first()->value / 100;
-            } else if ($transaction_type == 'loyalty_point') {
-                $credit = (int)($amount / BusinessSetting::where('key', 'loyalty_point_exchange_rate')->first()->value);
+                $bonusPercent = BusinessSetting::where('key', 'wallet_add_fund_bonus')->first()->value ?? 0;
+                $wallet_transaction->admin_bonus = ($amount * $bonusPercent) / 100;
             }
-        } else if ($transaction_type == 'order_place') {
-            $debit = $amount;
+
+            if ($transaction_type == 'loyalty_point') {
+                $rate = BusinessSetting::where('key', 'loyalty_point_exchange_rate')->first()->value ?? 1;
+                $credit = (int)($amount / $rate);
+            }
         }
+
+        // --------------------------------------
+        // DEBIT TRANSACTIONS
+        // --------------------------------------
+        else if (in_array($transaction_type, [
+            'order_place',                    // wallet used
+            'order_place_reversal',           // reverse wallet use
+            'referral_cash_back_reversal'     // reverse cashback
+        ])) {
+            $debit = abs($amount); // always positive
+        }
+
+        // --------------------------------------
+        // FINAL AMOUNT
+        // --------------------------------------
+
 
         $wallet_transaction->credit = $credit;
         $wallet_transaction->debit = $debit;
