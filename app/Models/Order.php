@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Scopes\ZoneScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Log;
 
 class Order extends Model
 {
@@ -174,7 +175,7 @@ class Order extends Model
         $orderPlaceTransactions = WalletTransaction::where('reference', $this->id)
             ->where('transaction_type', 'order_place')
             ->get();
-
+        Log::info('Reversing wallet transactions for Order ID: ' . $orderPlaceTransactions);
         if ($orderPlaceTransactions->count() > 0) {
 
             foreach ($orderPlaceTransactions as $txn) {
