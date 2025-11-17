@@ -188,8 +188,8 @@ class Order extends Model
                 if (!$alreadyReversed) {
                     CustomerLogic::create_wallet_transaction(
                         $txn->user_id,
-                        -abs($txn->amount),      // debit the wallet
-                        'order_place_reversal',  // reversal type
+                        $txn->amount,            // ✔ ALWAYS positive
+                        'order_place_reversal',  // ✔ credit type
                         $this->id
                     );
                 }
