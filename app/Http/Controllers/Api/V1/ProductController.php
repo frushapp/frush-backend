@@ -45,6 +45,9 @@ class ProductController extends Controller
         }
         $limit = $request->query('limit', 10);
         $page = $request->query('offset', 1);
+         if (!is_null($isLatest)) {
+            $foodQuery->orderBy('order', "ASC");
+        }
         $foods = $foodQuery->paginate($limit, ['*'], 'page', $page);
         $formattedFoods = Helpers::product_data_formatting($foods->items(), true, true, 'en');
         return response()->json([
