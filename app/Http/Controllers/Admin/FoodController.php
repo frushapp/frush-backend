@@ -504,6 +504,11 @@ class FoodController extends Controller
         $category = $category_id != 'all' ? Category::findOrFail($category_id) : null;
         return view('admin-views.product.list', compact('foods', 'restaurant', 'category', 'type'));
     }
+    public function update_food_order(Request $request, $id)
+    {
+        Food::where('id', $id)->update(['order' => $request->order]);
+        return redirect()->back();
+    }
     public function update_food(Request $request, $id)
     {
         $data  = $request->except(['_token', '_method']);
