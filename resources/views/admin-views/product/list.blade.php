@@ -247,6 +247,7 @@
                                     <th>{{ __('Is Popular') }}</th>
                                     <th>{{ __('Is Trending') }}</th>
                                     <th>{{ __('Is Latest') }}</th>
+                                    <th>{{ __('Order') }}</th>
                                     <th>{{ __('messages.action') }}</th>
                                 </tr>
                             </thead>
@@ -350,6 +351,16 @@
                                                 </label>
                                             </form>
 
+                                        </td>
+                                        <td>
+                                            <form action="{{ route('admin.food.update_food_order', ['id' => $food->id]) }}" method="post">
+                                                @csrf
+                                                <div class="input-group">
+                                                    <input type="number" name="order" id="order"
+                                                        value="{{ $food->order }}" class="form-control">
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                </div>
+                                            </form>
                                         </td>
                                         <td>
                                             <a class="btn btn-sm btn-white"
