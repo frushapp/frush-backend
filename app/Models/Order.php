@@ -291,7 +291,7 @@ class Order extends Model
             }
         });
         static::updated(function ($order) {
-            if ($order->isDirty('order_status') && $order->order_status == 'failed') {
+            if ($order->isDirty('order_status') && $order->order_status == 'canceled') {
                 Log::info('RUn now');
                 $order->reverseWalletAndCashback();
             }

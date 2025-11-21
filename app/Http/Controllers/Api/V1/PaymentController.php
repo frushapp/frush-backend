@@ -113,7 +113,7 @@ class PaymentController extends Controller
     {
         $orderModel = Order::find($oid);
         $orderModel->payment_method = 'razor_pay';
-        $orderModel->order_status   = 'failed';
+        $orderModel->order_status   = 'canceled';
         $orderModel->failed         = now();
         $orderModel->save();
         return response()->json(['status' => "Success"], 200);
