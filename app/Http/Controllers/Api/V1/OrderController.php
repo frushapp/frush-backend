@@ -495,11 +495,9 @@ class OrderController extends Controller
                 'total_ammount' => $total_price + $order->delivery_charge + $total_tax_amount - $walletToUse
             ], 200);
         } catch (\Exception $e) {
-
             info($e);
             return response()->json(['code' => $e], 403);
         }
-
         return response()->json([
             'errors' => [
                 ['code' => 'order_time', 'message' => trans('messages.failed_to_place_order')]
