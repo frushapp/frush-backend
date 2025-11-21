@@ -416,7 +416,7 @@ class OrderController extends Controller
                 $order->payment_method = 'wallet';
             } else {
                 $order->payment_status = 'unpaid';
-                $order->order_status   = 'pending';
+                // $order->order_status   = 'pending';
             }
 
             // save order
