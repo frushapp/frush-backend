@@ -85,24 +85,17 @@ class PaymentController extends Controller
                 // }
                 Helpers::send_order_notification($order);
             } catch (\Exception $e) {
-                // print_r($e);
-                // info($e);
-                // WalletTransaction::where('reference', $order->id)
-                //     ->where('transaction_type', 'order_place')
-                //     ->delete();
                 $orderModel = Order::find($order);
 
-                $orderModel->update([
-                    'payment_method' => 'razor_pay',
-                    'order_status'   => 'failed',
-                    'failed'         => now(),
-                ]);
-                if ($order->callback != null) {
-                    // return 1;
-                    // return redirect($order->callback . '&status=fail');
+                // Proper model update so events fire
+                $orderModel->payment_method = 'razor_pay';
+                $orderModel->order_status   = 'failed';
+                $orderModel->failed         = now();
+                $orderModel->save();  // <-- this fires updated event
+
+                if ($orderModel->callback !== null) {
                     return response()->json(['status' => "Failed"], 500);
                 } else {
-                    // return 2;
                     return response()->json(['status' => "Failed"], 500);
                 }
             }
