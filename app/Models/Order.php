@@ -286,11 +286,12 @@ class Order extends Model
     {
         static::addGlobalScope(new ZoneScope);
         static::updated(function ($order) {
+            Log::info('order' . $order);
             if (
                 $order->isDirty('order_status')
                 && in_array($order->order_status, ['canceled', 'failed'])
             ) {
-
+                Log::info('here order run for failed');
                 $order->reverseWalletAndCashback();
             }
         });
