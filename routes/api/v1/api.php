@@ -201,6 +201,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
     // Route::group(['prefix' => 'banners'], function () {
     Route::get('/banners', 'BannerController@get_banners');
     Route::post('/payment', 'PaymentController@payment_new');
+    Route::post('/payment-failed/{id}', 'PaymentController@payment_failed');
     Route::get('/bu_db', 'BackupController@downloadDatabaseDump');
     // });
 

@@ -86,12 +86,11 @@ class PaymentController extends Controller
                 Helpers::send_order_notification($order);
             } catch (\Exception $e) {
                 $orderModel = Order::find($order);
-
                 // Proper model update so events fire
                 $orderModel->payment_method = 'razor_pay';
                 $orderModel->order_status   = 'failed';
                 $orderModel->failed         = now();
-                $orderModel->save();  // <-- this fires updated event
+                $orderModel->save();
 
                 if ($orderModel->callback !== null) {
                     return response()->json(['status' => "Failed"], 500);
@@ -109,5 +108,14 @@ class PaymentController extends Controller
             // return 4;
             return response()->json(['status' => "Success"], 200);
         }
+    }
+    public function payment_failed(Request $request, $oid)
+    {
+        $orderModel = Order::find($oid);
+        $orderModel->payment_method = 'razor_pay';
+        $orderModel->order_status   = 'failed';
+        $orderModel->failed         = now();
+        $orderModel->save();
+        return response()->json(['status' => "Success"], 200);
     }
 }
