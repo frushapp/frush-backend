@@ -286,13 +286,13 @@ class Order extends Model
     {
         static::addGlobalScope(new ZoneScope);
         static::updated(function ($order) {
-            Log::info('order updated event fired');
-
-            if (
-                $order->wasChanged('order_status')
-                && in_array($order->order_status, ['canceled', 'failed'])
-            ) {
-                Log::info('here order run for failed');
+            if ($order->isDirty('order_status') && $order->order_status == 'canceled') {
+                $order->reverseWalletAndCashback();
+            }
+        });
+        static::updated(function ($order) {
+            if ($order->isDirty('order_status') && $order->order_status == 'failed') {
+                Log::info('RUn now');
                 $order->reverseWalletAndCashback();
             }
         });
