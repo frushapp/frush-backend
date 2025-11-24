@@ -312,6 +312,7 @@
                         $total_addon_price = 0;
                         $product_price = 0;
                         $restaurant_discount_amount = 0;
+                       $wallet_discount_amount =  $order->wallet_discount_amount
                         $del_c = $order['delivery_charge'];
                         if ($editing) {
                             // $del_c=$order['original_delivery_charge'];
@@ -568,6 +569,7 @@
 
 
                                     <dd class="col-sm-6">
+                                        +
                                         {{ \App\CentralLogics\Helpers::format_currency($order->wallet_discount_amount) }}
                                         <hr>
                                     </dd>
@@ -616,7 +618,7 @@
 
                                     <dt class="col-sm-6">{{ __('messages.total') }}:</dt>
                                     <dd class="col-sm-6">
-                                        {{ \App\CentralLogics\Helpers::format_currency($product_price + $platform_fees + $delivery_gst + $del_c + $total_tax_amount + $packaging_fee + $total_addon_price - $coupon_discount_amount - $restaurant_discount_amount) }}
+                                        {{ \App\CentralLogics\Helpers::format_currency($product_price + $platform_fees + $delivery_gst + $del_c + $total_tax_amount + $packaging_fee + $total_addon_price - $coupon_discount_amount - $restaurant_discount_amount - $wallet_discount_amount) }}
                                     </dd>
                                 </dl>
                                 <!-- End Row -->
@@ -1592,7 +1594,7 @@
                 google.maps.event.addListenerOnce(map, 'idle', function() {
                     map.fitBounds(locationbounds);
                 });
-            }
+            };
 
             // Re-init map before show modal
             $('#locationModal').on('shown.bs.modal', function(event) {
@@ -1609,6 +1611,6 @@
                     dmMarkers[id].setAnimation(null);
                 }, 3);
             });
-        })
+        });
     </script>
 @endpush
