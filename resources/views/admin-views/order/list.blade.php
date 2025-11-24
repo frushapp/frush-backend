@@ -65,14 +65,8 @@
                                         <span id="datatableCounter">0</span>
                                         {{__('messages.selected')}}
                                       </span>
-                                    {{--<a class="btn btn-sm btn-outline-danger" href="javascript:;">
-                                        <i class="tio-delete-outlined"></i> Delete
-                                    </a>--}}
                                 </div>
                             </div>
-                            <!-- End Datatable Info -->
-
-                            <!-- Unfold -->
                             <div class="hs-unfold mr-2">
                                 <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle" href="javascript:;"
                                    data-hs-unfold-options='{
@@ -145,8 +139,6 @@
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-center mb-3">
                                                 <span class="mr-2">{{__('messages.order')}}</span>
-
-                                                <!-- Checkbox Switch -->
                                                 <label class="toggle-switch toggle-switch-sm" for="toggleColumn_order">
                                                     <input type="checkbox" class="toggle-switch-input"
                                                            id="toggleColumn_order" checked>
@@ -154,9 +146,7 @@
                                                     <span class="toggle-switch-indicator"></span>
                                                   </span>
                                                 </label>
-                                                <!-- End Checkbox Switch -->
                                             </div>
-
                                             <div class="d-flex justify-content-between align-items-center mb-3">
                                                 <span class="mr-2">{{__('messages.date')}}</span>
 
@@ -437,7 +427,7 @@
                     </a>
                     <!-- End Toggle Button -->
                 </div>
-                <?php 
+                <?php
                 $filter_count=0;
                 if(isset($zone_ids) && count($zone_ids) > 0) $filter_count += 1;
                 if(isset($vendor_ids) && count($vendor_ids)>0) $filter_count += 1;
@@ -449,7 +439,7 @@
 
                 if(isset($from_date) && isset($to_date)) $filter_count += 1;
                 if(isset($order_type)) $filter_count += 1;
-                
+
                 ?>
                 <!-- Body -->
                 <form class="card-body sidebar-body sidebar-scrollbar" action="{{route('admin.order.filter')}}" method="POST" id="order_filter_form">

@@ -661,7 +661,6 @@ class Helpers
     public static function format_currency($value)
     {
         $currency_symbol_position = BusinessSetting::where(['key' => 'currency_symbol_position'])->first()->value;
-
         return $currency_symbol_position == 'right' ? round($value, config('round_up_to_digit')) . ' ' . self::currency_symbol() : self::currency_symbol() . ' ' . round($value, config('round_up_to_digit'));
     }
     public static function send_push_notif_to_device($fcm_token, $data)
