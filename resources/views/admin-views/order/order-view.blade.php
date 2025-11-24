@@ -312,7 +312,7 @@
                         $total_addon_price = 0;
                         $product_price = 0;
                         $restaurant_discount_amount = 0;
-                       $wallet_discount_amount =  $order->wallet_discount_amount
+                        $wallet_discount_amount = $order->wallet_discount_amount;
                         $del_c = $order['delivery_charge'];
                         if ($editing) {
                             // $del_c=$order['original_delivery_charge'];
