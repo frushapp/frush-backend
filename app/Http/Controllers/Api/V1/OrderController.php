@@ -382,7 +382,7 @@ class OrderController extends Controller
                 $order->platform_fees = $request["platform_fees"];
             }
             $order->order_amount = $order_amount;
-
+            $walletToUse = 0;
             // ---------------------------------------------
             // 2. WALLET REDEMPTION (50% MAX)
             // ---------------------------------------------
@@ -393,10 +393,8 @@ class OrderController extends Controller
             // $maxWalletUse = $order_amount * 0.50;
 
             // $walletToUse = min($walletBalance, $maxWalletUse);
-            if ($walletBalance > 0) {
+            if ($walletBalance > 0 && !$coupan) {
                 $walletToUse = Helpers::getMaxWalletUsable($customer, $order_amount);
-            } else {
-                $walletToUse = 0;
             }
 
 
