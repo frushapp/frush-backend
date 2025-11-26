@@ -381,14 +381,14 @@ class OrderController extends Controller
             $order->customer->increment('order_count');
             $order->restaurant->increment('order_count');
 
-            $this->send_sms(
-                json_decode($order["delivery_address"])->contact_person_number,
-                json_decode($order["delivery_address"])->contact_person_name,
-                $request->id,
-                "Delivered",
-                "",
-                "65b261d0d6fc051d2670ec93"
-            );
+            // $this->send_sms(
+            //     json_decode($order["delivery_address"])->contact_person_number,
+            //     json_decode($order["delivery_address"])->contact_person_name,
+            //     $request->id,
+            //     "Delivered",
+            //     "",
+            //     "65b261d0d6fc051d2670ec93"
+            // );
         } else if ($request->order_status == 'refunded') {
             if ($order->payment_method == "cash_on_delivery" || $order->payment_status == "unpaid") {
                 Toastr::warning(trans('messages.you_can_not_refund_a_cod_order'));
@@ -422,23 +422,23 @@ class OrderController extends Controller
                 $dm->current_orders = $dm->current_orders > 1 ? $dm->current_orders - 1 : 0;
                 $dm->save();
             }
-            $this->send_sms(
-                json_decode($order["delivery_address"])->contact_person_number,
-                json_decode($order["delivery_address"])->contact_person_name,
-                $request->id,
-                "Cancelled",
-                "",
-                "65b261d0d6fc051d2670ec93"
-            );
+            // $this->send_sms(
+            //     json_decode($order["delivery_address"])->contact_person_number,
+            //     json_decode($order["delivery_address"])->contact_person_name,
+            //     $request->id,
+            //     "Cancelled",
+            //     "",
+            //     "65b261d0d6fc051d2670ec93"
+            // );
         }
         $order->order_status = $request->order_status;
         $order[$request->order_status] = now();
         $order->save();
 
 
-        if ($request->order_status == 'confirmed') {
-            $this->send_sms(json_decode($order["delivery_address"])->contact_person_number, json_decode($order["delivery_address"])->contact_person_name, $request->id, "Restaurant", $order["order_amount"]);
-        }
+        // if ($request->order_status == 'confirmed') {
+        //     $this->send_sms(json_decode($order["delivery_address"])->contact_person_number, json_decode($order["delivery_address"])->contact_person_name, $request->id, "Restaurant", $order["order_amount"]);
+        // }
 
         if (!Helpers::send_order_notification($order)) {
             Toastr::warning(trans('messages.push_notification_faild'));
