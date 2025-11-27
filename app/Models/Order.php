@@ -303,5 +303,17 @@ class Order extends Model
                 $order->grantReferralCashbackIfEligible();
             }
         });
+        static::updated(function ($order) {
+            if ($order->isDirty('order_status') && $order->order_status == 'delivered') {
+
+                foreach ($order->details as $detail) {
+
+                    if ($detail->food && $detail->quantity > 0) {
+                        // subtract quantity from food stock
+                        $detail->food->decrement('stock', $detail->quantity);
+                    }
+                }
+            }
+        });
     }
 }
