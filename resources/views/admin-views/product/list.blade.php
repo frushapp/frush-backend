@@ -247,6 +247,7 @@
                                     <th>{{ __('Is Popular') }}</th>
                                     <th>{{ __('Is Trending') }}</th>
                                     <th>{{ __('Is Latest') }}</th>
+                                    <th>Stock</th>
                                     <th>{{ __('Order') }}</th>
                                     <th>{{ __('messages.action') }}</th>
                                 </tr>
@@ -353,12 +354,26 @@
 
                                         </td>
                                         <td>
-                                            <form action="{{ route('admin.food.update_food_order', ['id' => $food->id]) }}" method="post">
+                                            <form
+                                                action="{{ route('admin.food.update_food_stock', ['id' => $food->id]) }}"
+                                                method="post">
+                                                @csrf
+                                                <div class="input-group">
+                                                    <input type="number" name="stock" id="stock"
+                                                        value="{{ $food->stock }}" class="form-control form-control-sm">
+                                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                                </div>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form
+                                                action="{{ route('admin.food.update_food_order', ['id' => $food->id]) }}"
+                                                method="post">
                                                 @csrf
                                                 <div class="input-group">
                                                     <input type="number" name="order" id="order"
-                                                        value="{{ $food->order }}" class="form-control">
-                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                        value="{{ $food->order }}" class="form-control form-control-sm">
+                                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
                                                 </div>
                                             </form>
                                         </td>

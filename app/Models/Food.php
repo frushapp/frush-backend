@@ -30,6 +30,8 @@ class Food extends Model
         'is_newest' => 'string',
         'is_recommended' => 'string',
         'is_trending' => 'string',
+        'daily_opening_stock' => 'integer',
+        'stock' => 'integer',
     ];
     protected $fillable = [
         'tax',
@@ -47,6 +49,8 @@ class Food extends Model
         'is_popular',
         'is_newest',
         'is_recommended',
+        'daily_opening_stock',
+        'stock',
         'is_trending',
     ];
     protected $table = 'food';

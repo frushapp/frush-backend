@@ -69,6 +69,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::put('change-update/{id}', 'FoodController@update_food')->name('update_food');
             Route::get('list', 'FoodController@list')->name('list');
             Route::post('update-order/{id}', 'FoodController@update_food_order')->name('update_food_order');
+            Route::post('update-stock/{id}', 'FoodController@update_food_stock')->name('update_food_stock');
             Route::delete('delete/{id}', 'FoodController@delete')->name('delete');
             Route::get('status/{id}/{status}', 'FoodController@status')->name('status');
             Route::get('review-status/{id}/{status}', 'FoodController@reviews_status')->name('reviews.status');

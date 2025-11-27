@@ -331,6 +331,12 @@ class FoodController extends Controller
         $p->add_ons = $request->has('addon_ids') ? json_encode($request->addon_ids) : json_encode([]);
         $p->restaurant_id = $request->restaurant_id;
         $p->veg = $request->veg;
+        if ($request->stock) {
+            $p->stock = $request->stock;
+        }
+        if ($request->daily_opening_stock) {
+            $p->daily_opening_stock = $request->daily_opening_stock;
+        }
         $p->save();
 
         foreach ($request->lang as $index => $key) {
@@ -507,6 +513,11 @@ class FoodController extends Controller
     public function update_food_order(Request $request, $id)
     {
         Food::where('id', $id)->update(['order' => $request->order]);
+        return redirect()->back();
+    }
+    public function update_food_stock(Request $request, $id)
+    {
+        Food::where('id', $id)->update(['stock' => $request->stock]);
         return redirect()->back();
     }
     public function update_food(Request $request, $id)

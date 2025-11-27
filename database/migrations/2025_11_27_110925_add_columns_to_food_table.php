@@ -15,6 +15,7 @@ class AddColumnsToFoodTable extends Migration
     {
         Schema::table('food', function (Blueprint $table) {
             $table->integer('stock')->nullable()->after('image');
+            $table->integer('daily_opening_stock')->nullable()->after('image');
         });
     }
 
