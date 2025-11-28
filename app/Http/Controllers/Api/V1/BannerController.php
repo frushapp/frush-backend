@@ -35,13 +35,19 @@ class BannerController extends Controller
             if ($request->has('title')) {
                 $query->where('title', 'like', "%{$request->title}%");
             }
+            // $banners = $query->with('food')->orderBy('id', 'desc')->get();
+
             $banners = $query->with('food')->orderBy('id', 'desc')->get();
 
             foreach ($banners as $banner) {
                 if ($banner->food) {
-                    $banner->food = Helpers::product_data_formatting([$banner->food], true, true, 'en');
+                    $formatted = Helpers::product_data_formatting([$banner->food], true, true, 'en')[0];
+
+                    // force convert object → array
+                    $banner->setRelation('food', (array) $formatted);
                 }
             }
+
 
             return response()->json([
                 'success' => 1,
