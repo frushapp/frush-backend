@@ -8,6 +8,7 @@ use App\Models\Banner;
 use App\CentralLogics\BannerLogic;
 use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
+use App\Models\AddOn;
 use Illuminate\Http\Request;
 
 class BannerController extends Controller
@@ -44,10 +45,20 @@ class BannerController extends Controller
                     // Convert JSON string fields to arrays safely
                     $categoryIds    = is_string($food->category_ids) ? json_decode($food->category_ids, true) : ($food->category_ids ?? []);
                     $variations     = is_string($food->variations) ? json_decode($food->variations, true) : ($food->variations ?? []);
-                    $addOns         = is_string($food->add_ons) ? json_decode($food->add_ons, true) : ($food->add_ons ?? []);
+                    // $addOns         = is_string($food->add_ons) ? json_decode($food->add_ons, true) : ($food->add_ons ?? []);
                     $attributes     = is_string($food->attributes) ? json_decode($food->attributes, true) : ($food->attributes ?? []);
                     $choiceOptions  = is_string($food->choice_options) ? json_decode($food->choice_options, true) : ($food->choice_options ?? []);
-
+                    $addOnIds      = is_string($food->add_ons) ? json_decode($food->add_ons, true) : ($food->add_ons ?? []);
+                    $addOns = AddOn::withoutGlobalScope('translate')
+                        ->whereIn('id', $addOnIds)
+                        ->active()
+                        ->get()
+                        ->map(fn($addOn) => [
+                            'id' => $addOn->id,
+                            'name' => $addOn->name,
+                            'price' => (float) $addOn->price,
+                        ])
+                        ->toArray();
                     // Format the food object manually
                     $formattedFood = [
                         'id'                     => $food->id,
