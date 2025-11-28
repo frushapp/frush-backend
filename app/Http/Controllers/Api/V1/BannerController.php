@@ -37,7 +37,16 @@ class BannerController extends Controller
             }
             // $banners = $query->with('food')->orderBy('id', 'desc')->get();
             $banners = $query->with('food')->orderBy('id', 'desc')->get();
+            $formatted = $banners->map(function ($banner) {
+                if ($banner->food) {
+                    // Helper expects array, returns array
+                    $formattedFood = Helpers::product_data_formatting([$banner->food], true, true, 'en');
 
+                    // Take first item → assign as array relation
+                    $banner->setRelation('food', $formattedFood[0]);
+                }
+                return $banner;
+            });
             // foreach ($banners as $banner) {
 
             //     if ($banner->food) {
@@ -60,7 +69,7 @@ class BannerController extends Controller
             return response()->json([
                 'success' => 1,
                 'count' => $banners->count(),
-                'banners' => $banners
+                'banners' => $formatted
             ], 200);
             return response()->json([
                 'success' => 1,
