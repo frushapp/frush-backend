@@ -82,7 +82,7 @@ class BannerController extends Controller
                     ];
 
                     // Assign formatted food back to banner
-                    $banner->setRelation('food', $formattedFood);
+                    $banner->formatted_food = $formattedFood;
                 }
 
                 return $banner;
