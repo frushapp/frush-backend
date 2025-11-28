@@ -36,6 +36,18 @@ class BannerController extends Controller
                 $query->where('title', 'like', "%{$request->title}%");
             }
             $banners = $query->with('food')->orderBy('id', 'desc')->get();
+
+            foreach ($banners as $banner) {
+                if ($banner->food) {
+                    $banner->food = Helpers::product_data_formatting([$banner->food], true, true, 'en')[0];
+                }
+            }
+
+            return response()->json([
+                'success' => 1,
+                'count' => $banners->count(),
+                'banners' => $banners
+            ], 200);
             return response()->json([
                 'success' => 1,
                 'count' => $banners->count(),
