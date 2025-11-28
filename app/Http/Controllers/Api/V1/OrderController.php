@@ -391,12 +391,12 @@ class OrderController extends Controller
 
             // max wallet use = 50% of order amo
             // $maxWalletUse = $order_amount * 0.50;
-
+            $useWallet = filter_var($request->use_wallet, FILTER_VALIDATE_BOOLEAN);
             // $walletToUse = min($walletBalance, $maxWalletUse);
             if (
                 $walletBalance > 0 &&
                 !$request->coupon_code &&
-                $request->use_wallet === true
+                $useWallet
             ) {
                 $walletToUse = Helpers::getMaxWalletUsable($customer, $order_amount);
                 $order->order_amount = $order_amount - $walletToUse;
