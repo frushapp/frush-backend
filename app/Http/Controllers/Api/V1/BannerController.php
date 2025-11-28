@@ -39,7 +39,7 @@ class BannerController extends Controller
 
             foreach ($banners as $banner) {
                 if ($banner->food) {
-                    $banner->food = Helpers::product_data_formatting([$banner->food], true, true, 'en')[0];
+                    $banner->food = Helpers::product_data_formatting([$banner->food], true, true, 'en');
                 }
             }
 
