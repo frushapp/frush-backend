@@ -39,31 +39,56 @@ class BannerController extends Controller
             $banners = $query->with('food')->orderBy('id', 'desc')->get();
             $formatted = $banners->map(function ($banner) {
                 if ($banner->food) {
-                    // Helper expects array, returns array
-                    $formattedFood = Helpers::product_data_formatting([$banner->food], true, true, 'en');
+                    $food = $banner->food;
 
-                    // Take first item → assign as array relation
-                    $banner->setRelation('food', $formattedFood[0]);
+                    // Convert JSON string fields to arrays safely
+                    $categoryIds    = is_string($food->category_ids) ? json_decode($food->category_ids, true) : ($food->category_ids ?? []);
+                    $variations     = is_string($food->variations) ? json_decode($food->variations, true) : ($food->variations ?? []);
+                    $addOns         = is_string($food->add_ons) ? json_decode($food->add_ons, true) : ($food->add_ons ?? []);
+                    $attributes     = is_string($food->attributes) ? json_decode($food->attributes, true) : ($food->attributes ?? []);
+                    $choiceOptions  = is_string($food->choice_options) ? json_decode($food->choice_options, true) : ($food->choice_options ?? []);
+
+                    // Format the food object manually
+                    $formattedFood = [
+                        'id'                     => $food->id,
+                        'name'                   => $food->title ?? $food->name,
+                        'description'            => $food->description,
+                        'image'                  => $food->image,
+                        'daily_opening_stock'    => $food->daily_opening_stock,
+                        'stock'                  => $food->stock,
+                        'category_id'            => $food->category_id,
+                        'category_ids'           => $categoryIds,
+                        'variations'             => array_map(fn($v) => ['type' => $v['type'], 'price' => (float)($v['price'] ?? 0)], $variations),
+                        'add_ons'                => $addOns,
+                        'attributes'             => $attributes,
+                        'choice_options'         => $choiceOptions,
+                        'price'                  => (float) $food->price,
+                        'tax'                    => (float) $food->tax,
+                        'tax_type'               => $food->tax_type,
+                        'discount'               => (float) $food->discount,
+                        'discount_type'          => $food->discount_type,
+                        'available_time_starts'  => $food->start_time ?? $food->available_time_starts,
+                        'available_time_ends'    => $food->end_time ?? $food->available_time_ends,
+                        'veg'                    => $food->veg,
+                        'status'                 => $food->status,
+                        'restaurant_id'          => $food->restaurant_id,
+                        'restaurant_name'        => $food->restaurant->name ?? null,
+                        'restaurant_discount'    => $food->restaurant->discount->discount ?? 0,
+                        'restaurant_opening_time' => $food->restaurant->opening_time ?? null,
+                        'restaurant_closing_time' => $food->restaurant->closeing_time ?? null,
+                        'schedule_order'         => $food->restaurant->schedule_order ?? false,
+                        'rating_count'           => is_string($food->rating) ? array_sum(json_decode($food->rating, true) ?? []) : array_sum($food->rating ?? []),
+                        'avg_rating'             => (float) ($food->avg_rating ?? 0),
+                    ];
+
+                    // Assign formatted food back to banner
+                    $banner->setRelation('food', $formattedFood);
                 }
+
                 return $banner;
             });
-            // foreach ($banners as $banner) {
 
-            //     if ($banner->food) {
 
-            //         // Step 1: Format
-            //         $formattedArrayList = Helpers::product_data_formatting($banner->food, false, true, 'en');
-
-            //         // Step 2: Take the first item (your function returns a list)
-            //         $formattedFood = $formattedArrayList[0];
-
-            //         // Step 3: Make sure it is a VALID array
-            //         $formattedFood = json_decode(json_encode($formattedFood), true);
-
-            //         // Step 4: Assign safely
-            //         $banner->setRelation('food', $formattedFood);
-            //     }
-            // }
 
 
             return response()->json([
