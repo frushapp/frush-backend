@@ -43,7 +43,7 @@ class BannerController extends Controller
                 if ($banner->food) {
 
                     // Step 1: Format
-                    $formattedArrayList = Helpers::product_data_formatting([$banner->food], true, true, 'en');
+                    $formattedArrayList = Helpers::product_data_formatting($banner->food, false, true, 'en');
 
                     // Step 2: Take the first item (your function returns a list)
                     $formattedFood = $formattedArrayList[0];
