@@ -39,7 +39,7 @@ class BannerController extends Controller
             $banners = $query->with('food')->orderBy('id', 'desc')->get();
             $formatted = $banners->map(function ($banner) {
                 if ($banner->food) {
-                    $food = $banner->food->load('');
+                    $food = $banner->food;
 
                     // Convert JSON string fields to arrays safely
                     $categoryIds    = is_string($food->category_ids) ? json_decode($food->category_ids, true) : ($food->category_ids ?? []);
