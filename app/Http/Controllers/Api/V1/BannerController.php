@@ -38,23 +38,23 @@ class BannerController extends Controller
             // $banners = $query->with('food')->orderBy('id', 'desc')->get();
             $banners = $query->with('food')->orderBy('id', 'desc')->get();
 
-            foreach ($banners as $banner) {
+            // foreach ($banners as $banner) {
 
-                if ($banner->food) {
+            //     if ($banner->food) {
 
-                    // Step 1: Format
-                    $formattedArrayList = Helpers::product_data_formatting($banner->food, false, true, 'en');
+            //         // Step 1: Format
+            //         $formattedArrayList = Helpers::product_data_formatting($banner->food, false, true, 'en');
 
-                    // Step 2: Take the first item (your function returns a list)
-                    $formattedFood = $formattedArrayList[0];
+            //         // Step 2: Take the first item (your function returns a list)
+            //         $formattedFood = $formattedArrayList[0];
 
-                    // Step 3: Make sure it is a VALID array
-                    $formattedFood = json_decode(json_encode($formattedFood), true);
+            //         // Step 3: Make sure it is a VALID array
+            //         $formattedFood = json_decode(json_encode($formattedFood), true);
 
-                    // Step 4: Assign safely
-                    $banner->setRelation('food', $formattedFood);
-                }
-            }
+            //         // Step 4: Assign safely
+            //         $banner->setRelation('food', $formattedFood);
+            //     }
+            // }
 
 
             return response()->json([
