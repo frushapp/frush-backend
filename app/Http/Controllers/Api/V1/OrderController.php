@@ -438,64 +438,18 @@ class OrderController extends Controller
             }
 
 
-            foreach ($order_details as $key => $item) {
-                $order_details[$key]['order_id'] = $order->id;
+            foreach ($order_details as $detail) {
+                $detail['order_id'] = $order->id;
+                OrderDetail::create($detail);
             }
-            OrderDetail::create($order_details);
+
+            // OrderDetail::create($order_details);
             Helpers::send_order_notification($order);
-            // $referCashBackSetting = BusinessSetting::where('key', 'first_order_referral_cash_back')->first();
-            // $cashbackAmount = $referCashBackSetting ? $referCashBackSetting->value : 0;
 
-            // $customer = User::find($request->user()->id);
-
-            // // Count previous completed orders (excluding this one)
-            // $previousOrders = Order::where('user_id', $customer->id)
-            //     ->where('id', '!=', $order->id)
-            //     ->count();
-
-            // $isFirstOrder = ($previousOrders == 0);
-
-            // // Apply cashback only for first-ever order
-            // if ($isFirstOrder && $cashbackAmount > 0 && $customer->parent_id != null) {
-
-            //     // Cashback for Parent
-            //     $referrer = User::find($customer->parent_id);
-
-            //     if ($referrer) {
-            //         CustomerLogic::create_wallet_transaction(
-            //             $referrer->id,
-            //             $cashbackAmount,
-            //             'referral_cash_back',
-            //             null
-            //         );
-            //         // Cashback for Child (Customer)
-            //         CustomerLogic::create_wallet_transaction(
-            //             $customer->id,
-            //             $cashbackAmount,
-            //             'referral_cash_back',
-            //             null
-            //         );
-            //     }
-            // }
-
-            // $customer = $request->user();
-            // $customer->zone_id = $restaurant->zone_id;
-            // $customer->zone_id = 10;
-            // $customer->save();
 
             $restaurant->increment('total_order');
             if ($request->payment_method == 'wallet') CustomerLogic::create_wallet_transaction($order->user_id, $order->order_amount, 'order_place', $order->id);
 
-            // try{
-            //     if($order->order_status == 'pending')
-            //     {
-            //         Mail::to($customer['email'])->send(new \App\Mail\OrderPlaced($order->id));
-            //     }
-            // }catch (\Exception $ex) {
-            //     info($ex);
-            // }
-
-            // $this->send_sms($customer['phone'] , $name="Customer" , $order->id , $restaurant->name , $order_amount );
 
             return response()->json([
                 'message' => trans('messages.order_placed_successfully'),

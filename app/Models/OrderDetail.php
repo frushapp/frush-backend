@@ -10,6 +10,7 @@ class OrderDetail extends Model
     use HasFactory;
 
     protected $casts = [
+        'food_id' => 'integer',
         'price' => 'float',
         'discount_on_food' => 'float',
         'total_add_on_price' => 'float',
@@ -20,6 +21,10 @@ class OrderDetail extends Model
         'item_campaign_id' => 'integer'
     ];
     protected $fillable = [
+        'food_details',
+        'variation',
+        'add_ons',
+        'discount_type',
         'price',
         'discount_on_food',
         'total_add_on_price',
@@ -27,7 +32,8 @@ class OrderDetail extends Model
         'food_id',
         'order_id',
         'quantity',
-        'item_campaign_id'
+        'item_campaign_id',
+        'variant'
     ];
 
     protected $primaryKey   = 'id';
