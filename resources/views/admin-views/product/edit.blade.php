@@ -158,14 +158,16 @@
                         <div class="col-md-3 col-6">
                             <div class="form-group">
                                 <label for="">Daily Opening Stock</label>
-                                <input type="number" name="daily_opening_stock" id="daily_opening_stock"
+                                <input type="number" name="daily_opening_stock"
+                                    value="{{ $product->daily_opening_stock }}" id="daily_opening_stock"
                                     class="form-control">
                             </div>
                         </div>
                         <div class="col-md-3 col-6">
                             <div class="form-group">
                                 <label for="">Current Stock</label>
-                                <input type="number" name="stock" id="stock" class="form-control">
+                                <input type="number" name="stock" id="stock" value="{{ $product->stock }}"
+                                    class="form-control">
                             </div>
                         </div>
                     </div>
