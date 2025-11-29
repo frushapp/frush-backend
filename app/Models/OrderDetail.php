@@ -19,6 +19,16 @@ class OrderDetail extends Model
         'quantity' => 'integer',
         'item_campaign_id' => 'integer'
     ];
+    protected $fillable = [
+        'price',
+        'discount_on_food',
+        'total_add_on_price',
+        'tax_amount',
+        'food_id',
+        'order_id',
+        'quantity',
+        'item_campaign_id'
+    ];
 
     protected $primaryKey   = 'id';
 
@@ -38,8 +48,10 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(ItemCampaign::class, 'item_campaign_id');
     }
-    public static function booted()
+    protected static function boot()
     {
+        parent::boot();
+
         static::created(function ($orderDetail) {
             if ($orderDetail->food && $orderDetail->quantity > 0) {
                 $orderDetail->food->decrement('stock', $orderDetail->quantity);

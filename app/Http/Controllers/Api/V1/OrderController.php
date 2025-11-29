@@ -441,7 +441,7 @@ class OrderController extends Controller
             foreach ($order_details as $key => $item) {
                 $order_details[$key]['order_id'] = $order->id;
             }
-            OrderDetail::insert($order_details);
+            OrderDetail::create($order_details);
             Helpers::send_order_notification($order);
             // $referCashBackSetting = BusinessSetting::where('key', 'first_order_referral_cash_back')->first();
             // $cashbackAmount = $referCashBackSetting ? $referCashBackSetting->value : 0;
