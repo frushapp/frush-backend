@@ -54,7 +54,10 @@ class OrderDetail extends Model
 
         static::created(function ($orderDetail) {
             if ($orderDetail->food && $orderDetail->quantity > 0) {
-                $orderDetail->food->decrement('stock', $orderDetail->quantity);
+                $food = $orderDetail->food()->withoutGlobalScopes()->first();
+                if ($food) {
+                    $food->decrement('stock', $orderDetail->quantity);
+                }
             }
         });
     }

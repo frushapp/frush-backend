@@ -319,9 +319,13 @@ class Order extends Model
             if ($order->isDirty('order_status') && $order->order_status == 'canceled') {
 
                 foreach ($order->details as $detail) {
-                    if ($detail->food && $detail->quantity > 0) {
-                        $detail->food->increment('stock', $detail->quantity);
+
+                    $food = Food::withoutGlobalScopes()->find($detail->food_id);
+
+                    if ($food && $detail->quantity > 0) {
+                        $food->increment('stock', $detail->quantity);
                     }
+                    $detail->food->increment('stock', $detail->quantity);
                 }
             }
         });
