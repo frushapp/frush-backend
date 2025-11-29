@@ -166,11 +166,7 @@ class OrderController extends Controller
         $per_km_shipping_charge = (float)BusinessSetting::where(['key' => 'per_km_shipping_charge'])->first()->value;
         $minimum_shipping_charge = (float)BusinessSetting::where(['key' => 'minimum_shipping_charge'])->first()->value;
         $original_delivery_charge = ($request->distance * $per_km_shipping_charge > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge : $minimum_shipping_charge;
-
-
-
         $delivery_charges_slab = BusinessSetting::where('key', 'delivery_charges_slab')->first();
-
         foreach (json_decode($delivery_charges_slab->value) as $row) {
 
             if ($request->distance >= $row->from && $request->distance <=  $row->to) {
@@ -287,6 +283,13 @@ class OrderController extends Controller
             } else {
                 $product = Food::active()->find($c['food_id']);
                 if ($product) {
+                    if ($product->stock < $c['quantity']) {
+                        return response()->json([
+                            'errors' => [
+                                ['code' => 'food', 'message' => trans('messages.product_unavailable_warning')]
+                            ]
+                        ], 401);
+                    }
                     if (count(json_decode($product['variations'], true)) > 0) {
                         $price = Helpers::variation_price($product, json_encode($c['variation']));
                     } else {

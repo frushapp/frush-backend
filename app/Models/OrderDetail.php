@@ -38,4 +38,12 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(ItemCampaign::class, 'item_campaign_id');
     }
+    public static function booted()
+    {
+        static::created(function ($orderDetail) {
+            if ($orderDetail->food && $orderDetail->quantity > 0) {
+                $orderDetail->food->decrement('stock', $orderDetail->quantity);
+            }
+        });
+    }
 }

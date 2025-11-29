@@ -140,7 +140,6 @@ class Food extends Model
         } else if ($type == 'non_veg') {
             return $query->where('veg', false);
         }
-
         return $query;
     }
 }
