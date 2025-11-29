@@ -19,6 +19,8 @@ class ProductController extends Controller
 
     public function get_all_products(Request $request)
     {
+        $ids = $request->query('ids'); //comma separated string
+
         $zone_id = $request->header('zoneId');
         $isVeg = $request->query('type');
         $isPopular = $request->query('popular');
@@ -31,6 +33,18 @@ class ProductController extends Controller
         if (!is_null($isPopular)) {
             $foodQuery->where('is_trending', $isTrending);
         }
+        if (!is_null($ids)) {
+            $idarr = collect(explode(',', $ids))
+                ->map(fn($id) => (int) trim($id))
+                ->filter()
+                ->values()
+                ->toArray();
+            if (!empty($idarr)) {
+                $foodQuery->whereIn('id', $idarr);
+            }
+        }
+
+
         if (!is_null($isLatest)) {
             $foodQuery->where('is_newest', $isLatest);
         }
@@ -45,7 +59,7 @@ class ProductController extends Controller
         }
         $limit = $request->query('limit', 10);
         $page = $request->query('offset', 1);
-         if (!is_null($isLatest)) {
+        if (!is_null($isLatest)) {
             $foodQuery->orderBy('order', "ASC");
         }
         $foods = $foodQuery->paginate($limit, ['*'], 'page', $page);
