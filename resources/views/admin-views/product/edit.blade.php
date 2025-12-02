@@ -157,6 +157,13 @@
                         </div>
                         <div class="col-md-3 col-6">
                             <div class="form-group">
+                                <label class="input-label" for="serving2">Serving</label>
+                                <input type="text" name="serving" id="serving"
+                                    class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="form-group">
                                 <label for="">Daily Opening Stock</label>
                                 <input type="number" name="daily_opening_stock"
                                     value="{{ $product->daily_opening_stock }}" id="daily_opening_stock"
