@@ -367,4 +367,17 @@ class ProductController extends Controller
 
         return response()->json(['message' => trans('messages.review_submited_successfully')], 200);
     }
+    public function stock_cron()
+    {
+        // Get all active foods
+        $foods = Food::active()->get();
+
+        foreach ($foods as $food) {
+            // Set today's stock equal to the daily opening stock
+            $food->stock = $food->daily_opening_stock;
+            $food->save();
+        }
+
+        return "Stock reset completed.";
+    }
 }
