@@ -158,7 +158,7 @@
                         <div class="col-md-3 col-6">
                             <div class="form-group">
                                 <label class="input-label" for="serving2">Serving</label>
-                                <input type="text" name="serving" id="serving"
+                                <input type="text" name="serving" value={{ $product->serving }} id="serving"
                                     class="form-control form-control-sm">
                             </div>
                         </div>
