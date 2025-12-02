@@ -139,7 +139,9 @@ class FoodController extends Controller
         $food->available_time_ends = $request->available_time_ends;
         $food->discount = $request->discount_type == 'amount' ? $request->discount : $request->discount;
         $food->discount_type = $request->discount_type;
-
+        if ($request->serving) {
+            $food->serving = $request->serving;
+        }
         $food->attributes = $request->has('attribute_id') ? json_encode($request->attribute_id) : json_encode([]);
         $food->add_ons = $request->has('addon_ids') ? json_encode($request->addon_ids) : json_encode([]);
         $food->restaurant_id = $request->restaurant_id;
@@ -288,6 +290,9 @@ class FoodController extends Controller
                 $item['options'] = explode(',', implode('|', preg_replace('/\s+/', ' ', $request[$str])));
                 array_push($choice_options, $item);
             }
+        }
+        if ($request->serving) {
+            $p->serving = $request->serving;
         }
         $p->choice_options = json_encode($choice_options);
         $variations = [];
