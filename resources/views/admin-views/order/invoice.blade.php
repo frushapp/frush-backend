@@ -19,6 +19,7 @@
                 /* Chrome, Safari */
                 color-adjust: exact !important;
                 font-family: emoji !important;
+                color: #000 !important;
             }
 
             .font-weight-bold {
@@ -204,9 +205,9 @@
                 <span>---------------------------------------------------------------------------------</span>
                 <div class="row justify-content-md-end mb-3" style="width: 97%">
                     <div class="col-md-7 col-lg-7">
-                        <dl class="row text-right">
+                        {{-- <dl class="row text-right">
                             <dt class="col-6">Items Price:</dt>
-                            <dd class="col-6">{{ \App\CentralLogics\Helpers::format_currency($sub_total) }}</dd>
+                            <dd class="col-6">  {{ \App\CentralLogics\Helpers::format_currency($sub_total) }}</dd>
                             <dt class="col-6">Addon Cost:</dt>
                             <dd class="col-6">
                                 {{ \App\CentralLogics\Helpers::format_currency($add_ons_cost) }}
@@ -236,7 +237,55 @@
                             <dd class="col-6" style="font-size: 20px">
                                 {{ \App\CentralLogics\Helpers::format_currency($sub_total + $del_c + $order['total_tax_amount'] + $add_ons_cost - $order['coupon_discount_amount'] - $order['restaurant_discount_amount']) }}
                             </dd>
+                        </dl> --}}
+                        <dl class="row text-right">
+                            <dt class="col-6">Items Price:</dt>
+                            <dd class="col-6">
+                                <strong>{{ \App\CentralLogics\Helpers::format_currency($sub_total) }}</strong>
+                            </dd>
+
+                            <dt class="col-6">Addon Cost:</dt>
+                            <dd class="col-6">
+                                <strong>{{ \App\CentralLogics\Helpers::format_currency($add_ons_cost) }}</strong>
+                                <hr>
+                            </dd>
+
+                            <dt class="col-6">Subtotal:</dt>
+                            <dd class="col-6">
+                                <strong>{{ \App\CentralLogics\Helpers::format_currency($sub_total + $add_ons_cost) }}</strong>
+                            </dd>
+
+                            <dt class="col-6">{{ __('messages.discount') }}:</dt>
+                            <dd class="col-6">
+                                -
+                                <strong>{{ \App\CentralLogics\Helpers::format_currency($order['restaurant_discount_amount']) }}</strong>
+                            </dd>
+
+                            <dt class="col-6">Coupon Discount:</dt>
+                            <dd class="col-6">
+                                -
+                                <strong>{{ \App\CentralLogics\Helpers::format_currency($order['coupon_discount_amount']) }}</strong>
+                            </dd>
+
+                            <dt class="col-6">{{ __('messages.vat/tax') }}:</dt>
+                            <dd class="col-6">
+                                +
+                                <strong>{{ \App\CentralLogics\Helpers::format_currency($order['total_tax_amount']) }}</strong>
+                            </dd>
+
+                            <dt class="col-6">Delivery Fee:</dt>
+                            <dd class="col-6">
+                                @php($del_c = $order['delivery_charge'])
+                                <strong>{{ \App\CentralLogics\Helpers::format_currency($del_c) }}</strong>
+                                <hr>
+                            </dd>
+
+                            <dt class="col-6" style="font-size: 20px">Total:</dt>
+                            <dd class="col-6" style="font-size: 20px">
+                                <strong>{{ \App\CentralLogics\Helpers::format_currency($sub_total + $del_c + $order['total_tax_amount'] + $add_ons_cost - $order['coupon_discount_amount'] - $order['restaurant_discount_amount']) }}</strong>
+                            </dd>
                         </dl>
+
                     </div>
                 </div>
                 <span>---------------------------------------------------------------------------------</span>
