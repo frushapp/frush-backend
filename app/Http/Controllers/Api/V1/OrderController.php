@@ -399,7 +399,7 @@ class OrderController extends Controller
             if ($order_amount <= $min_order_amount_required) {
                 return response()->json([
                     'errors' => [
-                        ['code' => 'order_amount', 'message' => 'insufficient order amount']
+                        ['code' => 'order_amount', 'message' => 'Invalid Coupon Amount']
                     ]
                 ], 403);
             }
