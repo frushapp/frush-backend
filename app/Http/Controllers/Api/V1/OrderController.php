@@ -357,9 +357,10 @@ class OrderController extends Controller
                 $order->delivery_charge = 0;
             }
         }
-
+        $min_order_amount_required = 1;
         if ($coupon) {
             $coupon->increment('total_uses');
+            $min_order_amount_required = $coupon->min_purchase;
         }
 
         $order_amount = round($total_price + $total_tax_amount + $order->delivery_charge + $order->packaging_fees, config('round_up_to_digit'));
@@ -387,7 +388,15 @@ class OrderController extends Controller
             }
             $order->order_amount = $order_amount;
             $walletToUse = 0;
+
             if ($order_amount <= $coupon_discount_amount) {
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'order_amount', 'message' => 'insufficient order amount']
+                    ]
+                ], 403);
+            }
+            if ($order_amount <= $min_order_amount_required) {
                 return response()->json([
                     'errors' => [
                         ['code' => 'order_amount', 'message' => 'insufficient order amount']
