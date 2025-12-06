@@ -371,6 +371,13 @@ class OrderController extends Controller
             ], 203);
         }
         try {
+            if ($order_amount <= $coupon_discount_amount) {
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'order_amount', 'message' => 'insufficient order amount']
+                    ]
+                ], 203);
+            }
             $order->coupon_discount_amount = round($coupon_discount_amount, config('round_up_to_digit'));
             $order->coupon_discount_title = $coupon ? $coupon->title : '';
 
