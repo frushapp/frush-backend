@@ -364,6 +364,7 @@ class OrderController extends Controller
         }
 
         $order_amount = round($total_price + $total_tax_amount + $order->delivery_charge + $order->packaging_fees, config('round_up_to_digit'));
+        $place_order_value = $order_amount;
         if ($request->payment_method == 'wallet' && $request->user()->wallet_balance < $order_amount) {
             return response()->json([
                 'errors' => [
@@ -396,10 +397,11 @@ class OrderController extends Controller
                     ]
                 ], 403);
             }
-            if ($order_amount <= $min_order_amount_required) {
+            if ($place_order_value <= $min_order_amount_required) {
+                $msg = "order amount must be more than " . $min_order_amount_required . " " . Helpers::currency_code() . " to apply this coupon {$place_order_value}";
                 return response()->json([
                     'errors' => [
-                        ['code' => 'order_amount', 'message' => 'Invalid Coupon Amount']
+                        ['code' => 'order_amount', 'message' => $msg]
                     ]
                 ], 403);
             }
