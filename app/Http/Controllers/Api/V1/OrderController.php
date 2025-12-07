@@ -364,7 +364,7 @@ class OrderController extends Controller
         }
 
         $order_amount = round($total_price + $total_tax_amount + $order->delivery_charge + $order->packaging_fees, config('round_up_to_digit'));
-        $place_order_value = $order_amount*1.05;
+        $place_order_value = ($product_price + $total_addon_price +  $total_tax_amount + $order->delivery_charge + $order->packaging_fees)*1.05;
         if ($request->payment_method == 'wallet' && $request->user()->wallet_balance < $order_amount) {
             return response()->json([
                 'errors' => [
