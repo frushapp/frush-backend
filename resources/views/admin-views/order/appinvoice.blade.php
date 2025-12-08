@@ -38,14 +38,7 @@
 
     <div class="content container-fluid">
         <div class="row" id="printableArea" style="font-family: emoji;">
-            <div class="col-md-12">
-                <center>
-                    <input type="button" class="btn btn-primary non-printable" onclick="printDiv('printableArea')"
-                        value="Proceed, If thermal printer is ready." />
-                    {{-- <a href="{{ url()->previous() }}" class="btn btn-danger non-printable">Back</a> --}}
-                </center>
-                <hr class="non-printable">
-            </div>
+
             <div class="col-md-5 col-12">
                 <div class="text-center pt-4 mb-3">
                     <h2 style="line-height: 1">{{ $order->restaurant->name }}</h2>
