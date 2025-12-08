@@ -217,6 +217,7 @@ class FoodController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $validator = Validator::make($request->all(), [
             'name' => 'array',
             'name.0' => 'required',
