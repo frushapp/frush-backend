@@ -7,7 +7,7 @@
     <!-- Title -->
     <title>@yield('title')</title>
     <!-- Favicon -->
-    @php($logo=\App\Models\BusinessSetting::where(['key'=>'icon'])->first()->value)
+    @php($logo=optional(\App\Models\BusinessSetting::where(['key'=>'icon'])->first())->value)
     <link rel="shortcut icon" href="">
     <link rel="icon" type="image/x-icon" href="{{asset('storage/app/public/business/'.$logo??'')}}">
     <!-- Font -->
