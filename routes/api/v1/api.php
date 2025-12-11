@@ -292,5 +292,13 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'localization'], function
     });
 
     Route::get('zone-wise-products', [ZoneController::class, 'products']);
+    
+    // FCM Test Routes (for development/testing purposes)
+    Route::group(['prefix' => 'fcm-test'], function () {
+        Route::get('status', 'FCMTestController@checkStatus');
+        Route::post('send-device', 'FCMTestController@sendTestNotification');
+        Route::post('send-topic', 'FCMTestController@sendTestTopicNotification');
+    });
 });
 Route::get('faq', [FaqController::class, 'index']);
+

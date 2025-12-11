@@ -281,12 +281,43 @@ class CustomerController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        DB::table('users')->where('id', $request->user()->id)->update([
+        $user = $request->user();
+        $isFirstTimeToken = empty($user->cm_firebase_token);
+        
+        DB::table('users')->where('id', $user->id)->update([
             'cm_firebase_token' => $request['cm_firebase_token']
         ]);
 
+        // Send welcome notification for first-time users
+        if ($isFirstTimeToken && !empty($request['cm_firebase_token'])) {
+            try {
+                $fcmService = new \App\Services\FCMService();
+                $userName = $user->f_name ?? '';
+                $fcmService->sendWelcomeNotification($request['cm_firebase_token'], $userName);
+                
+                // Also save the welcome notification to user_notifications table
+                $welcomeData = [
+                    'title' => '🎉 Welcome to Frush!',
+                    'description' => (!empty($userName) ? "Hi {$userName}! " : "Hi there! ") . 'Welcome to Frush! Get Rs.100 OFF on your first order. Use code: FRUSH100. Order now →',
+                    'order_id' => '',
+                    'image' => '',
+                    'type' => 'welcome'
+                ];
+                
+                DB::table('user_notifications')->insert([
+                    'data' => json_encode($welcomeData),
+                    'user_id' => $user->id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            } catch (\Exception $e) {
+                \Log::error('Failed to send welcome notification: ' . $e->getMessage());
+            }
+        }
+
         return response()->json(['message' => trans('messages.updated_successfully')], 200);
     }
+
 
     public function get_suggested_food(Request $request)
     {

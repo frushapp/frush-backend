@@ -665,218 +665,24 @@ class Helpers
     }
     public static function send_push_notif_to_device($fcm_token, $data)
     {
-        $key = BusinessSetting::where(['key' => 'push_notification_key'])->first()->value;
-        $url = "https://fcm.googleapis.com/fcm/send";
-        $header = array(
-            "authorization: key=" . $key . "",
-            "content-type: application/json"
-        );
-
-        // $postdata = '{
-        //     "to" : "' . $fcm_token . '",
-        //     "mutable_content": true,
-        //     "data" : {
-        //         "title":"' . $data['title'] . '",
-        //         "body" : "' . $data['description'] . '",
-        //         "image" : "' . $data['image'] . '",
-        //         "order_id":"' . $data['order_id'] . '",
-        //         "type":"' . $data['type'] . '",
-        //         "is_read": 0
-        //     },
-        //     "notification" : {
-        //         "title" :"' . $data['title'] . '",
-        //         "body" : "' . $data['description'] . '",
-        //         "image" : "' . $data['image'] . '",
-        //         "order_id":"' . $data['order_id'] . '",
-        //         "title_loc_key":"' . $data['order_id'] . '",
-        //         "body_loc_key":"' . $data['type'] . '",
-        //         "type":"' . $data['type'] . '",
-        //         "is_read": 0,
-        //         "icon" : "new",
-        //         "sound": "notification.wav",
-        //         "android_channel_id": "stackfood"
-        //     }
-        // }';
-        $postdata = [
-            'to' => $fcm_token,
-            'mutable_content' => true,
-            'data' => [
-                'title' => $data['title'],
-                'body' => $data['description'],
-                'image' => $data['image'],
-                'order_id' => $data['order_id'],
-                'type' => $data['type'],
-                'is_read' => 0
-            ],
-            'notification' => [
-                'title' => $data['title'],
-                'body' => $data['description'],
-                'image' => $data['image'],
-                'order_id' => $data['order_id'],
-                'title_loc_key' => $data['order_id'],
-                'body_loc_key' => $data['type'],
-                'type' => $data['type'],
-                'is_read' => 0,
-                'icon' => 'new',
-                'sound' => 'notification.wav',
-                'android_channel_id' => 'stackfood'
-            ]
-        ];
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-        ])->post("http://213.210.36.202:8989/notification_tasty_food", $postdata);
-
-        // echo $topic;
-        if ($response->successful()) {
-            return true;
-        } else {
-            // \Log::error('Error sending notification: ' . $response->body());
+        try {
+            $fcmService = new \App\Services\FCMService();
+            return $fcmService->sendToDevice($fcm_token, $data);
+        } catch (\Exception $e) {
+            \Log::error('FCM Push Notification Error: ' . $e->getMessage());
             return false;
         }
-        // $ch = curl_init();
-        // $timeout = 120;
-        // curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        // curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        // curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-        // // Get URL content
-        // $result = curl_exec($ch);
-        // // close handle to release resources
-        // curl_close($ch);
-        // return $result;
-        // // return 0;
     }
 
     public static function send_push_notif_to_topic($data, $topic, $type)
     {
-        $key = BusinessSetting::where(['key' => 'push_notification_key'])->first()->value;
-
-        $url = "https://fcm.googleapis.com/fcm/send";
-        $header = array(
-            "authorization: key=" . $key . "",
-            "content-type: application/json"
-        );
-        // if(isset($data['order_id']))
-        // {
-        //     $postdata = '{
-        //         "to" : "/topics/'.$topic.'",
-        //         "mutable_content": true,
-        //         "data" : {
-        //             "title":"' . $data['title'] . '",
-        //             "body" : "' . $data['description'] . '",
-        //             "image" : "' . $data['image'] . '",
-        //             "order_id":"' . $data['order_id'] . '",
-        //             "is_read": 0,
-        //             "type":"'.$type.'"
-        //         },
-        //         "notification" : {
-        //             "title":"' . $data['title'] . '",
-        //             "body" : "' . $data['description'] . '",
-        //             "image" : "' . $data['image'] . '",
-        //             "order_id":"' . $data['order_id'] . '",
-        //             "title_loc_key":"' . $data['order_id'] . '",
-        //             "body_loc_key":"' . $type . '",
-        //             "type":"'.$type.'",
-        //             "is_read": 0,
-        //             "icon" : "new",
-        //             "sound": "notification.wav",
-        //             "android_channel_id": "stackfood"
-        //           }
-        //     }';
-        // }
-        // else{
-        //     $postdata = '{
-        //         "to" : "/topics/'.$topic.'",
-        //         "mutable_content": true,
-        //         "data" : {
-        //             "title":"' . $data['title'] . '",
-        //             "body" : "' . $data['description'] . '",
-        //             "image" : "' . $data['image'] . '",
-        //             "is_read": 0,
-        //             "type":"'.$type.'"
-        //         },
-        //         "notification" : {
-        //             "title":"' . $data['title'] . '",
-        //             "body" : "' . $data['description'] . '",
-        //             "image" : "' . $data['image'] . '",
-        //             "body_loc_key":"' . $type . '",
-        //             "type":"'.$type.'",
-        //             "is_read": 0,
-        //             "icon" : "new",
-        //             "sound": "notification.wav",
-        //             "android_channel_id": "stackfood"
-        //           }
-        //     }';
-        // }
-
-        $postdata = [
-            "to" => "/topics/" . $topic,
-            "mutable_content" => true,
-            "data" => [
-                "title" => $data['title'],
-                "body" => $data['description'],
-                "image" => $data['image'],
-                "is_read" => 0,
-                "type" => $type
-            ],
-            "notification" => [
-                "title" => $data['title'],
-                "body" => $data['description'],
-                "image" => $data['image'],
-                "body_loc_key" => $type,
-                "type" => $type,
-                "is_read" => 0,
-                "icon" => "new",
-                "sound" => "notification.wav",
-                "android_channel_id" => "stackfood"
-            ]
-        ];
-        if (isset($data['order_id'])) {
-            $postdata['data']['order_id'] = $data['order_id'];
-            $postdata['notification']['order_id'] = $data['order_id'];
-            $postdata['notification']['title_loc_key'] = $data['order_id'];
-        }
-
-
-
-        // $response = Http::withHeaders([
-        //     'Authorization' => 'key=' . $key,
-        //     'Content-Type' => 'application/json',
-        // ])->post($url, $postdata);
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-        ])->post("http://213.210.36.202:8989/notification_tasty_food", $postdata);
-
-        // echo $topic;
-        if ($response->successful()) {
-            return true;
-        } else {
+        try {
+            $fcmService = new \App\Services\FCMService();
+            return $fcmService->sendToTopic($data, $topic, $type);
+        } catch (\Exception $e) {
+            \Log::error('FCM Topic Notification Error: ' . $e->getMessage());
             return false;
         }
-
-        // $ch = curl_init();
-        // $timeout = 120;
-        // curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        // curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        // curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-        // // Get URL content
-        // $result = curl_exec($ch);
-
-        // // print_r($result);
-        // // die();
-
-        // // close handle to release resources
-        // curl_close($ch);
-
-        // return $result;
-        // // return 0;
     }
 
     public static function rating_count($food_id, $rating)
