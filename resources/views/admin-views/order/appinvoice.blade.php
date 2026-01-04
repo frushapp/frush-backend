@@ -53,7 +53,7 @@
                 <span>---------------------------------------------------------------------------------</span>
                 <div class="row mt-3">
                     <div class="col-6">
-                        <h5>Order ID : {{ $order['id'] }}</h5>
+                        <h5><strong>Order ID :</strong> {{ $order['id'] }}</h5>
                     </div>
                     <div class="col-6">
                         <h5 style="font-weight: lighter">
@@ -62,13 +62,13 @@
                     </div>
                     <div class="col-12">
                         <h5>
-                            Customer Name : {{ $order->customer['f_name'] . ' ' . $order->customer['l_name'] }}
+                            <strong>Customer Name :</strong> {{ $order->customer['f_name'] . ' ' . $order->customer['l_name'] }}
                         </h5>
                         <h5>
-                            Phone : {{ $order->customer['phone'] }}
+                            <strong>Phone :</strong> {{ $order->customer['phone'] }}
                         </h5>
                         <h5 class="text-break">
-                            Address :
+                            <strong>Address :</strong>
                             {{ isset($order->delivery_address) ? json_decode($order->delivery_address, true)['address'] : '' }}
                         </h5>
                     </div>
@@ -188,34 +188,34 @@
                 <div class="row justify-content-md-end mb-3" style="width: 97%">
                     <div class="col-md-7 col-lg-7">
                         <dl class="row text-right">
-                            <dt class="col-6">Items Price:</dt>
+                            <dt class="col-6" style="font-weight: bold;">Items Price:</dt>
                             <dd class="col-6">{{ \App\CentralLogics\Helpers::format_currency($sub_total) }}</dd>
-                            <dt class="col-6">Addon Cost:</dt>
+                            <dt class="col-6" style="font-weight: bold;">Addon Cost:</dt>
                             <dd class="col-6">
                                 {{ \App\CentralLogics\Helpers::format_currency($add_ons_cost) }}
                                 <hr>
                             </dd>
-                            <dt class="col-6">Subtotal:</dt>
+                            <dt class="col-6" style="font-weight: bold;">Subtotal:</dt>
                             <dd class="col-6">
                                 {{ \App\CentralLogics\Helpers::format_currency($sub_total + $add_ons_cost) }}</dd>
-                            <dt class="col-6">{{ __('messages.discount') }}:</dt>
+                            <dt class="col-6" style="font-weight: bold;">{{ __('messages.discount') }}:</dt>
                             <dd class="col-6">
                                 - {{ \App\CentralLogics\Helpers::format_currency($order['restaurant_discount_amount']) }}
                             </dd>
-                            <dt class="col-6">Coupon Discount:</dt>
+                            <dt class="col-6" style="font-weight: bold;">Coupon Discount:</dt>
                             <dd class="col-6">
                                 - {{ \App\CentralLogics\Helpers::format_currency($order['coupon_discount_amount']) }}</dd>
-                            <dt class="col-6">{{ __('messages.vat/tax') }}:</dt>
+                            <dt class="col-6" style="font-weight: bold;">{{ __('messages.vat/tax') }}:</dt>
                             <dd class="col-6">+
                                 {{ \App\CentralLogics\Helpers::format_currency($order['total_tax_amount']) }}</dd>
-                            <dt class="col-6">Delivery Fee:</dt>
+                            <dt class="col-6" style="font-weight: bold;">Delivery Fee:</dt>
                             <dd class="col-6">
                                 @php($del_c = $order['delivery_charge'])
                                 {{ \App\CentralLogics\Helpers::format_currency($del_c) }}
                                 <hr>
                             </dd>
 
-                            <dt class="col-6" style="font-size: 20px">Total:</dt>
+                            <dt class="col-6" style="font-size: 20px; font-weight: bold;">Total:</dt>
                             <dd class="col-6" style="font-size: 20px">
                                 {{ \App\CentralLogics\Helpers::format_currency($sub_total + $del_c + $order['total_tax_amount'] + $add_ons_cost - $order['coupon_discount_amount'] - $order['restaurant_discount_amount']) }}
                             </dd>
@@ -223,7 +223,7 @@
                     </div>
                 </div>
                 <span>---------------------------------------------------------------------------------</span>
-                <h5 class="text-center pt-3">
+                <h5 class="text-center pt-3" style="font-weight: bold;">
                     """THANK YOU"""
                 </h5>
                 <span>---------------------------------------------------------------------------------</span>
