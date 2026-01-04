@@ -78,9 +78,9 @@
                 <table class="table table-bordered mt-3" style="width: 98%">
                     <thead>
                         <tr>
-                            <th style="width: 10%">QTY</th>
-                            <th class="">DESC</th>
-                            <th class="">Price</th>
+                            <th style="width: 10%; font-weight: bold;">QTY</th>
+                            <th style="font-weight: bold;">DESC</th>
+                            <th style="font-weight: bold;">PRICE</th>
                         </tr>
                     </thead>
 
@@ -92,11 +92,11 @@
                         @foreach ($order->details as $detail)
                             @if ($detail->food)
                                 <tr>
-                                    <td class="">
+                                    <td style="font-weight: bold;">
                                         {{ $detail['quantity'] }}
                                     </td>
                                     <td class="text-break">
-                                        {{ $detail->food['name'] }} <br>
+                                        <strong>{{ $detail->food['name'] }}</strong> <br>
                                         @if (count(json_decode($detail['variation'], true)) > 0)
                                             <strong><u>Variation : </u></strong>
                                             @foreach (json_decode($detail['variation'], true)[0] as $key1 => $variation)
@@ -128,7 +128,7 @@
                                             @php($add_ons_cost += $addon['price'] * $addon['quantity'])
                                         @endforeach
                                     </td>
-                                    <td style="width: 28%">
+                                    <td style="width: 28%; font-weight: bold;">
                                         @php($amount = $detail['price'] * $detail['quantity'])
                                         {{ \App\CentralLogics\Helpers::format_currency($amount) }}
                                     </td>
@@ -137,11 +137,11 @@
                                 @php($total_tax += $detail['tax_amount'] * $detail['quantity'])
                             @elseif($detail->campaign)
                                 <tr>
-                                    <td class="">
+                                    <td style="font-weight: bold;">
                                         {{ $detail['quantity'] }}
                                     </td>
                                     <td class="text-break">
-                                        {{ $detail->campaign['title'] }} <br>
+                                        <strong>{{ $detail->campaign['title'] }}</strong> <br>
                                         @if (count(json_decode($detail['variation'], true)) > 0)
                                             <strong><u>Variation : </u></strong>
                                             @foreach (json_decode($detail['variation'], true)[0] as $key1 => $variation)
@@ -173,7 +173,7 @@
                                             @php($add_ons_cost += $addon['price'] * $addon['quantity'])
                                         @endforeach
                                     </td>
-                                    <td style="width: 28%">
+                                    <td style="width: 28%; font-weight: bold;">
                                         @php($amount = $detail['price'] * $detail['quantity'])
                                         {{ \App\CentralLogics\Helpers::format_currency($amount) }}
                                     </td>
