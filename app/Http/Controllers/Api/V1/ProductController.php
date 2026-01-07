@@ -310,7 +310,7 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), [
             'food_id' => 'required',
             'order_id' => 'required',
-            'comment' => 'nullable',
+            'comment' => 'sometimes|nullable',
             'rating' => 'required|numeric|max:5',
         ]);
 
