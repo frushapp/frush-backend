@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\OrderController;
 use Illuminate\Support\Facades\Route;
 /*
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('generate-invoice-mobile/{id}', [OrderController::class, 'generate_invoice_mobile']);
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', [LoginController::class, 'login'])->name('home');
 Route::get('terms-and-conditions', 'HomeController@terms_and_conditions')->name('terms-and-conditions');
 Route::get('driver-privacy-policy', 'HomeController@driver_policy')->name('driver-terms-and-conditions');
 Route::get('about-us', 'HomeController@about_us')->name('about-us');
