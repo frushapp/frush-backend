@@ -16,10 +16,10 @@ class FCMService
 
     public function __construct()
     {
-        $this->projectId = config('fcm.project_id', 'rushh-6b021');
+        $this->projectId = config('fcm.project_id', 'frushapp-bb25b');
         $this->fcmUrl = "https://fcm.googleapis.com/v1/projects/{$this->projectId}/messages:send";
         $this->serviceAccountPath = storage_path('firebase/firebase-service-account.json');
-        
+
         // Configure Guzzle client with SSL handling for Windows/local development
         $guzzleOptions = [];
         if (config('app.env') === 'local' || config('app.debug') === true) {
@@ -32,7 +32,7 @@ class FCMService
 
     /**
      * Get OAuth2 access token for Firebase
-     * 
+     *
      * @return string|null
      */
     private function getAccessToken()
@@ -50,7 +50,7 @@ class FCMService
 
         try {
             $serviceAccount = json_decode(file_get_contents($this->serviceAccountPath), true);
-            
+
             if (!$serviceAccount) {
                 Log::error('FCM Service: Invalid service account JSON');
                 return null;
@@ -59,7 +59,7 @@ class FCMService
             // Create JWT token
             $now = time();
             $header = base64_encode(json_encode(['alg' => 'RS256', 'typ' => 'JWT']));
-            
+
             $payload = [
                 'iss' => $serviceAccount['client_email'],
                 'scope' => 'https://www.googleapis.com/auth/firebase.messaging',
@@ -99,7 +99,6 @@ class FCMService
             }
 
             return $accessToken;
-
         } catch (\Exception $e) {
             Log::error('FCM Service: Failed to get access token - ' . $e->getMessage());
             return null;
@@ -116,7 +115,7 @@ class FCMService
 
     /**
      * Send notification to a specific device using FCM token
-     * 
+     *
      * @param string $fcmToken Device FCM token
      * @param array|object $data Notification data (can be array or Eloquent model)
      * @return bool
@@ -191,7 +190,7 @@ class FCMService
 
     /**
      * Send notification to a topic
-     * 
+     *
      * @param array|object $data Notification data (can be array or Eloquent model)
      * @param string $topic Topic name
      * @param string $type Notification type
@@ -265,7 +264,7 @@ class FCMService
 
     /**
      * Send notification to multiple devices
-     * 
+     *
      * @param array $tokens Array of FCM tokens
      * @param array $data Notification data
      * @return array Results for each token
@@ -273,19 +272,19 @@ class FCMService
     public function sendToMultipleDevices(array $tokens, array $data)
     {
         $results = [];
-        
+
         foreach ($tokens as $token) {
             if (!empty($token)) {
                 $results[$token] = $this->sendToDevice($token, $data);
             }
         }
-        
+
         return $results;
     }
 
     /**
      * Send the actual request to FCM
-     * 
+     *
      * @param array $message The message payload
      * @return bool
      */
@@ -293,7 +292,7 @@ class FCMService
     {
         try {
             $accessToken = $this->getAccessToken();
-            
+
             if (!$accessToken) {
                 Log::error('FCM Service: Could not get access token');
                 return false;
@@ -322,23 +321,21 @@ class FCMService
                 'response' => $responseBody
             ]);
             return false;
-
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             $response = $e->getResponse();
             $errorBody = $response ? json_decode($response->getBody()->getContents(), true) : null;
-            
+
             Log::error('FCM Service: Client exception', [
                 'error' => $e->getMessage(),
                 'response' => $errorBody
             ]);
-            
+
             // If token is expired, clear cache and retry once
             if ($response && $response->getStatusCode() === 401) {
                 Cache::forget('fcm_access_token');
             }
-            
-            return false;
 
+            return false;
         } catch (\Exception $e) {
             Log::error('FCM Service: Exception while sending notification', [
                 'error' => $e->getMessage(),
@@ -350,7 +347,7 @@ class FCMService
 
     /**
      * Send welcome notification to new user
-     * 
+     *
      * @param string $fcmToken User's FCM token
      * @param string $userName User's name
      * @return bool
@@ -358,7 +355,7 @@ class FCMService
     public function sendWelcomeNotification($fcmToken, $userName = '')
     {
         $greeting = !empty($userName) ? "Hi {$userName}! " : "Hi there! ";
-        
+
         $data = [
             'title' => '🎉 Welcome to Frush!',
             'description' => $greeting . 'Welcome to Frush! Get Rs.100 OFF on your first order. Use code: FRUSH100. Order now →',
@@ -372,7 +369,7 @@ class FCMService
 
     /**
      * Send promotional notification
-     * 
+     *
      * @param array $data Notification data with title, description, image
      * @param string $topic Topic to send to (default: all_zone_customer)
      * @return bool
@@ -384,7 +381,7 @@ class FCMService
 
     /**
      * Check if FCM service is properly configured
-     * 
+     *
      * @return array Status information
      */
     public function checkConfiguration()
@@ -403,7 +400,7 @@ class FCMService
 
         try {
             $serviceAccount = json_decode(file_get_contents($this->serviceAccountPath), true);
-            
+
             if (!$serviceAccount) {
                 $status['errors'][] = 'Invalid service account JSON file';
                 return $status;
@@ -425,7 +422,6 @@ class FCMService
                     $status['errors'][] = 'Could not obtain access token';
                 }
             }
-
         } catch (\Exception $e) {
             $status['errors'][] = 'Error reading service account: ' . $e->getMessage();
         }
