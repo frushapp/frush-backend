@@ -16,6 +16,3 @@ public_temp/
 .DS_Store
 Thumbs.db
 
-# Firebase credentials (NEVER commit these!)
-storage/firebase/firebase-service-account.json
-storage/firebase/*.json
