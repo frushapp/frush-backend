@@ -16,6 +16,7 @@ use Laravelpkg\Laravelchk\Http\Controllers\LaravelchkController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderPlaced;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class Helpers
 {
@@ -669,7 +670,7 @@ class Helpers
             $fcmService = new \App\Services\FCMService();
             return $fcmService->sendToDevice($fcm_token, $data);
         } catch (\Exception $e) {
-            \Log::error('FCM Push Notification Error: ' . $e->getMessage());
+            Log::error('FCM Push Notification Error: ' . $e->getMessage());
             return false;
         }
     }
@@ -680,7 +681,7 @@ class Helpers
             $fcmService = new \App\Services\FCMService();
             return $fcmService->sendToTopic($data, $topic, $type);
         } catch (\Exception $e) {
-            \Log::error('FCM Topic Notification Error: ' . $e->getMessage());
+            Log::error('FCM Topic Notification Error: ' . $e->getMessage());
             return false;
         }
     }
