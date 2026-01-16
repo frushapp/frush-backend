@@ -465,7 +465,7 @@ class OrderController extends Controller
             // OrderDetail::create($order_details);
 
             //commented for sms
-            // Helpers::send_order_notification($order);
+             Helpers::send_order_notification($order);
 
 
             $restaurant->increment('total_order');
