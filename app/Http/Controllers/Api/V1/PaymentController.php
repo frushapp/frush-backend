@@ -21,11 +21,18 @@ class PaymentController extends Controller
         $order = Order::where(['id' => $order_id])->first();
         $api = new Api(config('razor.razor_key'), config('razor.razor_secret'));
         $payment = $api->payment->fetch($payment_id);
-        if (!empty($payment_id)) {
+        if ($payment->status === 'authorized') {
+            $payment->capture([
+                'amount' => $payment->amount
+            ]);
+        }
+        // if (!empty($payment_id)) {
+        if ($payment->status === 'captured' || $payment->status === 'authorized') {
+
             try {
 
                 // if($payment["status"]=="Authorized" || $payment["status"]=="authorized");{
-                $api->payment->fetch($payment_id)->capture(array('amount' => $payment['amount']));
+                //$api->payment->fetch($payment_id)->capture(array('amount' => $payment['amount']));
                 // }
 
                 $order = Order::where(['id' => $order_id])->first();
