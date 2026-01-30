@@ -186,11 +186,14 @@
                                     for="exampleFormControlSelect1">{{ __('messages.category') }}<span
                                         class="input-label-secondary">*</span></label>
                                 @php
-                                    // Extract category IDs from the product_category array
+                                    // Initialize variables with default values
                                     $selectedCategoryIds = [];
                                     $primaryCategoryId = null;
                                     $subCategoryId = null;
-                                    if(isset($product_category) && is_array($product_category)) {
+                                    $additionalCategoryIds = [];
+                                    
+                                    // Extract category IDs from the product_category array
+                                    if(isset($product_category) && is_array($product_category) && count($product_category) > 0) {
                                         foreach($product_category as $index => $cat) {
                                             $catId = null;
                                             if(is_object($cat) && isset($cat->id)) {
@@ -206,9 +209,9 @@
                                                 if($index == 1) $subCategoryId = $catId;
                                             }
                                         }
+                                        // Get additional categories (excluding primary and sub)
+                                        $additionalCategoryIds = count($selectedCategoryIds) > 2 ? array_slice($selectedCategoryIds, 2) : [];
                                     }
-                                    // Get additional categories (excluding primary and sub)
-                                    $additionalCategoryIds = array_slice($selectedCategoryIds, 2);
                                 @endphp
                                 <select name="category_id" id="category-id" class="form-control js-select2-custom"
                                     onchange="getRequest('{{ url('/') }}/admin/food/get-categories?parent_id='+this.value,'sub-categories')">
