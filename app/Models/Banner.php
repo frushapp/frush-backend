@@ -10,7 +10,8 @@ class Banner extends Model
 {
     use HasFactory;
     protected $casts = [
-        'data' => 'integer',
+        // 'data' field can be either an integer ID or a string ('default', 'referral')
+        // so we don't cast it to integer
     ];
     public function zone()
     {

@@ -382,7 +382,7 @@
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    console.log("resut", data)
+                    console.log("result", data)
                     if (data.errors) {
                         for (var i = 0; i < data.errors.length; i++) {
                             toastr.error(data.errors[i].message, {
@@ -398,6 +398,22 @@
                         setTimeout(function() {
                             location.href = '{{ route('admin.banner.add-new') }}';
                         }, 2000);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Error:", xhr.responseJSON);
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        for (var i = 0; i < xhr.responseJSON.errors.length; i++) {
+                            toastr.error(xhr.responseJSON.errors[i].message, {
+                                CloseButton: true,
+                                ProgressBar: true
+                            });
+                        }
+                    } else {
+                        toastr.error('Failed to upload banner. Please try again.', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
                     }
                 }
             });

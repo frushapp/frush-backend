@@ -72,8 +72,7 @@ class BannerController extends Controller
             $banner->save();
             return response()->json([], 200);
         } catch (\Exception $e) {
-            print_r($e->getMessage());
-            return response()->json(["message" =>  $e->getMessage()], 200);
+            return response()->json(['errors' => [['code' => 'error', 'message' => $e->getMessage()]]], 500);
         }
     }
 
