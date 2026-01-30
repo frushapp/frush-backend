@@ -100,6 +100,18 @@ class CouponController extends Controller
                             ['code' => 'coupon', 'message' => trans('messages.coupon_expire')]
                         ]
                     ], 407);
+                case 408:
+                    // Get prerequisite coupon info for better error message
+                    $prerequisiteCoupon = $coupon->prerequisiteCoupon;
+                    $prerequisiteCode = $prerequisiteCoupon ? $prerequisiteCoupon->code : '';
+                    $usesRequired = $coupon->prerequisite_uses_required;
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'coupon', 'message' => "This coupon will be unlocked after using coupon '{$prerequisiteCode}' {$usesRequired} time(s)."]
+                        ],
+                        'prerequisite_coupon_code' => $prerequisiteCode,
+                        'prerequisite_uses_required' => $usesRequired
+                    ], 408);
                 default:
                     return response()->json([
                         'errors' => [

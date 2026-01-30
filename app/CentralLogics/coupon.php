@@ -39,6 +39,23 @@ class CouponLogic
             return 407;  //coupon expire
         }
 
+        // Check if coupon has a prerequisite
+        if ($coupon->prerequisite_coupon_id != null && $coupon->prerequisite_uses_required > 0) {
+            $prerequisiteCoupon = Coupon::find($coupon->prerequisite_coupon_id);
+            if ($prerequisiteCoupon) {
+                // Count how many times user has used the prerequisite coupon
+                $prerequisiteUses = Order::where([
+                    'user_id' => $user_id, 
+                    'coupon_code' => $prerequisiteCoupon->code
+                ])->count();
+                
+                // If user hasn't used prerequisite enough times, coupon is locked
+                if ($prerequisiteUses < $coupon->prerequisite_uses_required) {
+                    return 408; // Coupon locked - prerequisite not met
+                }
+            }
+        }
+
         if($coupon->coupon_type == 'restaurant_wise' && !in_array($restaurant_id, json_decode($coupon->data, true)))
         {  
             return 404;   

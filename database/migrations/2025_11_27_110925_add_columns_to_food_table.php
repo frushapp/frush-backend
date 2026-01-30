@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class AddColumnsToFoodTable extends Migration
 {
@@ -13,10 +14,19 @@ class AddColumnsToFoodTable extends Migration
      */
     public function up()
     {
-        Schema::table('food', function (Blueprint $table) {
-            $table->integer('stock')->nullable()->after('image');
-            $table->integer('daily_opening_stock')->nullable()->after('image');
-        });
+        $columns = Schema::getColumnListing('food');
+        
+        if (!in_array('stock', $columns)) {
+            Schema::table('food', function (Blueprint $table) {
+                $table->integer('stock')->nullable();
+            });
+        }
+        
+        if (!in_array('daily_opening_stock', $columns)) {
+            Schema::table('food', function (Blueprint $table) {
+                $table->integer('daily_opening_stock')->nullable();
+            });
+        }
     }
 
     /**

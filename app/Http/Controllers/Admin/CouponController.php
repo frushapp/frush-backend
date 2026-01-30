@@ -58,7 +58,9 @@ class CouponController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
             'description' => $request->description,
-
+            // Prerequisite coupon fields
+            'prerequisite_coupon_id' => $request->prerequisite_coupon_id ?: null,
+            'prerequisite_uses_required' => $request->prerequisite_uses_required ?: 0,
         ]);
 
         Toastr::success(trans('messages.coupon_added_successfully'));
@@ -108,6 +110,9 @@ class CouponController extends Controller
             'discount_type' => $request->discount_type??'',
             'data' => json_encode($data),
             'description' => $request->description,
+            // Prerequisite coupon fields
+            'prerequisite_coupon_id' => $request->prerequisite_coupon_id ?: null,
+            'prerequisite_uses_required' => $request->prerequisite_uses_required ?: 0,
 
             'updated_at' => now()
         ]);

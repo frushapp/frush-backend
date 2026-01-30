@@ -137,6 +137,34 @@
                                     </div>
                                 </div> 
                             </div>
+                            
+                            <!-- Prerequisite Coupon Section -->
+                            <div class="card card-body bg-light mb-3">
+                                <h5 class="mb-3"><i class="tio-link"></i> {{__('Coupon Chaining')}} <small class="text-muted">({{__('Optional')}})</small></h5>
+                                <p class="text-muted small mb-3">Link this coupon to another coupon. This coupon will only become available after the user has used the selected prerequisite coupon the specified number of times.</p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="input-label">{{__('Prerequisite Coupon')}}</label>
+                                            <select name="prerequisite_coupon_id" class="form-control js-select2-custom" data-placeholder="{{__('Select Prerequisite Coupon')}}">
+                                                <option value="">{{__('None (No Prerequisite)')}}</option>
+                                                @foreach(\App\Models\Coupon::where('status', 1)->get() as $prereqCoupon)
+                                                    <option value="{{$prereqCoupon->id}}">{{$prereqCoupon->title}} ({{$prereqCoupon->code}})</option>
+                                                @endforeach
+                                            </select>
+                                            <small class="text-muted">{{__('User must use this coupon first')}}</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="input-label">{{__('Uses Required to Unlock')}}</label>
+                                            <input type="number" name="prerequisite_uses_required" class="form-control" value="0" min="0" max="100" placeholder="e.g. 3">
+                                            <small class="text-muted">{{__('How many times prerequisite must be used to unlock this coupon')}}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <button type="submit" class="btn btn-primary">{{__('messages.submit')}}</button>
                         </form>
                     </div>
@@ -191,6 +219,7 @@
                                 <th>{{__('messages.expire')}} {{__('messages.date')}}</th>
                                 <th>{{__('messages.status')}}</th>
                                 <th>Description</th>
+                                <th>{{__('Prerequisites')}}</th>
 
                                 <th>{{__('messages.action')}}</th>
                             </tr>
@@ -223,6 +252,20 @@
                                         </label>
                                     </td>                                    
                                     <td>{{$coupon['description']}}</td>
+                                    <td>
+                                        @if($coupon->prerequisite_coupon_id)
+                                            @php($prereq = \App\Models\Coupon::find($coupon->prerequisite_coupon_id))
+                                            @if($prereq)
+                                                <span class="badge badge-soft-info" title="Requires {{$prereq->title}} ({{$prereq->code}}) to be used {{$coupon->prerequisite_uses_required}} time(s)">
+                                                    <i class="tio-link"></i> {{$prereq->code}} × {{$coupon->prerequisite_uses_required}}
+                                                </span>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
 
                                     <td>
                                         <a class="btn btn-sm btn-white" href="{{route('admin.coupon.update',[$coupon['id']])}}"title="{{__('messages.edit')}} {{__('messages.coupon')}}"><i class="tio-edit"></i>
