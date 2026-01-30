@@ -52,7 +52,7 @@
                             <label class="input-label" for="exampleFormControlInput1">{{__('messages.name')}}</label>
                             <input type="text" name="name" class="form-control" placeholder="{{__('messages.new_category')}}" value="{{old('name')}}" required maxlength="191">
                         </div>
-                        <input type="hidden" name="lang[]" value="{{$lang}}">
+                        <input type="hidden" name="lang[]" value="{{$default_lang}}">
                     @endif
                     <!-- <div class="form-group">
                         <label class="input-label" for="exampleFormControlInput1">{{__('messages.name')}}</label>

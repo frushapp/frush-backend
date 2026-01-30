@@ -185,12 +185,39 @@
                                 <label class="input-label"
                                     for="exampleFormControlSelect1">{{ __('messages.category') }}<span
                                         class="input-label-secondary">*</span></label>
+                                @php
+                                    // Extract category IDs from the product_category array
+                                    $selectedCategoryIds = [];
+                                    $primaryCategoryId = null;
+                                    $subCategoryId = null;
+                                    if(isset($product_category) && is_array($product_category)) {
+                                        foreach($product_category as $index => $cat) {
+                                            $catId = null;
+                                            if(is_object($cat) && isset($cat->id)) {
+                                                $catId = $cat->id;
+                                            } elseif(is_array($cat) && isset($cat['id'])) {
+                                                $catId = $cat['id'];
+                                            } elseif(is_numeric($cat)) {
+                                                $catId = $cat;
+                                            }
+                                            if($catId) {
+                                                $selectedCategoryIds[] = $catId;
+                                                if($index == 0) $primaryCategoryId = $catId;
+                                                if($index == 1) $subCategoryId = $catId;
+                                            }
+                                        }
+                                    }
+                                    // Get additional categories (excluding primary and sub)
+                                    $additionalCategoryIds = array_slice($selectedCategoryIds, 2);
+                                @endphp
                                 <select name="category_id" id="category-id" class="form-control js-select2-custom"
                                     onchange="getRequest('{{ url('/') }}/admin/food/get-categories?parent_id='+this.value,'sub-categories')">
                                     @foreach ($categories as $category)
+                                        @if($category->parent_id == 0 || $category->position == 0)
                                         <option value="{{ $category['id'] }}"
-                                            {{ $category->id == $product_category[0]->id ? 'selected' : '' }}>
+                                            {{ $primaryCategoryId == $category['id'] ? 'selected' : '' }}>
                                             {{ $category['name'] }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -204,23 +231,30 @@
                                             src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                             alt="{{ __('messages.category_required_warning') }}"></span></label>
                                 <select name="sub_category_id" id="sub-categories"
-                                    data-id="{{ count($product_category) >= 2 ? $product_category[1]->id : '' }}"
+                                    data-id="{{ $subCategoryId ?? '' }}"
                                     class="form-control js-select2-custom">
 
                                 </select>
                             </div>
                         </div>
-                        {{-- <div class="col-md-4 col-6">
-                            <div class="form-group">
-                                <label class="input-label" for="exampleFormControlSelect1">Sub Sub Category<span
-                                        class="input-label-secondary"></span></label>
-                                <select name="sub_sub_category_id" id="sub-sub-categories"
-                                        data-id="{{count($product_category)>=3?$product_category[2]->id:''}}"
-                                        class="form-control js-select2-custom">
+                    </div>
 
+                    <div class="row">
+                        <div class="col-md-12 col-12">
+                            <div class="form-group">
+                                <label class="input-label"
+                                    for="additional_category_ids">{{ __('Additional Categories') }}<span
+                                        class="input-label-secondary"> ({{ __('Optional - Select extra categories') }})</span></label>
+                                <select name="additional_category_ids[]" id="additional_category_ids" class="form-control js-select2-custom" multiple="multiple">
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category['id'] }}" {{ in_array($category['id'], $additionalCategoryIds) ? 'selected' : '' }}>
+                                            {{ $category['name'] }}
+                                        </option>
+                                    @endforeach
                                 </select>
+                                <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select additional categories for this food item.</small>
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
 
                     <div class="row"

@@ -271,7 +271,34 @@
                                             </a>
                                         </td>
                                         <td>
-                                            {{ Str::limit($food->category, 20, '...') }}
+                                            @php
+                                                $categoryNames = [];
+                                                if ($food->category_ids) {
+                                                    $categoryIds = json_decode($food->category_ids, true);
+                                                    if (is_array($categoryIds)) {
+                                                        foreach ($categoryIds as $cat) {
+                                                            $catId = is_array($cat) ? ($cat['id'] ?? null) : $cat;
+                                                            if ($catId) {
+                                                                $category = \App\Models\Category::find($catId);
+                                                                if ($category) {
+                                                                    $categoryNames[] = $category->name;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                // Fallback to single category if no category_ids
+                                                if (empty($categoryNames) && $food->category) {
+                                                    $categoryNames[] = $food->category;
+                                                }
+                                            @endphp
+                                            @if(count($categoryNames) > 0)
+                                                @foreach($categoryNames as $catName)
+                                                    <span class="badge badge-soft-primary mb-1">{{ Str::limit($catName, 15, '...') }}</span>
+                                                @endforeach
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
                                         </td>
                                         <td>
                                             {{ Str::limit($food->restaurant ? $food->restaurant->name : __('messages.Restaurant deleted!'), 20, '...') }}

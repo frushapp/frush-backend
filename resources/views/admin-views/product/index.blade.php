@@ -145,7 +145,9 @@
                                     onchange="getRequest('{{ url('/') }}/admin/food/get-categories?parent_id='+this.value,'sub-categories')">
                                     <option value="">---{{ __('messages.select') }}---</option>
                                     @foreach ($categories as $category)
+                                        @if($category->parent_id == 0 || $category->position == 0)
                                         <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -164,17 +166,22 @@
                                 </select>
                             </div>
                         </div>
+                    </div>
 
-                        {{-- <div class="col-md-4 col-6">
+                    <div class="row">
+                        <div class="col-md-12 col-12">
                             <div class="form-group">
-                                <label class="input-label" for="exampleFormControlSelect1">Sub Sub Category<span
-                                        class="input-label-secondary"></span></label>
-                                <select name="sub_sub_category_id" id="sub-sub-categories"
-                                        class="form-control js-select2-custom">
-
+                                <label class="input-label"
+                                    for="additional_category_ids">{{ __('Additional Categories') }}<span
+                                        class="input-label-secondary"> ({{ __('Optional - Select extra categories') }})</span></label>
+                                <select name="additional_category_ids[]" id="additional_category_ids" class="form-control js-select2-custom" multiple="multiple">
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
+                                    @endforeach
                                 </select>
+                                <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select additional categories for this food item.</small>
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
 
                     <div class="row"

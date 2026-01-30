@@ -25,7 +25,8 @@ class FoodController extends Controller
 {
     public function index()
     {
-        $categories = Category::where(['position' => 0])->get();
+        // Load all categories for multi-category selection
+        $categories = Category::orderBy('name')->get();
         return view('admin-views.product.index', compact('categories'));
     }
 
@@ -65,27 +66,42 @@ class FoodController extends Controller
         $food = new Food;
         $food->name = $request->name[array_search('en', $request->lang)];
 
+        // Handle category, sub-category, and additional categories
         $category = [];
+        $position = 1;
+        
+        // Add primary category
         if ($request->category_id != null) {
             array_push($category, [
-                'id' => $request->category_id,
-                'position' => 1,
+                'id' => (int)$request->category_id,
+                'position' => $position++,
             ]);
         }
+        
+        // Add sub-category
         if ($request->sub_category_id != null) {
             array_push($category, [
-                'id' => $request->sub_category_id,
-                'position' => 2,
+                'id' => (int)$request->sub_category_id,
+                'position' => $position++,
             ]);
         }
-        if ($request->sub_sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_sub_category_id,
-                'position' => 3,
-            ]);
+        
+        // Add additional categories
+        if ($request->has('additional_category_ids') && is_array($request->additional_category_ids)) {
+            foreach ($request->additional_category_ids as $catId) {
+                // Avoid duplicates
+                $existingIds = array_column($category, 'id');
+                if (!in_array((int)$catId, $existingIds)) {
+                    array_push($category, [
+                        'id' => (int)$catId,
+                        'position' => $position++,
+                    ]);
+                }
+            }
         }
 
         $food->category_ids = json_encode($category);
+        // Set category_id to the sub-category if exists, otherwise primary category
         $food->category_id = $request->sub_category_id ? $request->sub_category_id : $request->category_id;
         $food->description =  $request->description[array_search('en', $request->lang)];
 
@@ -202,7 +218,8 @@ class FoodController extends Controller
             return back();
         }
         $product_category = json_decode($product->category_ids);
-        $categories = Category::where(['parent_id' => 0])->get();
+        // Load all categories for multi-category selection
+        $categories = Category::orderBy('name')->get();
         return view('admin-views.product.edit', compact('product', 'product_category', 'categories'));
     }
 
@@ -254,26 +271,41 @@ class FoodController extends Controller
 
         $p->name = $request->name[array_search('en', $request->lang)];
 
+        // Handle category, sub-category, and additional categories
         $category = [];
+        $position = 1;
+        
+        // Add primary category
         if ($request->category_id != null) {
             array_push($category, [
-                'id' => $request->category_id,
-                'position' => 1,
+                'id' => (int)$request->category_id,
+                'position' => $position++,
             ]);
         }
+        
+        // Add sub-category
         if ($request->sub_category_id != null) {
             array_push($category, [
-                'id' => $request->sub_category_id,
-                'position' => 2,
+                'id' => (int)$request->sub_category_id,
+                'position' => $position++,
             ]);
         }
-        if ($request->sub_sub_category_id != null) {
-            array_push($category, [
-                'id' => $request->sub_sub_category_id,
-                'position' => 3,
-            ]);
+        
+        // Add additional categories
+        if ($request->has('additional_category_ids') && is_array($request->additional_category_ids)) {
+            foreach ($request->additional_category_ids as $catId) {
+                // Avoid duplicates
+                $existingIds = array_column($category, 'id');
+                if (!in_array((int)$catId, $existingIds)) {
+                    array_push($category, [
+                        'id' => (int)$catId,
+                        'position' => $position++,
+                    ]);
+                }
+            }
         }
 
+        // Set category_id to the sub-category if exists, otherwise primary category
         $p->category_id = $request->sub_category_id ? $request->sub_category_id : $request->category_id;
         $p->category_ids = json_encode($category);
         $p->description =  $request->description[array_search('en', $request->lang)];
