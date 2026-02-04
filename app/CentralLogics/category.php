@@ -23,8 +23,13 @@ class CategoryLogic
         $paginator = Food::whereHas('restaurant', function($query)use($zone_id){
             return $query->where('zone_id', $zone_id);
         })
-        ->whereHas('category',function($q)use($category_id){
-            return $q->whereId($category_id)->orWhere('parent_id', $category_id);
+        ->where(function($query) use($category_id) {
+            // Check primary category relationship
+            $query->whereHas('category', function($q) use($category_id) {
+                return $q->whereId($category_id)->orWhere('parent_id', $category_id);
+            })
+            // Also check the category_ids JSON field for additional categories
+            ->orWhereRaw("JSON_CONTAINS(category_ids, ?)", [json_encode(['id' => (int)$category_id])]);
         })
         ->active()->type($type)->latest()->paginate($limit, ['*'], 'page', $offset);
 
@@ -40,12 +45,16 @@ class CategoryLogic
     public static function restaurants(int $category_id, int $zone_id, int $limit,int $offset, $type)
     {
         $paginator = Restaurant::withOpen()->where('zone_id', $zone_id)
-        ->whereHas('foods.category', function($query)use($category_id){
-            return $query->whereId($category_id)->orWhere('parent_id', $category_id);
+        ->whereHas('foods', function($query) use($category_id) {
+            $query->where(function($q) use($category_id) {
+                // Check primary category relationship
+                $q->whereHas('category', function($subQ) use($category_id) {
+                    return $subQ->whereId($category_id)->orWhere('parent_id', $category_id);
+                })
+                // Also check the category_ids JSON field for additional categories
+                ->orWhereRaw("JSON_CONTAINS(category_ids, ?)", [json_encode(['id' => (int)$category_id])]);
+            });
         })
-        // ->whereHas('category',function($q)use($category_id){
-        //     return $q->whereId($category_id)->orWhere('parent_id', $category_id);
-        // })
         ->active()->type($type)->latest()->paginate($limit, ['*'], 'page', $offset);
 
         return [
@@ -68,16 +77,12 @@ class CategoryLogic
             }
         }
 
-        // $products = Food::active()->get();
-        // $product_ids = [];
-        // foreach ($products as $product) {
-        //     foreach (json_decode($product['category_ids'], true) as $category) {
-        //         if (in_array($category['id'],$cate_ids)) {
-        //             array_push($product_ids, $product['id']);
-        //         }
-        //     }
-        // }
-
-        return Food::whereIn('category_id', $cate_ids)->get();
+        // Check both category_id and category_ids JSON field for multiple categories
+        return Food::where(function($query) use($cate_ids) {
+            $query->whereIn('category_id', $cate_ids);
+            foreach($cate_ids as $catId) {
+                $query->orWhereRaw("JSON_CONTAINS(category_ids, ?)", [json_encode(['id' => (int)$catId])]);
+            }
+        })->get();
     }
 }
