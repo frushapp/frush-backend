@@ -538,8 +538,13 @@ class FoodController extends Controller
                 return $query->where('restaurant_id', $restaurant_id);
             })
             ->when(is_numeric($category_id), function ($query) use ($category_id) {
-                return $query->whereHas('category', function ($q) use ($category_id) {
-                    return $q->whereId($category_id)->orWhere('parent_id', $category_id);
+                return $query->where(function ($q) use ($category_id) {
+                    // Check primary category relationship
+                    $q->whereHas('category', function ($subQ) use ($category_id) {
+                        return $subQ->whereId($category_id)->orWhere('parent_id', $category_id);
+                    })
+                    // Also check the category_ids JSON field for additional categories
+                    ->orWhereRaw("JSON_CONTAINS(category_ids, ?)", [json_encode(['id' => (int)$category_id])]);
                 });
             })
             ->type($type)

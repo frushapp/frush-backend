@@ -170,8 +170,13 @@ class ProductController extends Controller
                 $q->where('zone_id', $zone_id);
             })
             ->when($request->category_id, function ($query) use ($request) {
-                $query->whereHas('category', function ($q) use ($request) {
-                    return $q->whereId($request->category_id)->orWhere('parent_id', $request->category_id);
+                $query->where(function ($q) use ($request) {
+                    // Check primary category relationship
+                    $q->whereHas('category', function ($subQ) use ($request) {
+                        return $subQ->whereId($request->category_id)->orWhere('parent_id', $request->category_id);
+                    })
+                    // Also check the category_ids JSON field for additional categories
+                    ->orWhereRaw("JSON_CONTAINS(category_ids, ?)", [json_encode(['id' => (int)$request->category_id])]);
                 });
             })
             ->when($request->restaurant_id, function ($query) use ($request) {

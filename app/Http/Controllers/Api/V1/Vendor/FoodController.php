@@ -359,8 +359,11 @@ class FoodController extends Controller
         ->with(['rating'])
         ->where('restaurant_id', $request['vendor']->restaurants[0]->id)
         ->when($request->category_id, function($query)use($request){
-            $query->whereHas('category',function($q)use($request){
-                return $q->whereId($request->category_id)->orWhere('parent_id', $request->category_id);
+            $query->where(function($q)use($request){
+                $q->whereHas('category',function($subQ)use($request){
+                    return $subQ->whereId($request->category_id)->orWhere('parent_id', $request->category_id);
+                })
+                ->orWhereRaw("JSON_CONTAINS(category_ids, ?)", [json_encode(['id' => (int)$request->category_id])]);
             });
         })
         ->when($request->restaurant_id, function($query) use($request){

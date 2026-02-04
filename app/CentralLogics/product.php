@@ -18,8 +18,15 @@ class ProductLogic
     {
         $paginator = Food::active()->type($type);
         if ($category_id != 0) {
-            $paginator = $paginator->whereHas('category', function ($q) use ($category_id) {
-                return $q->whereId($category_id)->orWhere('parent_id', $category_id);
+            $paginator = $paginator->where(function ($query) use ($category_id) {
+                // Check primary category relationship
+                $query->whereHas('category', function ($q) use ($category_id) {
+                    return $q->whereId($category_id)->orWhere('parent_id', $category_id);
+                })
+                // Also check the category_ids JSON field for additional categories
+                ->orWhere(function ($q) use ($category_id) {
+                    $q->whereRaw("JSON_CONTAINS(category_ids, ?)", [json_encode(['id' => (int)$category_id])]);
+                });
             });
         }
         if ($zone_id) {
