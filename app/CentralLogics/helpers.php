@@ -144,8 +144,11 @@ class Helpers
                     unset($item['end_date']);
                 }
                 $categories = [];
-                foreach (json_decode($item['category_ids']) as $value) {
-                    $categories[] = ['id' => (string)$value->id, 'position' => $value->position];
+                $categoryIdsData = is_string($item['category_ids']) ? json_decode($item['category_ids']) : $item['category_ids'];
+                if ($categoryIdsData) {
+                    foreach ($categoryIdsData as $value) {
+                        $categories[] = ['id' => (string)$value->id, 'position' => $value->position];
+                    }
                 }
                 $item['category_ids'] = $categories;
                 $item['attributes'] = json_decode($item['attributes']);
@@ -214,8 +217,11 @@ class Helpers
         } else {
             $variations = [];
             $categories = [];
-            foreach (json_decode($data['category_ids']) as $value) {
-                $categories[] = ['id' => (string)$value->id, 'position' => $value->position];
+            $categoryIdsData = is_string($data['category_ids']) ? json_decode($data['category_ids']) : $data['category_ids'];
+            if ($categoryIdsData) {
+                foreach ($categoryIdsData as $value) {
+                    $categories[] = ['id' => (string)$value->id, 'position' => $value->position];
+                }
             }
             $data['category_ids'] = $categories;
             // $data['category_ids'] = json_decode($data['category_ids']);
