@@ -42,10 +42,10 @@
             <div class="col-md-5 col-12">
                 <div class="text-center pt-4 mb-3">
                     <h2 style="line-height: 1">{{ $order->restaurant->name }}</h2>
-                    <h5 style="font-size: 20px;font-weight: lighter;line-height: 1">
+                    <h5 style="font-size: 20px;font-weight: 700;line-height: 1; color: #000;">
                         {{ $order->restaurant->address }}
                     </h5>
-                    <h5 style="font-size: 16px;font-weight: lighter;line-height: 1">
+                    <h5 style="font-size: 16px;font-weight: 700;line-height: 1; color: #000;">
                         Phone : {{ $order->restaurant->phone }}
                     </h5>
                 </div>
@@ -56,7 +56,7 @@
                         <h5><strong>Order ID :</strong> {{ $order['id'] }}</h5>
                     </div>
                     <div class="col-6">
-                        <h5 style="font-weight: lighter">
+                        <h5 style="font-weight: 700; color: #000;">
                             {{ date('d/M/Y ' . config('timeformat'), strtotime($order['created_at'])) }}
                         </h5>
                     </div>
@@ -95,22 +95,22 @@
                                     <td style="font-weight: bold;">
                                         {{ $detail['quantity'] }}
                                     </td>
-                                    <td class="text-break">
-                                        <strong>{{ $detail->food['name'] }}</strong> <br>
+                                    <td class="text-break" style="color: #000;">
+                                        <span style="font-weight: 700; color: #000;">{{ $detail->food['name'] }}</span> <br>
                                         @if (count(json_decode($detail['variation'], true)) > 0)
                                             <strong><u>Variation : </u></strong>
                                             @foreach (json_decode($detail['variation'], true)[0] as $key1 => $variation)
-                                                <div class="font-size-sm text-body">
-                                                    <span>{{ $key1 }} : </span>
+                                                <div style="color: #000; font-size: 14px;">
+                                                    <span style="font-weight: 600; color: #000;">{{ $key1 }} : </span>
                                                     <span
-                                                        class="font-weight-bold">{{ $key1 == 'price' ? \App\CentralLogics\Helpers::format_currency($variation) : $variation }}</span>
+                                                        style="font-weight: 700; color: #000;">{{ $key1 == 'price' ? \App\CentralLogics\Helpers::format_currency($variation) : $variation }}</span>
                                                 </div>
                                             @endforeach
                                         @else
-                                            <div class="font-size-sm text-body">
-                                                <span>{{ 'Price' }} : </span>
+                                            <div style="color: #000; font-size: 14px;">
+                                                <span style="font-weight: 600; color: #000;">{{ 'Price' }} : </span>
                                                 <span
-                                                    class="font-weight-bold">{{ \App\CentralLogics\Helpers::format_currency($detail->price) }}</span>
+                                                    style="font-weight: 700; color: #000;">{{ \App\CentralLogics\Helpers::format_currency($detail->price) }}</span>
                                             </div>
                                         @endif
 
@@ -118,9 +118,9 @@
                                             @if ($key2 == 0)
                                                 <strong><u>Addons : </u></strong>
                                             @endif
-                                            <div class="font-size-sm text-body">
-                                                <span class="text-break">{{ $addon['name'] }} : </span>
-                                                <span class="font-weight-bold">
+                                            <div style="color: #000; font-size: 14px;">
+                                                <span class="text-break" style="font-weight: 600; color: #000;">{{ $addon['name'] }} : </span>
+                                                <span style="font-weight: 700; color: #000;">
                                                     {{ $addon['quantity'] }} x
                                                     {{ \App\CentralLogics\Helpers::format_currency($addon['price']) }}
                                                 </span>
@@ -140,22 +140,22 @@
                                     <td style="font-weight: bold;">
                                         {{ $detail['quantity'] }}
                                     </td>
-                                    <td class="text-break">
-                                        <strong>{{ $detail->campaign['title'] }}</strong> <br>
+                                    <td class="text-break" style="color: #000;">
+                                        <span style="font-weight: 700; color: #000;">{{ $detail->campaign['title'] }}</span> <br>
                                         @if (count(json_decode($detail['variation'], true)) > 0)
                                             <strong><u>Variation : </u></strong>
                                             @foreach (json_decode($detail['variation'], true)[0] as $key1 => $variation)
-                                                <div class="font-size-sm text-body">
-                                                    <span>{{ $key1 }} : </span>
+                                                <div style="color: #000; font-size: 14px;">
+                                                    <span style="font-weight: 600; color: #000;">{{ $key1 }} : </span>
                                                     <span
-                                                        class="font-weight-bold">{{ $key1 == 'price' ? \App\CentralLogics\Helpers::format_currency($variation) : $variation }}</span>
+                                                        style="font-weight: 700; color: #000;">{{ $key1 == 'price' ? \App\CentralLogics\Helpers::format_currency($variation) : $variation }}</span>
                                                 </div>
                                             @endforeach
                                         @else
-                                            <div class="font-size-sm text-body">
-                                                <span>{{ 'Price' }} : </span>
+                                            <div style="color: #000; font-size: 14px;">
+                                                <span style="font-weight: 600; color: #000;">{{ 'Price' }} : </span>
                                                 <span
-                                                    class="font-weight-bold">{{ \App\CentralLogics\Helpers::format_currency($detail->price) }}</span>
+                                                    style="font-weight: 700; color: #000;">{{ \App\CentralLogics\Helpers::format_currency($detail->price) }}</span>
                                             </div>
                                         @endif
 
@@ -163,9 +163,9 @@
                                             @if ($key2 == 0)
                                                 <strong><u>Addons : </u></strong>
                                             @endif
-                                            <div class="font-size-sm text-body">
-                                                <span class="text-break">{{ $addon['name'] }} : </span>
-                                                <span class="font-weight-bold">
+                                            <div style="color: #000; font-size: 14px;">
+                                                <span class="text-break" style="font-weight: 600; color: #000;">{{ $addon['name'] }} : </span>
+                                                <span style="font-weight: 700; color: #000;">
                                                     {{ $addon['quantity'] }} x
                                                     {{ \App\CentralLogics\Helpers::format_currency($addon['price']) }}
                                                 </span>
