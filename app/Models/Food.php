@@ -113,8 +113,12 @@ class Food extends Model
 
     public function getCategoryAttribute()
     {
-        $category = Category::find(json_decode($this->category_ids)[0]->id);
-        return $category ? $category->name : trans('messages.uncategorize');
+        $categoryIds = is_string($this->category_ids) ? json_decode($this->category_ids) : $this->category_ids;
+        if ($categoryIds && isset($categoryIds[0]) && isset($categoryIds[0]->id)) {
+            $category = Category::find($categoryIds[0]->id);
+            return $category ? $category->name : trans('messages.uncategorize');
+        }
+        return trans('messages.uncategorize');
     }
 
     protected static function booted()

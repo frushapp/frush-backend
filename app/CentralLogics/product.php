@@ -207,11 +207,14 @@ class ProductLogic
         foreach ($foods as $item) {
             $category_id = 0;
             $sub_category_id = 0;
-            foreach (json_decode($item->category_ids, true) as $category) {
-                if ($category['position'] == 1) {
-                    $category_id = $category['id'];
-                } else if ($category['position'] == 2) {
-                    $sub_category_id = $category['id'];
+            $categoryIds = is_string($item->category_ids) ? json_decode($item->category_ids, true) : $item->category_ids;
+            if ($categoryIds) {
+                foreach ($categoryIds as $category) {
+                    if ($category['position'] == 1) {
+                        $category_id = $category['id'];
+                    } else if ($category['position'] == 2) {
+                        $sub_category_id = $category['id'];
+                    }
                 }
             }
             $storage[] = [

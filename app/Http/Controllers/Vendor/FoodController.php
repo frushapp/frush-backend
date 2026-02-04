@@ -197,7 +197,7 @@ class FoodController extends Controller
         }
 
         $product = Food::withoutGlobalScope('translate')->findOrFail($id);
-        $product_category = json_decode($product->category_ids);
+        $product_category = is_string($product->category_ids) ? json_decode($product->category_ids) : $product->category_ids;
         $categories = Category::where(['parent_id' => 0])->get();
         return view('vendor-views.product.edit', compact('product', 'product_category', 'categories'));
     }

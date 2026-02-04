@@ -217,7 +217,7 @@ class FoodController extends Controller
             Toastr::error(trans('messages.food') . ' ' . trans('messages.not_found'));
             return back();
         }
-        $product_category = json_decode($product->category_ids);
+        $product_category = is_string($product->category_ids) ? json_decode($product->category_ids) : $product->category_ids;
         // Load all categories for multi-category selection
         $categories = Category::orderBy('name')->get();
         return view('admin-views.product.edit', compact('product', 'product_category', 'categories'));
