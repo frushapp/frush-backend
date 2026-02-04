@@ -15,6 +15,7 @@ use App\Models\AdminWallet;
 use App\Models\Notification;
 use App\Models\UserNotification;
 use App\Models\Campaign;
+use App\Models\Coupon;
 use App\Models\WithdrawRequest;
 use App\Models\Food;
 use Illuminate\Http\Request;
@@ -299,7 +300,16 @@ class VendorController extends Controller
                 $dm = $order->delivery_man;
                 $dm->current_orders = $dm->current_orders>1?$dm->current_orders-1:0;
                 $dm->save();
-            }                   
+            }
+            
+            // Restore coupon usage if the order is canceled and had a coupon
+            if($request->status == 'canceled' && $order->coupon_code)
+            {
+                $coupon = Coupon::where('code', $order->coupon_code)->first();
+                if ($coupon && $coupon->total_uses > 0) {
+                    $coupon->decrement('total_uses');
+                }
+            }
         }
 
         $order->order_status = $request['status'];

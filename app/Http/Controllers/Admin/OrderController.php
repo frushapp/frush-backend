@@ -422,6 +422,14 @@ class OrderController extends Controller
                 $dm->current_orders = $dm->current_orders > 1 ? $dm->current_orders - 1 : 0;
                 $dm->save();
             }
+            
+            // Restore coupon usage if the order had a coupon
+            if ($order->coupon_code) {
+                $coupon = Coupon::where('code', $order->coupon_code)->first();
+                if ($coupon && $coupon->total_uses > 0) {
+                    $coupon->decrement('total_uses');
+                }
+            }
             // $this->send_sms(
             //     json_decode($order["delivery_address"])->contact_person_number,
             //     json_decode($order["delivery_address"])->contact_person_name,

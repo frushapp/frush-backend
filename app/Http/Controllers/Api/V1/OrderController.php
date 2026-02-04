@@ -653,6 +653,15 @@ class OrderController extends Controller
             $order->order_status = 'canceled';
             $order->canceled = now();
             $order->save();
+            
+            // Restore coupon usage if a coupon was used
+            if ($order->coupon_code) {
+                $coupon = Coupon::where('code', $order->coupon_code)->first();
+                if ($coupon && $coupon->total_uses > 0) {
+                    $coupon->decrement('total_uses');
+                }
+            }
+            
             Helpers::send_order_notification($order);
             return response()->json(['message' => trans('messages.order_canceled_successfully')], 200);
         }

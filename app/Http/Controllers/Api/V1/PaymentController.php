@@ -123,6 +123,15 @@ class PaymentController extends Controller
         $orderModel->order_status   = 'canceled';
         $orderModel->failed         = now();
         $orderModel->save();
+        
+        // Restore coupon usage if the order had a coupon
+        if ($orderModel->coupon_code) {
+            $coupon = \App\Models\Coupon::where('code', $orderModel->coupon_code)->first();
+            if ($coupon && $coupon->total_uses > 0) {
+                $coupon->decrement('total_uses');
+            }
+        }
+        
         return response()->json(['status' => "Success"], 200);
     }
 }
