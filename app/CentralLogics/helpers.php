@@ -144,10 +144,17 @@ class Helpers
                     unset($item['end_date']);
                 }
                 $categories = [];
-                $categoryIdsData = is_string($item['category_ids']) ? json_decode($item['category_ids']) : $item['category_ids'];
-                if ($categoryIdsData) {
+                $categoryIdsData = null;
+                if (isset($item['category_ids']) && $item['category_ids']) {
+                    $categoryIdsData = is_string($item['category_ids']) ? json_decode($item['category_ids'], true) : (array)$item['category_ids'];
+                }
+                if ($categoryIdsData && is_array($categoryIdsData)) {
                     foreach ($categoryIdsData as $value) {
-                        $categories[] = ['id' => (string)$value->id, 'position' => $value->position];
+                        $catId = is_array($value) ? ($value['id'] ?? null) : (isset($value->id) ? $value->id : null);
+                        $catPos = is_array($value) ? ($value['position'] ?? 0) : (isset($value->position) ? $value->position : 0);
+                        if ($catId !== null) {
+                            $categories[] = ['id' => (string)$catId, 'position' => $catPos];
+                        }
                     }
                 }
                 $item['category_ids'] = $categories;
@@ -217,10 +224,17 @@ class Helpers
         } else {
             $variations = [];
             $categories = [];
-            $categoryIdsData = is_string($data['category_ids']) ? json_decode($data['category_ids']) : $data['category_ids'];
-            if ($categoryIdsData) {
+            $categoryIdsData = null;
+            if (isset($data['category_ids']) && $data['category_ids']) {
+                $categoryIdsData = is_string($data['category_ids']) ? json_decode($data['category_ids'], true) : (array)$data['category_ids'];
+            }
+            if ($categoryIdsData && is_array($categoryIdsData)) {
                 foreach ($categoryIdsData as $value) {
-                    $categories[] = ['id' => (string)$value->id, 'position' => $value->position];
+                    $catId = is_array($value) ? ($value['id'] ?? null) : (isset($value->id) ? $value->id : null);
+                    $catPos = is_array($value) ? ($value['position'] ?? 0) : (isset($value->position) ? $value->position : 0);
+                    if ($catId !== null) {
+                        $categories[] = ['id' => (string)$catId, 'position' => $catPos];
+                    }
                 }
             }
             $data['category_ids'] = $categories;
