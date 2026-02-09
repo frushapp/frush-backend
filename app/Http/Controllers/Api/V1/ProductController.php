@@ -171,12 +171,15 @@ class ProductController extends Controller
             })
             ->when($request->category_id, function ($query) use ($request) {
                 $query->where(function ($q) use ($request) {
+                    $categoryId = (int)$request->category_id;
+                    // Check primary category_id field
+                    $q->where('category_id', $categoryId)
                     // Check primary category relationship
-                    $q->whereHas('category', function ($subQ) use ($request) {
-                        return $subQ->whereId($request->category_id)->orWhere('parent_id', $request->category_id);
+                    ->orWhereHas('category', function ($subQ) use ($categoryId) {
+                        return $subQ->whereId($categoryId)->orWhere('parent_id', $categoryId);
                     })
-                    // Also check the category_ids JSON field for additional categories
-                    ->orWhereRaw("JSON_CONTAINS(category_ids, ?)", [json_encode(['id' => (int)$request->category_id])]);
+                    // Check the category_ids JSON field using REGEXP for precise matching
+                    ->orWhereRaw("category_ids REGEXP ?", ['"id":\\s*' . $categoryId . '[^0-9]']);
                 });
             })
             ->when($request->restaurant_id, function ($query) use ($request) {

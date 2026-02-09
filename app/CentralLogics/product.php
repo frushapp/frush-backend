@@ -19,14 +19,14 @@ class ProductLogic
         $paginator = Food::active()->type($type);
         if ($category_id != 0) {
             $paginator = $paginator->where(function ($query) use ($category_id) {
-                // Check primary category relationship
-                $query->whereHas('category', function ($q) use ($category_id) {
-                    return $q->whereId($category_id)->orWhere('parent_id', $category_id);
+                // Check primary category_id field
+                $query->where('category_id', $category_id)
+                // Check primary category relationship (with parent categories)
+                ->orWhereHas('category', function ($q) use ($category_id) {
+                    return $q->where('parent_id', $category_id);
                 })
-                // Also check the category_ids JSON field for additional categories
-                ->orWhere(function ($q) use ($category_id) {
-                    $q->whereRaw("JSON_CONTAINS(category_ids, ?)", [json_encode(['id' => (int)$category_id])]);
-                });
+                // Check the category_ids JSON field using REGEXP for precise matching
+                ->orWhereRaw("category_ids REGEXP ?", ['"id":\\s*' . (int)$category_id . '[^0-9]']);
             });
         }
         if ($zone_id) {
@@ -265,7 +265,7 @@ class ProductLogic
 
         $restaurant_ratings = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
         if (isset($ratings)) {
-            $restaurant_ratings = json_decode($ratings, true);
+            $restaurant_ratings = is_string($ratings) ? json_decode($ratings, true) : (array)$ratings;
             $restaurant_ratings[$product_rating] = $restaurant_ratings[$product_rating] + 1;
         } else {
             $restaurant_ratings[$product_rating] = 1;

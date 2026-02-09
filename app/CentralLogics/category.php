@@ -24,12 +24,15 @@ class CategoryLogic
             return $query->where('zone_id', $zone_id);
         })
         ->where(function($query) use($category_id) {
-            // Check primary category relationship
-            $query->whereHas('category', function($q) use($category_id) {
-                return $q->whereId($category_id)->orWhere('parent_id', $category_id);
+            // Check primary category_id field
+            $query->where('category_id', $category_id)
+            // Check primary category relationship (with parent categories)
+            ->orWhereHas('category', function($q) use($category_id) {
+                return $q->where('parent_id', $category_id);
             })
-            // Also check the category_ids JSON field for additional categories
-            ->orWhereRaw("JSON_CONTAINS(category_ids, ?)", [json_encode(['id' => (int)$category_id])]);
+            // Check the category_ids JSON field using REGEXP for precise matching
+            // Pattern matches "id":X where X is exactly the category_id (not a substring)
+            ->orWhereRaw("category_ids REGEXP ?", ['"id":\\s*' . (int)$category_id . '[^0-9]']);
         })
         ->active()->type($type)->latest()->paginate($limit, ['*'], 'page', $offset);
 
@@ -47,12 +50,14 @@ class CategoryLogic
         $paginator = Restaurant::withOpen()->where('zone_id', $zone_id)
         ->whereHas('foods', function($query) use($category_id) {
             $query->where(function($q) use($category_id) {
+                // Check primary category_id field
+                $q->where('category_id', $category_id)
                 // Check primary category relationship
-                $q->whereHas('category', function($subQ) use($category_id) {
+                ->orWhereHas('category', function($subQ) use($category_id) {
                     return $subQ->whereId($category_id)->orWhere('parent_id', $category_id);
                 })
-                // Also check the category_ids JSON field for additional categories
-                ->orWhereRaw("JSON_CONTAINS(category_ids, ?)", [json_encode(['id' => (int)$category_id])]);
+                // Check the category_ids JSON field using REGEXP for precise matching
+                ->orWhereRaw("category_ids REGEXP ?", ['"id":\\s*' . (int)$category_id . '[^0-9]']);
             });
         })
         ->active()->type($type)->latest()->paginate($limit, ['*'], 'page', $offset);
@@ -81,7 +86,8 @@ class CategoryLogic
         return Food::where(function($query) use($cate_ids) {
             $query->whereIn('category_id', $cate_ids);
             foreach($cate_ids as $catId) {
-                $query->orWhereRaw("JSON_CONTAINS(category_ids, ?)", [json_encode(['id' => (int)$catId])]);
+                // Use REGEXP for precise category ID matching
+                $query->orWhereRaw("category_ids REGEXP ?", ['"id":\\s*' . (int)$catId . '[^0-9]']);
             }
         })->get();
     }

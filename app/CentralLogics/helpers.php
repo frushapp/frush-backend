@@ -20,6 +20,20 @@ use Illuminate\Support\Facades\Log;
 
 class Helpers
 {
+    /**
+     * Safely decode JSON - returns array if already decoded, or decodes string
+     */
+    public static function safe_json_decode($value, $associative = false)
+    {
+        if (is_array($value) || is_object($value)) {
+            return $associative ? (array)$value : $value;
+        }
+        if (is_string($value)) {
+            return json_decode($value, $associative);
+        }
+        return $associative ? [] : null;
+    }
+    
     public static function send_text_message($phone, $otp)
     {
         // $user     = "SWAD_RCS";
@@ -96,7 +110,7 @@ class Helpers
 
     public static function variation_price($product, $variation)
     {
-        $decoded = json_decode($variation, true);
+        $decoded = self::safe_json_decode($variation, true);
 
         // ✅ Make sure it's an array and has at least one item
         if (!is_array($decoded) || count($decoded) == 0) {
@@ -106,8 +120,9 @@ class Helpers
         $match = $decoded[0]; // Now safe to access
         $result = 0;
 
-        foreach (json_decode($product['variations'], true) as $property => $value) {
-            if (isset($value['type']) && $value['type'] == $match['type']) {
+        $productVariations = self::safe_json_decode($product['variations'], true) ?? [];
+        foreach ($productVariations as $property => $value) {
+            if (isset($value['type']) && $value['type'] == ($match['type'] ?? '')) {
                 $result = $value['price'] ?? 0;
             }
         }
@@ -158,13 +173,14 @@ class Helpers
                     }
                 }
                 $item['category_ids'] = $categories;
-                $item['attributes'] = json_decode($item['attributes']);
-                $item['choice_options'] = json_decode($item['choice_options']);
-                $item['add_ons'] = self::addon_data_formatting(AddOn::withoutGlobalScope('translate')->whereIn('id', json_decode($item['add_ons']))->active()->get(), true, $trans, $local);
-                foreach (json_decode($item['variations'], true) as $var) {
+                $item['attributes'] = self::safe_json_decode($item['attributes']);
+                $item['choice_options'] = self::safe_json_decode($item['choice_options']);
+                $item['add_ons'] = self::addon_data_formatting(AddOn::withoutGlobalScope('translate')->whereIn('id', self::safe_json_decode($item['add_ons'], true) ?? [])->active()->get(), true, $trans, $local);
+                $variationsData = self::safe_json_decode($item['variations'], true) ?? [];
+                foreach ($variationsData as $var) {
                     array_push($variations, [
-                        'type' => $var['type'],
-                        'price' => (float)$var['price']
+                        'type' => $var['type'] ?? '',
+                        'price' => (float)($var['price'] ?? 0)
                     ]);
                 }
                 $item['variations'] = $variations;
@@ -174,7 +190,7 @@ class Helpers
                 $item['restaurant_closing_time'] = $item->restaurant->closeing_time ? $item->restaurant->closeing_time->format('H:i') : null;
                 $item['schedule_order'] = $item->restaurant->schedule_order;
                 $item['tax'] = $item->restaurant->tax;
-                $item['rating_count'] = (int)($item->rating ? array_sum(json_decode($item->rating, true)) : 0);
+                $item['rating_count'] = (int)($item->rating ? array_sum(self::safe_json_decode($item->rating, true) ?? []) : 0);
                 $item['avg_rating'] = (float)($item->avg_rating ? $item->avg_rating : 0);
 
                 if ($trans) {
@@ -239,13 +255,14 @@ class Helpers
             }
             $data['category_ids'] = $categories;
             // $data['category_ids'] = json_decode($data['category_ids']);
-            $data['attributes'] = json_decode($data['attributes']);
-            $data['choice_options'] = json_decode($data['choice_options']);
-            $data['add_ons'] = self::addon_data_formatting(AddOn::whereIn('id', json_decode($data['add_ons']))->active()->get(), true, $trans, $local);
-            foreach (json_decode($data['variations'], true) as $var) {
+            $data['attributes'] = self::safe_json_decode($data['attributes']);
+            $data['choice_options'] = self::safe_json_decode($data['choice_options']);
+            $data['add_ons'] = self::addon_data_formatting(AddOn::whereIn('id', self::safe_json_decode($data['add_ons'], true) ?? [])->active()->get(), true, $trans, $local);
+            $variationsData = self::safe_json_decode($data['variations'], true) ?? [];
+            foreach ($variationsData as $var) {
                 array_push($variations, [
-                    'type' => $var['type'],
-                    'price' => (float)$var['price']
+                    'type' => $var['type'] ?? '',
+                    'price' => (float)($var['price'] ?? 0)
                 ]);
             }
             if ($data->title) {
@@ -274,7 +291,7 @@ class Helpers
             $data['restaurant_opening_time'] = $data->restaurant->opening_time ? $data->restaurant->opening_time->format('H:i') : null;
             $data['restaurant_closing_time'] = $data->restaurant->closeing_time ? $data->restaurant->closeing_time->format('H:i') : null;
             $data['schedule_order'] = $data->restaurant->schedule_order;
-            $data['rating_count'] = (int)($data->rating ? array_sum(json_decode($data->rating, true)) : 0);
+            $data['rating_count'] = (int)($data->rating ? array_sum(self::safe_json_decode($data->rating, true) ?? []) : 0);
             $data['avg_rating'] = (float)($data->avg_rating ? $data->avg_rating : 0);
 
             if ($trans) {
@@ -583,7 +600,7 @@ class Helpers
                     $data['food_campaign'] = 1;
                 }
             }
-            $data['delivery_address'] = $data->delivery_address ? json_decode($data->delivery_address, true) : null;
+            $data['delivery_address'] = $data->delivery_address ? self::safe_json_decode($data->delivery_address, true) : null;
             $data['details_count'] = (int)$data->details->count();
             unset($data['details']);
         }
@@ -595,15 +612,15 @@ class Helpers
         $storage = [];
         foreach ($data as $item) {
             if (isset($item['add_ons']) && $item['add_ons']) {
-                $item['add_ons'] = json_decode($item['add_ons']);
+                $item['add_ons'] = self::safe_json_decode($item['add_ons']);
             }
 
             if (isset($item['variation']) && $item['variation']) {
-                $item['variation'] = json_decode($item['variation']);
+                $item['variation'] = self::safe_json_decode($item['variation']);
             }
 
             if (isset($item['food_details']) && $item['food_details']) {
-                $item['food_details'] = json_decode($item['food_details'], true);
+                $item['food_details'] = self::safe_json_decode($item['food_details'], true);
             }
 
             $storage[] = $item; // shorthand for array_push()
