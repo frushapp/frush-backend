@@ -163,7 +163,7 @@
                                             src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                             alt="{{ __('messages.restaurant_lat_lng_warning') }}"></span></label>
                                 <input type="text" id="latitude" name="latitude" class="form-control"
-                                    placeholder="Ex : -94.22213" value="{{ old('latitude') }}" required readonly>
+                                    placeholder="Ex : -94.22213" value="{{ old('latitude') }}" required>
                             </div>
 
 
@@ -176,8 +176,7 @@
                                             src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                             alt="{{ __('messages.restaurant_lat_lng_warning') }}"></span></label>
                                 <input type="text" name="longitude" class="form-control"
-                                    placeholder="Ex : 103.344322" id="longitude" value="{{ old('longitude') }}" required
-                                    readonly>
+                                    placeholder="Ex : 103.344322" id="longitude" value="{{ old('longitude') }}" required>
                             </div>
                         </div>
                     </div>
@@ -435,9 +434,9 @@
             });
         });
     </script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <!-- polyfill.io removed for security -->
     <script
-        src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&libraries=drawing,places&callback=initMap&v=3.45.8">
+        src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&libraries=drawing,places&callback=initMap&v=weekly">
     </script>
     <script>
         @php($default_location = \App\Models\BusinessSetting::where('key', 'default_location')->first())
@@ -523,6 +522,10 @@
                             position: place.geometry.location,
                         })
                     );
+
+                    // Auto-fill latitude and longitude from search
+                    document.getElementById('latitude').value = place.geometry.location.lat();
+                    document.getElementById('longitude').value = place.geometry.location.lng();
 
                     if (place.geometry.viewport) {
                         // Only geocodes have viewport.
