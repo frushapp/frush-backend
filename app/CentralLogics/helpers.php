@@ -487,6 +487,24 @@ class Helpers
                     unset($item['closeing_time']);
                 }
 
+                // Sanitize nullable fields to prevent frontend crashes
+                $item['packaging_cost'] = $item['packaging_cost'] ?? '0';
+                $item['delivery_gst'] = $item['delivery_gst'] ?? 0;
+                $item['platform_fees'] = $item['platform_fees'] ?? 0;
+                // Filter out delivery slab entries with null from/to/value
+                if (isset($item['delivery_slab']) && $item['delivery_slab']) {
+                    $slabs = is_string($item['delivery_slab']) ? json_decode($item['delivery_slab'], true) : $item['delivery_slab'];
+                    if (is_array($slabs)) {
+                        $slabs = array_filter($slabs, function($slab) {
+                            return isset($slab['from']) && isset($slab['to']) && isset($slab['value'])
+                                && $slab['from'] !== null && $slab['to'] !== null && $slab['value'] !== null;
+                        });
+                        $item['delivery_slab'] = json_encode(array_values($slabs));
+                    }
+                } else {
+                    $item['delivery_slab'] = json_encode([]);
+                }
+
                 $ratings = RestaurantLogic::calculate_restaurant_rating($item['rating']);
                 unset($item['rating']);
                 $item['avg_rating'] = $ratings['rating'];
@@ -505,6 +523,25 @@ class Helpers
                 $data['available_time_ends'] = $data->closeing_time->format('H:i');
                 unset($data['closeing_time']);
             }
+
+            // Sanitize nullable fields to prevent frontend crashes
+            $data['packaging_cost'] = $data['packaging_cost'] ?? '0';
+            $data['delivery_gst'] = $data['delivery_gst'] ?? 0;
+            $data['platform_fees'] = $data['platform_fees'] ?? 0;
+            // Filter out delivery slab entries with null from/to/value
+            if (isset($data['delivery_slab']) && $data['delivery_slab']) {
+                $slabs = is_string($data['delivery_slab']) ? json_decode($data['delivery_slab'], true) : $data['delivery_slab'];
+                if (is_array($slabs)) {
+                    $slabs = array_filter($slabs, function($slab) {
+                        return isset($slab['from']) && isset($slab['to']) && isset($slab['value'])
+                            && $slab['from'] !== null && $slab['to'] !== null && $slab['value'] !== null;
+                    });
+                    $data['delivery_slab'] = json_encode(array_values($slabs));
+                }
+            } else {
+                $data['delivery_slab'] = json_encode([]);
+            }
+
             $ratings = RestaurantLogic::calculate_restaurant_rating($data['rating']);
             unset($data['rating']);
             $data['avg_rating'] = $ratings['rating'];
