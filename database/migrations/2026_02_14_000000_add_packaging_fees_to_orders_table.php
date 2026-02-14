@@ -13,9 +13,11 @@ class AddPackagingFeesToOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->decimal('packaging_fees', 10, 2)->default(0)->after('delivery_charge');
-        });
+        if (!Schema::hasColumn('orders', 'packaging_fees')) {
+            Schema::table('orders', function (Blueprint $table) {
+                $table->decimal('packaging_fees', 10, 2)->default(0)->after('delivery_charge');
+            });
+        }
     }
 
     /**
