@@ -28,7 +28,7 @@ class ConfigController extends Controller
         $key = ['cash_on_delivery','digital_payment','default_location','free_delivery_over','business_name','logo','address','phone','email_address','country','currency_symbol_position','app_minimum_version_android',
         'app_url_android','app_minimum_version_ios','app_url_ios','customer_verification','order_delivery_verification','terms_and_conditions','privacy_policy','about_us','per_km_shipping_charge','minimum_shipping_charge','maintenance_mode'
         ,'popular_food','popular_restaurant','new_restaurant','most_reviewed_foods','show_dm_earning','canceled_by_deliveryman','canceled_by_restaurant','timeformat','toggle_veg_non_veg','toggle_dm_registration','toggle_restaurant_registration','schedule_order_slot_duration',
-        'loyalty_point_exchange_rate','loyalty_point_item_purchase_point','loyalty_point_status','loyalty_point_minimum_point','wallet_status','schedule_order'];
+        'loyalty_point_exchange_rate','loyalty_point_item_purchase_point','loyalty_point_status','loyalty_point_minimum_point','wallet_status','schedule_order','dm_privacy_policy','dm_terms_and_conditions'];
         $settings =  array_column(BusinessSetting::whereIn('key',$key)->get()->toArray(), 'value', 'key');
         $currency_symbol = Currency::where(['currency_code' => Helpers::currency_code()])->first()->currency_symbol;
         $cod = json_decode($settings['cash_on_delivery'], true);
@@ -102,6 +102,8 @@ class ConfigController extends Controller
             'terms_and_conditions' => $settings['terms_and_conditions'],
             'privacy_policy' => $settings['privacy_policy'],
             'about_us' => $settings['about_us'],
+            'dm_privacy_policy' => isset($settings['dm_privacy_policy']) ? $settings['dm_privacy_policy'] : ($settings['privacy_policy'] ?? ''),
+            'dm_terms_and_conditions' => isset($settings['dm_terms_and_conditions']) ? $settings['dm_terms_and_conditions'] : ($settings['terms_and_conditions'] ?? ''),
             'per_km_shipping_charge' => (double)$settings['per_km_shipping_charge'],
             'minimum_shipping_charge' => (double)$settings['minimum_shipping_charge'],
             'free_delivery_over'=>(double)$free_delivery_over,
