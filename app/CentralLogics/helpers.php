@@ -1244,10 +1244,21 @@ class Helpers
     {
         if ($image != null) {
             $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . "." . $format;
-            if (!Storage::disk('public')->exists($dir)) {
-                Storage::disk('public')->makeDirectory($dir);
+            // Ensure dir has trailing slash
+            $dir = rtrim($dir, '/') . '/';
+            try {
+                if (!Storage::disk('public')->exists($dir)) {
+                    Storage::disk('public')->makeDirectory($dir);
+                }
+                Storage::disk('public')->put($dir . $imageName, file_get_contents($image));
+            } catch (\Exception $e) {
+                // Fallback: write directly to public path
+                $publicPath = public_path('storage/' . $dir);
+                if (!file_exists($publicPath)) {
+                    mkdir($publicPath, 0755, true);
+                }
+                file_put_contents($publicPath . $imageName, file_get_contents($image));
             }
-            Storage::disk('public')->put($dir . $imageName, file_get_contents($image));
         } else {
             $imageName = 'def.png';
         }
@@ -1260,8 +1271,13 @@ class Helpers
         if ($image == null) {
             return $old_image;
         }
-        if (Storage::disk('public')->exists($dir . $old_image)) {
-            Storage::disk('public')->delete($dir . $old_image);
+        $dir = rtrim($dir, '/') . '/';
+        try {
+            if (Storage::disk('public')->exists($dir . $old_image)) {
+                Storage::disk('public')->delete($dir . $old_image);
+            }
+        } catch (\Exception $e) {
+            // Silently fail on delete - old image may not exist
         }
         $imageName = Helpers::upload($dir, $format, $image);
         return $imageName;
